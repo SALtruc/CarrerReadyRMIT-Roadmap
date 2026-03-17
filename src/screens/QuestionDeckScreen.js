@@ -37,14 +37,11 @@ export function renderQuestionDeckScreen(state) {
         </div>
         ${state.showQuestionIntro ? renderQuestionIntroOverlay() : ""}
       </div>
-      <div class="deck-actions ${state.showQuestionIntro ? "is-hidden" : ""}">
+      <div class="deck-actions ${!state.showQuestionIntro ? "" : ""}">
         <button class="deck-button reject" data-action="answer-no" aria-label="Not yet">&times;</button>
         <button class="deck-button accept" data-action="answer-yes" aria-label="Yes">&#10003;</button>
       </div>
-      <p class="question-deck__hint ${state.showQuestionIntro ? "is-hidden" : ""}">
-        Swipe right for “yes”, swipe left for “not yet”.
-      </p>
-    </section>
+    </section>  
   `;
 }
 

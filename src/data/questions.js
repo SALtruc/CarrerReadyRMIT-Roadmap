@@ -6,7 +6,6 @@ export const questions = [
     figure: "GO",
     assetPath: "./src/assets/question_char/explore_1.png",
     imageAlt: "Explore careers illustration",
-    note: "Say yes if you have looked at real roles, industries, or career paths."
   },
   {
     id: "explore-2",
@@ -15,7 +14,6 @@ export const questions = [
     figure: "WHY",
     assetPath: "./src/assets/question_char/explore_2.png",
     imageAlt: "Interests and strengths illustration",
-    note: "Say yes if you can name what energizes you and what you are good at."
   },
   {
     id: "explore-3",
@@ -24,7 +22,6 @@ export const questions = [
     figure: "UP",
     assetPath: "./src/assets/question_char/explore_3.png",
     imageAlt: "Career direction illustration",
-    note: "Say yes if you already have a rough direction, even if it is still evolving."
   },
   {
     id: "develop-1",
@@ -33,7 +30,6 @@ export const questions = [
     figure: "DO",
     assetPath: "./src/assets/question_char/develop_1.png",
     imageAlt: "Projects and activities illustration",
-    note: "Any practical experience counts, not only formal internships."
   },
   {
     id: "develop-2",
@@ -42,7 +38,6 @@ export const questions = [
     figure: "CV",
     assetPath: "./src/assets/question_char/develop_2.png",
     imageAlt: "CV or portfolio illustration",
-    note: "Ready is enough for now. It does not need to be perfect yet."
   },
   {
     id: "develop-3",
@@ -51,7 +46,6 @@ export const questions = [
     figure: "TALK",
     assetPath: "./src/assets/question_char/develop_3.png",
     imageAlt: "Explain skills illustration",
-    note: "If you can describe what you did and why it matters, count that as yes."
   },
   {
     id: "transition-1",
@@ -60,7 +54,6 @@ export const questions = [
     figure: "FIND",
     assetPath: "./src/assets/question_char/transition_1.png",
     imageAlt: "Looked for internships illustration",
-    note: "Say yes if you know where to find relevant opportunities and have started looking."
   },
   {
     id: "transition-2",
@@ -69,7 +62,6 @@ export const questions = [
     figure: "ASK",
     assetPath: "./src/assets/question_char/transition_2.png",
     imageAlt: "Reach out to employers illustration",
-    note: "That includes networking, contacting recruiters, or following up professionally."
   },
   {
     id: "transition-3",
@@ -78,6 +70,5 @@ export const questions = [
     figure: "GO",
     assetPath: "./src/assets/question_char/transition_3.png",
     imageAlt: "Ready to work illustration",
-    note: "Count yes if you feel prepared to take the next real step into work."
   }
 ];

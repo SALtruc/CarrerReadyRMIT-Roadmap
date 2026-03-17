@@ -204,13 +204,13 @@
 
 .choose-character__title {
   position: absolute;
-  top: -2px;
-  right: 0;
+  top: 10%;
+  right: -60px; 
   width: 202px;
   margin: 0;
   font-family: "Museo", var(--font-display);
   font-weight: 500;
-  font-size: 31px;
+  font-size: 22px;
   line-height: 0.97;
   text-align: left;
   color: #000054;
@@ -1005,10 +1005,10 @@
   }
 
   .choose-character__title {
-    top: -2px;
-    right: -2px;
+    top: 13px;
+    right: -60px;
     width: 202px;
-    font-size: 31px;
+    font-size: 24px;
   }
 
   .avatar-grid {
