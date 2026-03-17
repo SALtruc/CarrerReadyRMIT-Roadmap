@@ -163,7 +163,9 @@
 }
 
 .screen--choose-character {
-  padding: calc(env(safe-area-inset-top, 0px) + 22px) 26px calc(env(safe-area-inset-bottom, 0px) + 98px);
+  --choose-character-side: clamp(24px, 4vw, 28px);
+  --choose-character-bottom-space: calc(env(safe-area-inset-bottom, 0px) + 68px);
+  padding: 0 var(--choose-character-side);
   min-height: 100%;
   height: 100%;
   position: absolute;
@@ -172,14 +174,14 @@
 }
 
 .choose-character__header {
+  grid-column: 1 / -1;
   position: relative;
-  min-height: 98px;
+  min-height: 96px;
+  margin-bottom: 2px;
 }
 
 .screen--choose-character .topbar {
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
   width: 100%;
   padding: 0;
 }
@@ -204,13 +206,13 @@
 
 .choose-character__title {
   position: absolute;
-  top: 10%;
-  right: -60px; 
-  width: 202px;
+  top: 10px;
+  right: -70px;
+  width: min(52vw, 206px);
   margin: 0;
   font-family: "Museo", var(--font-display);
   font-weight: 500;
-  font-size: 22px;
+  font-size: clamp(22px, 5.7vw, 24px);
   line-height: 0.97;
   text-align: left;
   color: #000054;
@@ -228,8 +230,9 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(124px, 134px));
   gap: 18px 20px;
-  margin-top: 20px;
-  padding: 4px 0 136px;
+  margin-top: 0;
+  height: 100%;
+  padding: calc(env(safe-area-inset-top, 0px) + 20px) 0 var(--choose-character-bottom-space);
   overflow-y: auto;
   flex: 1 1 auto;
   min-height: 0;
@@ -239,6 +242,8 @@
   align-self: center;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .avatar-grid::-webkit-scrollbar {
@@ -997,24 +1002,26 @@
   }
 
   .screen--choose-character {
-    padding: calc(env(safe-area-inset-top, 0px) + 20px) 27px calc(env(safe-area-inset-bottom, 0px) + 88px);
+    --choose-character-side: 27px;
+    --choose-character-bottom-space: calc(env(safe-area-inset-bottom, 0px) + 64px);
+    padding: 0 var(--choose-character-side);
   }
 
   .choose-character__header {
-    min-height: 94px;
+    min-height: 92px;
   }
 
   .choose-character__title {
-    top: 13px;
-    right: -60px;
-    width: 202px;
+    top: 10px;
+    right: -70px;
+    width: min(54vw, 204px);
     font-size: 24px;
   }
 
   .avatar-grid {
     gap: 18px 18px;
-    margin-top: 16px;
-    padding-bottom: 130px;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 18px);
+    padding-bottom: var(--choose-character-bottom-space);
     width: min(100%, 324px);
   }
 

@@ -1,3 +1,5 @@
+import { getAssetStateClass } from "../utils/assets.js";
+
 const mapImagePath = "./src/assets/Map.png";
 
 export function renderStageInfoModal() {
@@ -21,12 +23,14 @@ export function renderStageInfoModal() {
         >
           &times;
         </button>
-        <div class="stage-info-image asset-missing" data-asset-container="stage-map">
+        <div class="stage-info-image ${getAssetStateClass(mapImagePath)}" data-asset-container="stage-map">
           <img
             class="stage-info-image__img"
             data-asset-image="stage-map"
             src="${mapImagePath}"
             alt="Three career stages map"
+            decoding="async"
+            loading="eager"
           >
         </div>
       </div>

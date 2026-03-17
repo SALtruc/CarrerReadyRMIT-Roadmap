@@ -1,4 +1,6 @@
 import { renderApp } from "./renderApp.js";
+import { avatars } from "./data/avatars.js";
+import { questions } from "./data/questions.js";
 import { setupQuestionSwipe } from "./interactions/setupQuestionSwipe.js";
 import { state } from "./state/store.js";
 import {
@@ -14,11 +16,21 @@ import {
   toggleActivitySelection,
   toggleStageInfo
 } from "./state/actions.js";
+import { markAssetFailed, markAssetLoaded, warmAssetSources } from "./utils/assets.js";
 
 const app = document.getElementById("app");
 let roadmapCheckTimer = null;
 let roadmapSummaryTimer = null;
 let roadmapSequenceRunning = false;
+const preloadAssetSources = [
+  "./src/assets/logo-badge.png",
+  "./src/assets/welcome-coach.png",
+  "./src/assets/Map.png",
+  ...avatars.map((avatar) => avatar.assetPath),
+  ...questions.map((question) => question.assetPath)
+];
+
+warmAssetSources(preloadAssetSources);
 
 function render() {
   const preservedScroll = capturePreservedScroll();
@@ -203,6 +215,7 @@ function bindAssetImages() {
         return;
       }
 
+      markAssetLoaded(image.getAttribute("src") || image.currentSrc);
       container.classList.add("has-asset");
       container.classList.remove("asset-missing");
     };
@@ -212,6 +225,7 @@ function bindAssetImages() {
         return;
       }
 
+      markAssetFailed(image.getAttribute("src") || image.currentSrc);
       container.classList.remove("has-asset");
       container.classList.add("asset-missing");
     };

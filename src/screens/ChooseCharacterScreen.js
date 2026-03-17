@@ -5,14 +5,14 @@ import { renderTopBar } from "../components/TopBar.js";
 export function renderChooseCharacterScreen(state) {
   return `
     <section class="screen screen--choose-character grid-bg bg-explore">
-      <div class="choose-character__header">
-        ${renderTopBar(state, { showAvatar: false })}
-        <h1 class="choose-character__title">
-          <span class="choose-character__title-line">Choose your</span>
-          <span class="choose-character__title-line"><span class="accent">avatar</span></span>
-        </h1>
-      </div>
       <div class="avatar-grid" data-preserve-scroll="choose-avatar-grid">
+        <div class="choose-character__header">
+          ${renderTopBar(state, { showAvatar: false })}
+          <h1 class="choose-character__title">
+            <span class="choose-character__title-line">Choose your</span>
+            <span class="choose-character__title-line"><span class="accent">avatar</span></span>
+          </h1>
+        </div>
         ${avatars
           .map((avatar) =>
             renderAvatarCard({
@@ -23,7 +23,9 @@ export function renderChooseCharacterScreen(state) {
           .join("")}
       </div>
       ${state.selectedAvatarId ? `
-        <button class="choose-next-button" data-action="begin-questions">Next</button>
+        <button class="choose-next-button" data-action="begin-questions" type="button" aria-label="Next">
+          <span>Next</span>
+        </button>
       ` : ""}
     </section>
   `;
