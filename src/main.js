@@ -22,11 +22,21 @@ const app = document.getElementById("app");
 let roadmapCheckTimer = null;
 let roadmapSummaryTimer = null;
 let roadmapSequenceRunning = false;
+let questionIntroTimer = null;
+let previousQuestionDeckProgress = null;
 const preloadAssetSources = [
   "./src/assets/logo-badge.png",
   "./src/assets/welcome-coach.png",
   "./src/assets/Map.png",
-  ...avatars.map((avatar) => avatar.assetPath),
+  "./src/assets/button/no.png",
+  "./src/assets/button/yes.png",
+  ...new Set(
+    avatars.flatMap((avatar) => [
+      avatar.assetPath,
+      avatar.selectedAssetPath,
+      avatar.nonSelectedAssetPath
+    ].filter(Boolean))
+  ),
   ...questions.map((question) => question.assetPath)
 ];
 
@@ -38,7 +48,9 @@ function render() {
   restorePreservedScroll(preservedScroll);
   bindAssetImages();
   bindSummaryBoardMotion();
+  bindQuestionDeckProgress();
   syncRoadmapSequence();
+  syncQuestionIntroOverlay();
 
   if (state.screen === "question-deck") {
     setupQuestionSwipe({
@@ -123,6 +135,26 @@ function bindSummaryBoardMotion() {
   board.addEventListener("pointercancel", resetBoardVars);
 }
 
+function bindQuestionDeckProgress() {
+  const fill = app.querySelector(".progress-line__fill");
+  if (!fill || state.screen !== "question-deck") {
+    previousQuestionDeckProgress = null;
+    return;
+  }
+
+  const nextProgress = Number.parseFloat(fill.dataset.progressValue || "0");
+  const startProgress =
+    previousQuestionDeckProgress === null ? Math.max(0, nextProgress - (100 / questions.length)) : previousQuestionDeckProgress;
+
+  fill.style.width = `${startProgress}%`;
+
+  window.requestAnimationFrame(() => {
+    fill.style.width = `${nextProgress}%`;
+  });
+
+  previousQuestionDeckProgress = nextProgress;
+}
+
 function syncRoadmapSequence() {
   if (state.screen !== "roadmap") {
     clearRoadmapSequence();
@@ -166,6 +198,62 @@ function clearRoadmapSequence() {
   roadmapCheckTimer = null;
   roadmapSummaryTimer = null;
   roadmapSequenceRunning = false;
+}
+
+function syncQuestionIntroOverlay() {
+  clearQuestionIntroOverlaySync();
+
+  if (state.screen !== "question-deck" || !state.showQuestionIntro) {
+    return;
+  }
+
+  questionIntroTimer = window.setTimeout(() => {
+    dismissQuestionIntroOverlayInPlace();
+  }, 3000);
+
+  app.addEventListener("pointerdown", handleQuestionIntroInteraction, true);
+  app.addEventListener("keydown", handleQuestionIntroInteraction, true);
+  app.addEventListener("wheel", handleQuestionIntroInteraction, true);
+}
+
+function clearQuestionIntroOverlaySync() {
+  if (questionIntroTimer) {
+    window.clearTimeout(questionIntroTimer);
+  }
+
+  questionIntroTimer = null;
+  app.removeEventListener("pointerdown", handleQuestionIntroInteraction, true);
+  app.removeEventListener("keydown", handleQuestionIntroInteraction, true);
+  app.removeEventListener("wheel", handleQuestionIntroInteraction, true);
+}
+
+function handleQuestionIntroInteraction() {
+  dismissQuestionIntroOverlayInPlace();
+}
+
+function dismissQuestionIntroOverlayInPlace() {
+  if (!state.showQuestionIntro) {
+    return;
+  }
+
+  dismissQuestionIntro();
+  clearQuestionIntroOverlaySync();
+
+  const overlay = app.querySelector(".question-intro");
+  if (!overlay) {
+    return;
+  }
+
+  overlay.classList.add("is-hiding");
+
+  const removeOverlay = () => {
+    if (overlay.isConnected) {
+      overlay.remove();
+    }
+  };
+
+  overlay.addEventListener("transitionend", removeOverlay, { once: true });
+  window.setTimeout(removeOverlay, 220);
 }
 
 function capturePreservedScroll() {

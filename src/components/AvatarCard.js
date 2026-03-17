@@ -1,7 +1,10 @@
 import { getAssetStateClass } from "../utils/assets.js";
 
 export function renderAvatarCard({ avatar, isSelected }) {
-  const assetStateClass = getAssetStateClass(avatar.assetPath);
+  const displayAssetPath = isSelected
+    ? (avatar.selectedAssetPath || avatar.assetPath)
+    : (avatar.nonSelectedAssetPath || avatar.assetPath);
+  const assetStateClass = getAssetStateClass(displayAssetPath);
 
   return `
     <button
@@ -20,7 +23,7 @@ export function renderAvatarCard({ avatar, isSelected }) {
         <img
           class="avatar-card__image"
           data-asset-image="avatar"
-          src="${avatar.assetPath}"
+          src="${displayAssetPath}"
           alt="${avatar.name} avatar"
           decoding="async"
           loading="eager"

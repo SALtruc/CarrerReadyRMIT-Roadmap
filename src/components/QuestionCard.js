@@ -39,7 +39,7 @@ export function renderQuestionCard({ question, index, stage }) {
           >
           <div class="question-card__figure">${question.figure}</div>
         </div>
-        <p class="question-card__caption">${question.note}</p>
+        ${question.note ? `<p class="question-card__caption">${question.note}</p>` : ""}
       </div>
       <div class="question-card__drag-surface" aria-hidden="true"></div>
     </article>

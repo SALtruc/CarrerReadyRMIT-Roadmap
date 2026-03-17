@@ -1,6 +1,7 @@
 export const state = {
   screen: "welcome",
   selectedAvatarId: null,
+  hasActivatedChooseNext: false,
   questionIndex: 0,
   answers: {},
   activitySelections: {
@@ -18,6 +19,7 @@ export const state = {
 export function resetState() {
   state.screen = "welcome";
   state.selectedAvatarId = null;
+  state.hasActivatedChooseNext = false;
   state.questionIndex = 0;
   state.answers = {};
   state.activitySelections = {

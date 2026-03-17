@@ -3,11 +3,13 @@ import { resetState, state } from "./store.js";
 
 export function openChooseCharacterScreen() {
   state.screen = "choose-character";
+  state.hasActivatedChooseNext = Boolean(state.selectedAvatarId);
   state.showRoadmapCheck = false;
 }
 
 export function selectAvatar(avatarId) {
   state.selectedAvatarId = avatarId;
+  state.hasActivatedChooseNext = true;
 }
 
 export function openQuestionDeckScreen() {

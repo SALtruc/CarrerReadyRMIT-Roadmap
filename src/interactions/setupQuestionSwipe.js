@@ -1,9 +1,4 @@
 export function setupQuestionSwipe({ root, state, onAnswer }) {
-  if (state.showQuestionIntro) {
-    clearSwipePreview(root);
-    return;
-  }
-
   const card = root.querySelector("[data-question-card='front']");
   const stack = root.querySelector(".question-stack");
   if (!card || card.dataset.swipeBound === "true") {
@@ -154,12 +149,8 @@ function updateStackMotion(stack, pull, drift) {
     return;
   }
 
-  stack.style.setProperty("--stack-back-x", `${drift * 0.06}px`);
-  stack.style.setProperty("--stack-back-y", `${18 - (pull * 14)}px`);
-  stack.style.setProperty("--stack-back-scale", `${0.972 + (pull * 0.024)}`);
-  stack.style.setProperty("--stack-back-opacity", `${0.54 + (pull * 0.12)}`);
-  stack.style.setProperty("--stack-secondary-x", `${drift * 0.11}px`);
-  stack.style.setProperty("--stack-secondary-y", `${34 - (pull * 18)}px`);
-  stack.style.setProperty("--stack-secondary-scale", `${0.95 + (pull * 0.028)}`);
-  stack.style.setProperty("--stack-secondary-opacity", `${0.28 + (pull * 0.12)}`);
+  stack.style.setProperty("--stack-back-x", `${drift * 0.18}px`);
+  stack.style.setProperty("--stack-back-y", `${34 - (pull * 22)}px`);
+  stack.style.setProperty("--stack-back-scale", `${0.94 + (pull * 0.06)}`);
+  stack.style.setProperty("--stack-back-opacity", `${0.04 + (pull * 0.64)}`);
 }

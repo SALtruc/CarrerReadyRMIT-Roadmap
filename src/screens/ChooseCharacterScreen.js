@@ -22,11 +22,15 @@ export function renderChooseCharacterScreen(state) {
           )
           .join("")}
       </div>
-      ${state.selectedAvatarId ? `
-        <button class="choose-next-button" data-action="begin-questions" type="button" aria-label="Next">
-          <span>Next</span>
-        </button>
-      ` : ""}
+      <button
+        class="choose-next-button ${state.hasActivatedChooseNext ? "" : "is-hidden"}"
+        data-action="begin-questions"
+        type="button"
+        aria-label="Next"
+        ${state.selectedAvatarId ? "" : "disabled"}
+      >
+        <span>Next</span>
+      </button>
     </section>
   `;
 }
