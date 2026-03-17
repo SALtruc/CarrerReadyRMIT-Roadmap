@@ -10,7 +10,7 @@
 .logo-badge {
   width: 52px;
   height: 52px;
-  background: var(--red);
+  background: var(--logo-badge-fill, var(--red));
   border: 3px solid var(--ink);
   border-radius: 50%;
   box-shadow: 0 0 0 3px var(--white), 4px 5px 0 rgba(0, 0, 0, 0.92);
@@ -54,7 +54,7 @@
   width: 18px;
   border: 3px solid var(--ink);
   border-right: 0;
-  background: var(--red);
+  background: var(--logo-badge-fill, var(--red));
 }
 
 .logo-badge::before {
@@ -953,6 +953,249 @@
   opacity: 0.62;
 }
 
+.stage-badge {
+  width: 51px;
+  height: 51px;
+  border-width: 2px;
+  box-shadow: 0 0 0 2px var(--white), 2px 3px 0 rgba(0, 0, 0, 0.92);
+}
+
+.stage-badge::before,
+.stage-badge::after {
+  left: -10px;
+  width: 16px;
+  border-width: 2px;
+}
+
+.stage-badge::before {
+  top: 8px;
+  height: 13px;
+}
+
+.stage-badge::after {
+  top: 25px;
+  height: 13px;
+}
+
+.stage-badge--explore,
+.stage-badge--transition {
+  --logo-badge-fill: var(--red);
+}
+
+.stage-badge--develop {
+  --logo-badge-fill: var(--yellow);
+}
+
+.section-ribbon {
+  --section-ribbon-bg: var(--red);
+  --section-ribbon-text: var(--white);
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  isolation: isolate;
+}
+
+.section-ribbon--red {
+  --section-ribbon-bg: #ff2534;
+  --section-ribbon-text: var(--white);
+}
+
+.section-ribbon--yellow {
+  --section-ribbon-bg: #f8c300;
+  --section-ribbon-text: var(--white);
+}
+
+.section-ribbon__shape {
+  display: block;
+  width: 100%;
+  height: 52px;
+  overflow: visible;
+}
+
+.section-ribbon__shadow {
+  fill: #000000;
+}
+
+.section-ribbon__fill {
+  fill: var(--section-ribbon-bg);
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.section-ribbon__label {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  right: 34px;
+  z-index: 2;
+  transform: translateY(-50%);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 14.5px;
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--section-ribbon-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stage-activity-card {
+  position: relative;
+  width: 100%;
+  min-height: 115px;
+  padding: 14px 40px 14px 12px;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.98);
+  color: var(--ink);
+  text-align: left;
+  transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+}
+
+.stage-activity-card:not(:disabled):active {
+  transform: translate(1px, 1px);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.98);
+}
+
+.stage-activity-card.is-disabled {
+  opacity: 1;
+}
+
+.stage-activity-card.is-disabled .stage-activity-card__checkbox {
+  opacity: 0;
+}
+
+.stage-activity-card--featured {
+  min-height: 139px;
+}
+
+.stage-activity-card__layout {
+  display: grid;
+  grid-template-columns: 93px minmax(0, 1fr);
+  gap: 15px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.stage-activity-card__media {
+  min-height: 85px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.stage-activity-card__icon {
+  --activity-icon-scale: 1;
+  --activity-icon-offset-x: 0px;
+  --activity-icon-offset-y: 0px;
+  width: 82px;
+  height: 82px;
+  display: grid;
+  place-items: center;
+  overflow: visible;
+}
+
+.stage-activity-card__icon.has-asset .stage-activity-card__icon-image {
+  display: block;
+}
+
+.stage-activity-card__icon.has-asset .stage-activity-card__icon-fallback {
+  display: none;
+}
+
+.stage-activity-card__icon-image {
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform:
+    translate(var(--activity-icon-offset-x), var(--activity-icon-offset-y))
+    scale(var(--activity-icon-scale));
+  transform-origin: center;
+}
+
+.stage-activity-card__icon-fallback,
+.stage-activity-card__icon--fallback span {
+  font-family: "Museo", var(--font-display);
+  font-size: 26px;
+  line-height: 1;
+  font-weight: 700;
+  color: var(--blue);
+}
+
+.stage-activity-card__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+}
+
+.stage-activity-card__copy h3 {
+  margin: 0;
+  font-family: "Museo", var(--font-display);
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.stage-activity-card__copy p {
+  margin: 0;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 11px;
+  line-height: 1.37;
+  font-weight: 300;
+  color: rgba(17, 17, 17, 0.96);
+}
+
+.stage-activity-card__copy strong {
+  font-weight: 700;
+}
+
+.stage-activity-card__cta {
+  align-self: flex-end;
+  margin-top: auto;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.2;
+  font-style: italic;
+  font-weight: 700;
+  color: #000054;
+}
+
+.stage-activity-card__checkbox {
+  position: absolute;
+  top: 14px;
+  right: 11px;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--ink);
+  background: rgba(255, 255, 255, 0.98);
+  transition: opacity 120ms ease;
+}
+
+.stage-activity-card__checkbox-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ink);
+  transform: scale(0);
+  transition: transform 120ms ease;
+}
+
+.stage-activity-card.is-selected .stage-activity-card__checkbox-dot {
+  transform: scale(1);
+}
+
 .primary-fab,
 .floating-cta,
 .deck-button,
@@ -1473,6 +1716,64 @@
 }
 
 @media (max-width: 480px) {
+  .section-ribbon {
+    min-height: 48px;
+  }
+
+  .section-ribbon__shape {
+    height: 48px;
+  }
+
+  .section-ribbon__label {
+    left: 14px;
+    right: 32px;
+    font-size: 14px;
+  }
+
+  .stage-activity-card {
+    min-height: 114px;
+    padding: 14px 38px 14px 12px;
+    border-radius: 14px;
+  }
+
+  .stage-activity-card--featured {
+    min-height: 139px;
+  }
+
+  .stage-activity-card__layout {
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .stage-activity-card__media {
+    min-height: 82px;
+  }
+
+  .stage-activity-card__icon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .stage-activity-card__icon-fallback,
+  .stage-activity-card__icon--fallback span {
+    font-size: 24px;
+  }
+
+  .stage-activity-card__copy h3 {
+    font-size: 14px;
+  }
+
+  .stage-activity-card__copy p {
+    font-size: 10.8px;
+  }
+
+  .stage-activity-card__checkbox {
+    top: 12px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+  }
+
   .stage-info-overlay {
     --stage-info-offset-x: 8px;
     padding:

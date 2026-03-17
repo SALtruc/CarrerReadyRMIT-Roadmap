@@ -13,7 +13,8 @@ export const state = {
   showStageInfo: false,
   swipeFeedback: null,
   showQuestionIntro: false,
-  showRoadmapCheck: false
+  showRoadmapCheck: false,
+  roadmapAutoAdvanceDisabled: false
 };
 
 export function resetState() {
@@ -32,4 +33,5 @@ export function resetState() {
   state.swipeFeedback = null;
   state.showQuestionIntro = false;
   state.showRoadmapCheck = false;
+  state.roadmapAutoAdvanceDisabled = false;
 }

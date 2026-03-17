@@ -1,5 +1,6 @@
 import { renderApp } from "./renderApp.js";
 import { avatars } from "./data/avatars.js";
+import { getStageActivityAssetPaths } from "./data/activities.js";
 import { questions } from "./data/questions.js";
 import { setupQuestionSwipe } from "./interactions/setupQuestionSwipe.js";
 import { state } from "./state/store.js";
@@ -8,11 +9,13 @@ import {
   closeStageInfo,
   dismissQuestionIntro,
   openChooseCharacterScreen,
+  openExploreScreen,
   openQuestionDeckScreen,
   openStageDetailScreen,
-  openSummaryScreen,
   restartFlow,
   selectAvatar,
+  showNextStage,
+  showPreviousStage,
   toggleActivitySelection,
   toggleStageInfo
 } from "./state/actions.js";
@@ -37,7 +40,8 @@ const preloadAssetSources = [
       avatar.nonSelectedAssetPath
     ].filter(Boolean))
   ),
-  ...questions.map((question) => question.assetPath)
+  ...questions.map((question) => question.assetPath),
+  ...getStageActivityAssetPaths()
 ];
 
 warmAssetSources(preloadAssetSources);
@@ -161,6 +165,11 @@ function syncRoadmapSequence() {
     return;
   }
 
+  if (state.roadmapAutoAdvanceDisabled) {
+    clearRoadmapSequence();
+    return;
+  }
+
   if (roadmapSequenceRunning) {
     return;
   }
@@ -181,7 +190,7 @@ function syncRoadmapSequence() {
       return;
     }
 
-    openSummaryScreen();
+    openExploreScreen("explore");
     render();
   }, 5900);
 }
@@ -374,10 +383,16 @@ function handleAppClick(event) {
       answerCurrentQuestion(true);
       break;
     case "show-summary":
-      openSummaryScreen();
+      openExploreScreen("explore");
       break;
     case "open-stage-detail":
       openStageDetailScreen(actionElement.dataset.stage);
+      break;
+    case "stage-back":
+      showPreviousStage();
+      break;
+    case "stage-next":
+      showNextStage();
       break;
     case "toggle-stage-info":
       toggleStageInfo();
