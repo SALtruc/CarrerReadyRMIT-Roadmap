@@ -82,6 +82,7 @@ function renderRoadmapScore(stage, score) {
 
 function renderRoadmapSelection(selection) {
   const { slot } = selection;
+  const scale = slot.scale || 1;
 
   return `
     <div
@@ -89,10 +90,9 @@ function renderRoadmapSelection(selection) {
       style="${formatRoadmapStyle({
         left: `${toPercent(slot.x, ROADMAP_BACKGROUND_SIZE.width)}%`,
         top: `${toPercent(slot.y, ROADMAP_BACKGROUND_SIZE.height)}%`,
-        width: `${toPercent(slot.maxWidth, ROADMAP_BACKGROUND_SIZE.width)}%`,
-        height: `${toPercent(slot.maxHeight, ROADMAP_BACKGROUND_SIZE.height)}%`,
-        "--roadmap-item-rotate": `${slot.rotate}deg`,
-        "--roadmap-item-scale": `${slot.scale || 1}`
+        width: `${toPercent(slot.maxWidth * scale, ROADMAP_BACKGROUND_SIZE.width)}%`,
+        height: `${toPercent(slot.maxHeight * scale, ROADMAP_BACKGROUND_SIZE.height)}%`,
+        "--roadmap-item-rotate": `${slot.rotate}deg`
       })}"
       aria-hidden="true"
     >
