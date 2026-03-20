@@ -731,14 +731,23 @@
 }
 
 .screen--career-roadmap {
+  padding: 0;
   overflow-y: auto;
   overflow-x: hidden;
 }
 
+.screen--career-roadmap .topbar {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
+  left: 14px;
+  right: 14px;
+  z-index: 5;
+}
+
 .career-roadmap-shell {
-  width: min(100%, 392px);
-  margin: 16px auto 0;
-  padding-bottom: 14px;
+  width: 100%;
+  margin: 0;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .career-roadmap-poster {
@@ -798,24 +807,24 @@
 
 .career-roadmap-download-hotspot {
   left: 21.1%;
-  top: 80.72%;
+  top: 84.5%;
   width: 57.5%;
-  height: 4.08%;
+  height: 2.08%;
   border-radius: 999px;
 }
 
 .career-roadmap-social-link--sgs {
   left: 28.1%;
-  top: 89.22%;
+  top: 90.22%;
   width: 49%;
-  height: 1.26%;
+  height: 1%;
 }
 
 .career-roadmap-social-link--hanoi {
   left: 28.1%;
   top: 90.84%;
   width: 49%;
-  height: 1.26%;
+  height: 1%;
 }
 
 .career-roadmap-download-hotspot:focus-visible,
@@ -2470,8 +2479,8 @@
   }
 
   .career-roadmap-shell {
-    width: min(100%, 358px);
-    margin-top: 14px;
+    width: 100%;
+    margin-top: 0;
   }
 
   .career-roadmap-selection {

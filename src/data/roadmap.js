@@ -24,19 +24,19 @@ export const roadmapStageScoreLayout = {
 
 export const roadmapStageIconSlots = {
   explore: [
-    { x: 400, y: 2501, maxWidth: 560, maxHeight: 520, rotate: -2.5, scale: 2 },
+    { x: 480, y: 2501, maxWidth: 560, maxHeight: 520, rotate: -3, scale: 1.8 },
     { x: 1450, y: 3070, maxWidth: 560, maxHeight: 520, rotate: 2.5, scale: 2 },
-    { x: 400, y: 3850, maxWidth: 560, maxHeight: 500, rotate: -2, scale: 2 }
+    { x: 480, y: 3850, maxWidth: 560, maxHeight: 500, rotate: -3, scale: 1.8}
   ],
   develop: [
-    { x: 400, y: 4950, maxWidth: 540, maxHeight: 500, rotate: -2, scale: 2 },
-    { x: 1510, y: 5520, maxWidth: 560, maxHeight: 520, rotate: 2, scale: 2 },
-    { x: 1580, y: 6800, maxWidth: 560, maxHeight: 520, rotate: 1.5, scale: 2 }
+    { x: 400, y: 4950, maxWidth: 540, maxHeight: 500, rotate: -3, scale: 2 },
+    { x: 1510, y: 5520, maxWidth: 560, maxHeight: 520, rotate: 3, scale: 2 },
+    { x: 1580, y: 6800, maxWidth: 560, maxHeight: 520, rotate: 3, scale: 2 }
   ],
   transition: [
-    { x: 432, y: 7580, maxWidth: 560, maxHeight: 500, rotate: -2.5, scale: 2 },
-    { x: 1580, y: 8470, maxWidth: 560, maxHeight: 500, rotate: 2.5, scale: 2 },
-    { x: 430, y: 9050, maxWidth: 560, maxHeight: 470, rotate: -2, scale: 2   }
+    { x: 480, y: 7780, maxWidth: 560, maxHeight: 500, rotate: -3, scale: 1.8 },
+    { x: 1460, y: 8470, maxWidth: 560, maxHeight: 500, rotate: 3, scale: 1.85 },
+    { x: 480, y: 9050, maxWidth: 560, maxHeight: 470, rotate: -3, scale: 1.8   }
   ]
 };
 
