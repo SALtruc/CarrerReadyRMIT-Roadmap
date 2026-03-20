@@ -372,13 +372,20 @@ export const stageActivityScreens = {
   }
 };
 
-export function getStageActivityAssetPaths() {
+export function getStageActivityAssetPaths(stageKeys = null) {
+  const resolvedStageKeys = Array.isArray(stageKeys)
+    ? stageKeys.filter((stageKey) => activities[stageKey])
+    : (typeof stageKeys === "string" && activities[stageKeys]
+      ? [stageKeys]
+      : Object.keys(activities));
+  const includeExploreScore = resolvedStageKeys.includes("explore");
+
   return [
     ...new Set(
       [
-        exploreScoreAssetPath,
-        ...Object.values(activities).flatMap((stageActivities) =>
-          stageActivities
+        ...(includeExploreScore ? [exploreScoreAssetPath] : []),
+        ...resolvedStageKeys.flatMap((stageKey) =>
+          activities[stageKey]
             .map((activity) => activity.iconAssetPath)
             .filter(Boolean)
         )

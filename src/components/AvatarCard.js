@@ -26,7 +26,7 @@ export function renderAvatarCard({ avatar, isSelected }) {
           src="${displayAssetPath}"
           alt="${avatar.name} avatar"
           decoding="async"
-          loading="eager"
+          loading="lazy"
           draggable="false"
         >
         <span class="avatar-card__fallback">${avatar.icon}</span>

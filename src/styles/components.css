@@ -1054,6 +1054,36 @@
   color: var(--ink);
   text-align: left;
   transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+  overflow: visible;
+  transform-origin: center;
+  will-change: transform, box-shadow, filter;
+}
+
+.stage-activity-card::before,
+.stage-activity-card::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.stage-activity-card::before {
+  inset: -16px;
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.94) 0 18%, transparent 23%) 6% 50% / 13px 13px no-repeat,
+    radial-gradient(circle, rgba(255, 236, 140, 0.98) 0 19%, transparent 24%) 22% 8% / 12px 12px no-repeat,
+    radial-gradient(circle, rgba(87, 217, 238, 0.96) 0 18%, transparent 23%) 46% 0 / 14px 14px no-repeat,
+    radial-gradient(circle, rgba(255, 236, 140, 0.98) 0 19%, transparent 24%) 74% 10% / 13px 13px no-repeat,
+    radial-gradient(circle, rgba(255, 255, 255, 0.96) 0 18%, transparent 22%) 94% 42% / 12px 12px no-repeat,
+    radial-gradient(circle, rgba(87, 217, 238, 0.96) 0 18%, transparent 23%) 78% 98% / 12px 12px no-repeat,
+    radial-gradient(circle, rgba(255, 255, 255, 0.94) 0 18%, transparent 22%) 16% 100% / 13px 13px no-repeat;
+}
+
+.stage-activity-card::after {
+  inset: -3px;
+  border-radius: 17px;
+  background:
+    linear-gradient(115deg, transparent 18%, rgba(255, 255, 255, 0.84) 34%, transparent 56%) center / 220% 100% no-repeat;
 }
 
 .stage-activity-card:not(:disabled):active {
@@ -1198,6 +1228,150 @@
 
 .stage-activity-card.is-selected .stage-activity-card__checkbox-dot {
   transform: scale(1);
+}
+
+.stage-activity-card.is-celebrating {
+  animation: stage-activity-card-pop 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.stage-activity-card.is-unselecting {
+  animation: stage-activity-card-unselect 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.stage-activity-card.is-celebrating::before {
+  animation: stage-activity-card-burst 320ms ease-out;
+}
+
+.stage-activity-card.is-unselecting::before {
+  animation: stage-activity-card-burst-soft 260ms ease-out;
+}
+
+.stage-activity-card.is-celebrating::after {
+  animation: stage-activity-card-sheen 300ms ease-out;
+}
+
+.stage-activity-card.is-unselecting::after {
+  animation: stage-activity-card-sheen-soft 240ms ease-out;
+}
+
+.stage-activity-card.is-celebrating .stage-activity-card__checkbox,
+.stage-activity-card.is-unselecting .stage-activity-card__checkbox {
+  animation: stage-activity-card-checkbox-pop 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes stage-activity-card-pop {
+  0% {
+    transform: scale(0.96) rotate(-1.1deg);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.98);
+  }
+
+  58% {
+    transform: scale(1.03) rotate(0.8deg);
+    box-shadow: 7px 8px 0 rgba(0, 0, 0, 0.92);
+  }
+
+  100% {
+    transform: scale(1) rotate(0deg);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.98);
+  }
+}
+
+@keyframes stage-activity-card-unselect {
+  0% {
+    transform: scale(0.985) rotate(0deg);
+  }
+
+  35% {
+    transform: scale(1.01) rotate(-0.8deg);
+  }
+
+  68% {
+    transform: scale(0.992) rotate(0.8deg);
+  }
+
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes stage-activity-card-burst {
+  0% {
+    opacity: 0;
+    transform: scale(0.74);
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes stage-activity-card-burst-soft {
+  0% {
+    opacity: 0;
+    transform: scale(0.82);
+    filter: saturate(0.65);
+  }
+
+  35% {
+    opacity: 0.8;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.02);
+    filter: saturate(0.55);
+  }
+}
+
+@keyframes stage-activity-card-sheen {
+  0% {
+    opacity: 0;
+    background-position: 140% 0;
+  }
+
+  26% {
+    opacity: 0.95;
+  }
+
+  100% {
+    opacity: 0;
+    background-position: -40% 0;
+  }
+}
+
+@keyframes stage-activity-card-sheen-soft {
+  0% {
+    opacity: 0;
+    background-position: 120% 0;
+  }
+
+  26% {
+    opacity: 0.55;
+  }
+
+  100% {
+    opacity: 0;
+    background-position: -18% 0;
+  }
+}
+
+@keyframes stage-activity-card-checkbox-pop {
+  0% {
+    transform: scale(0.78);
+  }
+
+  55% {
+    transform: scale(1.18);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 .primary-fab,

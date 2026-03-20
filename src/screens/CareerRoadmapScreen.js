@@ -119,7 +119,7 @@ function renderRoadmapSelection(selection) {
         src="${selection.assetPath}"
         alt="${selection.title}"
         decoding="async"
-        loading="eager"
+        loading="lazy"
         draggable="false"
       >
     </div>

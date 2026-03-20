@@ -1,6 +1,6 @@
 import { renderApp } from "./renderApp.js";
 import { avatars } from "./data/avatars.js";
-import { getStageActivityAssetPaths } from "./data/activities.js";
+import { getStageActivityAssetPaths, stageSequence } from "./data/activities.js";
 import { getRoadmapAssetPaths } from "./data/roadmap.js";
 import { questions } from "./data/questions.js";
 import { exportCareerRoadmap } from "./interactions/exportCareerRoadmap.js";
@@ -38,10 +38,16 @@ let questionIntroTimer = null;
 let previousQuestionDeckProgress = null;
 let questionButtonAnswerTimer = null;
 let studentUnlockSubmitTimer = null;
-const preloadAssetSources = [
+let activitySelectionCelebration = null;
+let activitySelectionCelebrationTimer = null;
+const logoAssetSources = [
   "./src/assets/logo-badge.png",
-  "./src/assets/logo-badge-yellow.png",
-  "./src/assets/welcome-coach.png",
+  "./src/assets/logo-badge-yellow.png"
+];
+const welcomeAssetSources = [
+  "./src/assets/welcome-coach.png"
+];
+const summaryAssetSources = [
   "./src/assets/Map.png",
   "./src/assets/Portrait/Portrait-1.png",
   "./src/assets/Portrait/Portrait-2.png",
@@ -50,27 +56,31 @@ const preloadAssetSources = [
   "./src/assets/Portrait/Portrait-5.png",
   "./src/assets/Portrait/Portrait-6.png",
   "./src/assets/Portrait/Portrait-7.png",
-  "./src/assets/Portrait/Portrait-8.png",
+  "./src/assets/Portrait/Portrait-8.png"
+];
+const studentUnlockAssetSources = [
   "./src/assets/student/Student-coach.png",
   "./src/assets/student/Student-1.png",
   "./src/assets/student/Student-2.png",
-  "./src/assets/student/Student-3.png",
+  "./src/assets/student/Student-3.png"
+];
+const questionActionAssetSources = [
   "./src/assets/button/no.png",
-  "./src/assets/button/yes.png",
+  "./src/assets/button/yes.png"
+];
+const avatarAssetSources = [
   ...new Set(
     avatars.flatMap((avatar) => [
       avatar.assetPath,
       avatar.selectedAssetPath,
       avatar.nonSelectedAssetPath
     ].filter(Boolean))
-  ),
-  ...questions.map((question) => question.assetPath),
-  ...getStageActivityAssetPaths(),
-  ...getRoadmapAssetPaths()
+  )
 ];
+const criticalAssetSources = [...logoAssetSources, ...welcomeAssetSources];
 
 bootstrapAppState();
-warmAssetSources(preloadAssetSources);
+warmAssetSources(criticalAssetSources);
 
 function render() {
   const preservedScroll = capturePreservedScroll();
@@ -80,8 +90,10 @@ function render() {
   bindAssetImages();
   bindSummaryBoardMotion();
   bindQuestionDeckProgress();
+  syncActivitySelectionCelebration();
   syncRoadmapSequence();
   syncQuestionIntroOverlay();
+  warmAssetSources(getPredictiveAssetSources(state));
 
   if (state.screen === "question-deck") {
     setupQuestionSwipe({
@@ -184,6 +196,50 @@ function bindQuestionDeckProgress() {
   });
 
   previousQuestionDeckProgress = nextProgress;
+}
+
+function syncActivitySelectionCelebration() {
+  if (activitySelectionCelebrationTimer) {
+    window.clearTimeout(activitySelectionCelebrationTimer);
+    activitySelectionCelebrationTimer = null;
+  }
+
+  if (!activitySelectionCelebration) {
+    return;
+  }
+
+  if (state.screen !== "explore") {
+    activitySelectionCelebration = null;
+    return;
+  }
+
+  const card = Array.from(app.querySelectorAll(".stage-activity-card")).find(
+    (element) =>
+      element.dataset.stage === activitySelectionCelebration.stage &&
+      element.dataset.activityId === activitySelectionCelebration.activityId
+  );
+
+  if (!card) {
+    activitySelectionCelebration = null;
+    return;
+  }
+
+  const animationClass = activitySelectionCelebration.mode === "select"
+    ? "is-celebrating"
+    : "is-unselecting";
+
+  card.classList.remove("is-celebrating", "is-unselecting");
+  void card.offsetWidth;
+  card.classList.add(animationClass);
+
+  activitySelectionCelebrationTimer = window.setTimeout(() => {
+    if (card.isConnected) {
+      card.classList.remove(animationClass);
+    }
+
+    activitySelectionCelebration = null;
+    activitySelectionCelebrationTimer = null;
+  }, 360);
 }
 
 function syncRoadmapSequence() {
@@ -448,6 +504,70 @@ function handleAppSubmit(event) {
   }
 }
 
+function getQuestionContextAssetSources(questionIndex) {
+  return questions
+    .slice(questionIndex, questionIndex + 3)
+    .map((question) => question.assetPath)
+    .filter(Boolean);
+}
+
+function getSelectedRoadmapActivityIds(currentState) {
+  return stageSequence.flatMap((stageKey) => currentState.activitySelections[stageKey] || []);
+}
+
+function getPredictiveAssetSources(currentState) {
+  switch (currentState.screen) {
+    case "welcome":
+      return [...avatarAssetSources];
+    case "choose-character":
+      return [
+        ...avatarAssetSources,
+        ...questionActionAssetSources,
+        ...getQuestionContextAssetSources(0)
+      ];
+    case "question-deck": {
+      const currentQuestion = questions[currentState.questionIndex];
+      const nextQuestion = questions[currentState.questionIndex + 1];
+      const stageKeysToWarm = [currentQuestion?.stage, nextQuestion?.stage].filter(Boolean);
+
+      return [
+        ...questionActionAssetSources,
+        ...getQuestionContextAssetSources(currentState.questionIndex),
+        ...getStageActivityAssetPaths(stageKeysToWarm)
+      ];
+    }
+    case "roadmap":
+      return [...summaryAssetSources, ...studentUnlockAssetSources];
+    case "summary":
+      return [
+        ...summaryAssetSources,
+        ...studentUnlockAssetSources,
+        ...getStageActivityAssetPaths("explore")
+      ];
+    case "student-unlock":
+      return [...studentUnlockAssetSources, ...getStageActivityAssetPaths("explore")];
+    case "explore": {
+      const activeStage = stageSequence.includes(currentState.activeStage)
+        ? currentState.activeStage
+        : "explore";
+      const activeStageIndex = stageSequence.indexOf(activeStage);
+      const nextStage = stageSequence[activeStageIndex + 1];
+      const stageKeysToWarm = [activeStage, nextStage].filter(Boolean);
+      const nextAssetSources = [...getStageActivityAssetPaths(stageKeysToWarm)];
+
+      if (activeStage === "transition") {
+        nextAssetSources.push(...getRoadmapAssetPaths(getSelectedRoadmapActivityIds(currentState)));
+      }
+
+      return nextAssetSources;
+    }
+    case "career-roadmap":
+      return getRoadmapAssetPaths(getSelectedRoadmapActivityIds(currentState));
+    default:
+      return [];
+  }
+}
+
 function handleAppClick(event) {
   const actionElement = event.target.closest("[data-action]");
   if (!actionElement || !app.contains(actionElement)) {
@@ -515,6 +635,15 @@ function handleAppClick(event) {
       closeStageInfo();
       break;
     case "toggle-activity":
+      activitySelectionCelebration = {
+        stage: actionElement.dataset.stage,
+        activityId: actionElement.dataset.activityId,
+        mode: (state.activitySelections[actionElement.dataset.stage] || []).includes(
+          actionElement.dataset.activityId
+        )
+          ? "unselect"
+          : "select"
+      };
       toggleActivitySelection(
         actionElement.dataset.stage,
         actionElement.dataset.activityId

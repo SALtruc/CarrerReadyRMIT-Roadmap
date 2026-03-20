@@ -115,9 +115,17 @@ export function getRoadmapSelections(state) {
   );
 }
 
-export function getRoadmapAssetPaths() {
+export function getRoadmapAssetPaths(activityIds = null) {
+  const resolvedActivityIds = Array.isArray(activityIds)
+    ? activityIds
+    : Object.keys(roadmapActivityAssetPathById);
+
   return [
     ROADMAP_BACKGROUND_ASSET_PATH,
-    ...Object.values(roadmapActivityAssetPathById)
+    ...new Set(
+      resolvedActivityIds
+        .map((activityId) => roadmapActivityAssetPathById[activityId])
+        .filter(Boolean)
+    )
   ];
 }
