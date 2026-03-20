@@ -42,6 +42,13 @@ export function openStudentUnlockScreen() {
   state.showStageInfo = false;
 }
 
+export function openCareerRoadmapScreen() {
+  state.screen = "career-roadmap";
+  state.showRoadmapCheck = false;
+  state.roadmapAutoAdvanceDisabled = true;
+  state.showStageInfo = false;
+}
+
 export function openExploreScreen(stage = "explore", options = {}) {
   const { entryScreen = null } = options;
 
@@ -64,10 +71,7 @@ export function showNextStage() {
   const nextStage = stageSequence[currentIndex + 1];
 
   if (!nextStage) {
-    state.screen = "roadmap";
-    state.showRoadmapCheck = true;
-    state.roadmapAutoAdvanceDisabled = true;
-    state.showStageInfo = false;
+    openCareerRoadmapScreen();
     return;
   }
 

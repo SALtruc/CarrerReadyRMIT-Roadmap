@@ -1,4 +1,5 @@
 import { renderChooseCharacterScreen } from "./screens/ChooseCharacterScreen.js";
+import { renderCareerRoadmapScreen } from "./screens/CareerRoadmapScreen.js";
 import { renderExploreScreen } from "./screens/ExploreScreen.js";
 import { renderQuestionDeckScreen } from "./screens/QuestionDeckScreen.js";
 import { renderRoadmapScreen } from "./screens/RoadmapScreen.js";
@@ -16,6 +17,8 @@ export function renderApp(state) {
       return renderQuestionDeckScreen(state);
     case "roadmap":
       return renderRoadmapScreen(state);
+    case "career-roadmap":
+      return renderCareerRoadmapScreen(state);
     case "summary":
       return renderSummaryScreen(state);
     case "student-unlock":

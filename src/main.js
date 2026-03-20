@@ -1,7 +1,9 @@
 import { renderApp } from "./renderApp.js";
 import { avatars } from "./data/avatars.js";
 import { getStageActivityAssetPaths } from "./data/activities.js";
+import { getRoadmapAssetPaths } from "./data/roadmap.js";
 import { questions } from "./data/questions.js";
+import { exportCareerRoadmap } from "./interactions/exportCareerRoadmap.js";
 import { playQuestionResponseFeedback } from "./interactions/playQuestionResponseFeedback.js";
 import { setupQuestionSwipe } from "./interactions/setupQuestionSwipe.js";
 import { state } from "./state/store.js";
@@ -27,6 +29,8 @@ import {
 import { markAssetFailed, markAssetLoaded, warmAssetSources } from "./utils/assets.js";
 
 const app = document.getElementById("app");
+const APP_STATE_STORAGE_KEY = "career-ready-state-v2";
+const previewMode = new URLSearchParams(window.location.search).get("preview");
 let roadmapCheckTimer = null;
 let roadmapSummaryTimer = null;
 let roadmapSequenceRunning = false;
@@ -56,13 +60,16 @@ const preloadAssetSources = [
     ].filter(Boolean))
   ),
   ...questions.map((question) => question.assetPath),
-  ...getStageActivityAssetPaths()
+  ...getStageActivityAssetPaths(),
+  ...getRoadmapAssetPaths()
 ];
 
+bootstrapAppState();
 warmAssetSources(preloadAssetSources);
 
 function render() {
   const preservedScroll = capturePreservedScroll();
+  persistAppState();
   app.innerHTML = renderApp(state);
   restorePreservedScroll(preservedScroll);
   bindAssetImages();
@@ -496,11 +503,158 @@ function handleAppClick(event) {
     case "restart-flow":
       restartFlow();
       break;
+    case "download-career-roadmap":
+      void handleCareerRoadmapDownload(actionElement);
+      return;
     default:
       return;
   }
 
   render();
+}
+
+async function handleCareerRoadmapDownload(actionElement) {
+  if (actionElement.dataset.busy === "true") {
+    return;
+  }
+
+  actionElement.dataset.busy = "true";
+  actionElement.setAttribute("aria-busy", "true");
+
+  try {
+    await exportCareerRoadmap(state);
+  } catch (error) {
+    console.error(error);
+    window.alert("Couldn't export your roadmap just yet. Please try again.");
+  } finally {
+    actionElement.dataset.busy = "false";
+    actionElement.removeAttribute("aria-busy");
+  }
+}
+
+function bootstrapAppState() {
+  const storedState = readStoredAppState();
+
+  if (storedState) {
+    applyStateSnapshot(storedState);
+  }
+
+  if (previewMode === "roadmap") {
+    applyStateSnapshot(createRoadmapPreviewState());
+  }
+}
+
+function readStoredAppState() {
+  try {
+    const rawValue = window.localStorage.getItem(APP_STATE_STORAGE_KEY);
+
+    if (!rawValue) {
+      return null;
+    }
+
+    return JSON.parse(rawValue);
+  } catch (error) {
+    console.warn("Failed to read saved app state", error);
+    return null;
+  }
+}
+
+function persistAppState() {
+  try {
+    window.localStorage.setItem(
+      APP_STATE_STORAGE_KEY,
+      JSON.stringify({
+        screen: state.screen,
+        selectedAvatarId: state.selectedAvatarId,
+        hasActivatedChooseNext: state.hasActivatedChooseNext,
+        questionIndex: state.questionIndex,
+        answers: state.answers,
+        activitySelections: state.activitySelections,
+        activeStage: state.activeStage,
+        showRoadmapCheck: state.showRoadmapCheck,
+        roadmapAutoAdvanceDisabled: state.roadmapAutoAdvanceDisabled,
+        exploreEntryScreen: state.exploreEntryScreen,
+        studentIdDraft: state.studentIdDraft
+      })
+    );
+  } catch (error) {
+    console.warn("Failed to persist app state", error);
+  }
+}
+
+function applyStateSnapshot(snapshot) {
+  if (!snapshot || typeof snapshot !== "object") {
+    return;
+  }
+
+  const nextSelections = snapshot.activitySelections || {};
+
+  if (typeof snapshot.screen === "string") {
+    state.screen = snapshot.screen;
+  }
+
+  if (typeof snapshot.selectedAvatarId === "string") {
+    state.selectedAvatarId = snapshot.selectedAvatarId;
+  }
+
+  state.hasActivatedChooseNext = Boolean(
+    snapshot.hasActivatedChooseNext ?? state.selectedAvatarId
+  );
+  state.questionIndex = Number.isInteger(snapshot.questionIndex)
+    ? Math.max(0, Math.min(questions.length - 1, snapshot.questionIndex))
+    : state.questionIndex;
+  state.answers = snapshot.answers && typeof snapshot.answers === "object"
+    ? { ...snapshot.answers }
+    : {};
+  state.activitySelections = {
+    explore: Array.isArray(nextSelections.explore) ? [...nextSelections.explore] : [],
+    develop: Array.isArray(nextSelections.develop) ? [...nextSelections.develop] : [],
+    transition: Array.isArray(nextSelections.transition) ? [...nextSelections.transition] : []
+  };
+  state.activeStage = typeof snapshot.activeStage === "string"
+    ? snapshot.activeStage
+    : state.activeStage;
+  state.showRoadmapCheck = Boolean(snapshot.showRoadmapCheck);
+  state.roadmapAutoAdvanceDisabled = Boolean(snapshot.roadmapAutoAdvanceDisabled);
+  state.exploreEntryScreen = typeof snapshot.exploreEntryScreen === "string"
+    ? snapshot.exploreEntryScreen
+    : state.exploreEntryScreen;
+  state.studentIdDraft = typeof snapshot.studentIdDraft === "string"
+    ? snapshot.studentIdDraft
+    : "";
+  state.showStageInfo = false;
+  state.swipeFeedback = null;
+  state.showQuestionIntro = false;
+}
+
+function createRoadmapPreviewState() {
+  return {
+    screen: "career-roadmap",
+    selectedAvatarId: "echo",
+    hasActivatedChooseNext: true,
+    questionIndex: questions.length - 1,
+    answers: {
+      "explore-1": true,
+      "explore-2": true,
+      "explore-3": false,
+      "develop-1": true,
+      "develop-2": false,
+      "develop-3": false,
+      "transition-1": true,
+      "transition-2": true,
+      "transition-3": true
+    },
+    activitySelections: {
+      explore: ["consultation", "career-assessment", "cv-consults"],
+      develop: ["linkedin-leap", "become-club-leader", "join-competition"],
+      transition: ["employability-skills-workshop", "skillboost-101", "meet-your-employer"]
+    },
+    activeStage: "transition",
+    showRoadmapCheck: false,
+    roadmapAutoAdvanceDisabled: true,
+    exploreEntryScreen: "student-unlock",
+    studentIdDraft: ""
+  };
 }
 
 app.addEventListener("click", handleAppClick);

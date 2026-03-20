@@ -665,19 +665,22 @@
 }
 
 .screen--roadmap,
-.screen--summary {
+.screen--summary,
+.screen--career-roadmap {
   min-height: 100%;
   height: 100%;
   position: absolute;
   inset: 0;
 }
 
-.screen--roadmap {
+.screen--roadmap,
+.screen--career-roadmap {
   padding: calc(env(safe-area-inset-top, 0px) + 18px) 18px calc(env(safe-area-inset-bottom, 0px) + 22px);
 }
 
 .screen--roadmap .topbar,
-.screen--summary .topbar {
+.screen--summary .topbar,
+.screen--career-roadmap .topbar {
   padding: 0 2px;
 }
 
@@ -690,35 +693,135 @@
 }
 
 .screen--roadmap .logo-badge,
-.screen--summary .logo-badge {
+.screen--summary .logo-badge,
+.screen--career-roadmap .logo-badge {
   width: 50px;
   height: 50px;
 }
 
 .screen--roadmap .logo-badge.has-asset,
-.screen--summary .logo-badge.has-asset {
+.screen--summary .logo-badge.has-asset,
+.screen--career-roadmap .logo-badge.has-asset {
   width: 50px;
   height: 50px;
 }
 
 .screen--roadmap .avatar-chip,
-.screen--summary .avatar-chip {
+.screen--summary .avatar-chip,
+.screen--career-roadmap .avatar-chip {
   display: inline-flex;
 }
 
-.screen--summary .avatar-chip {
+.screen--summary .avatar-chip,
+.screen--career-roadmap .avatar-chip {
   min-width: 54px;
   min-height: 54px;
 }
 
-.screen--summary .avatar-chip__face {
+.screen--summary .avatar-chip__face,
+.screen--career-roadmap .avatar-chip__face {
   width: 54px;
   height: 54px;
 }
 
 .screen--roadmap .avatar-chip.hidden,
-.screen--summary .avatar-chip.hidden {
+.screen--summary .avatar-chip.hidden,
+.screen--career-roadmap .avatar-chip.hidden {
   display: none;
+}
+
+.screen--career-roadmap {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.career-roadmap-shell {
+  width: min(100%, 392px);
+  margin: 16px auto 0;
+  padding-bottom: 14px;
+}
+
+.career-roadmap-poster {
+  position: relative;
+  width: 100%;
+  container-type: inline-size;
+}
+
+.career-roadmap-poster__base {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.career-roadmap-score {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.career-roadmap-score__value {
+  display: block;
+  color: var(--ink);
+  font-family: "Museo", var(--font-display);
+  font-weight: 500;
+  font-size: var(--roadmap-score-font, 7.6cqw);
+  letter-spacing: -0.065em;
+  line-height: 0.9;
+}
+
+.career-roadmap-selection {
+  position: absolute;
+  transform: translate(-50%, -50%) rotate(var(--roadmap-item-rotate, 0deg));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  filter: drop-shadow(11px 14px 0 rgba(0, 0, 0, 0.24));
+}
+
+.career-roadmap-selection__image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(var(--roadmap-item-scale, 1));
+  transform-origin: center;
+}
+
+.career-roadmap-download-hotspot,
+.career-roadmap-social-link {
+  position: absolute;
+  display: block;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.career-roadmap-download-hotspot {
+  left: 21.1%;
+  top: 80.72%;
+  width: 57.5%;
+  height: 4.08%;
+  border-radius: 999px;
+}
+
+.career-roadmap-social-link--sgs {
+  left: 28.1%;
+  top: 89.22%;
+  width: 49%;
+  height: 1.26%;
+}
+
+.career-roadmap-social-link--hanoi {
+  left: 28.1%;
+  top: 90.84%;
+  width: 49%;
+  height: 1.26%;
+}
+
+.career-roadmap-download-hotspot:focus-visible,
+.career-roadmap-social-link:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.95);
+  outline-offset: 2px;
 }
 
 .roadmap-journey {
@@ -1273,7 +1376,7 @@
   align-content: center;
   align-self: center;
   padding-bottom: 18px;
-  transform: translate(12px, -62px);
+  transform: translate(20px, -86px);
 }
 
 .summary-image-button {
@@ -2334,6 +2437,12 @@
     right: 14px;
   }
 
+  .screen--career-roadmap .logo-badge,
+  .screen--career-roadmap .logo-badge.has-asset {
+    width: 48px;
+    height: 48px;
+  }
+
   .screen--summary .logo-badge,
   .screen--summary .logo-badge.has-asset {
     width: 48px;
@@ -2345,9 +2454,28 @@
     min-height: 52px;
   }
 
+  .screen--career-roadmap .avatar-chip {
+    min-width: 52px;
+    min-height: 52px;
+  }
+
   .screen--summary .avatar-chip__face {
     width: 52px;
     height: 52px;
+  }
+
+  .screen--career-roadmap .avatar-chip__face {
+    width: 52px;
+    height: 52px;
+  }
+
+  .career-roadmap-shell {
+    width: min(100%, 358px);
+    margin-top: 14px;
+  }
+
+  .career-roadmap-selection {
+    filter: drop-shadow(8px 10px 0 rgba(0, 0, 0, 0.22));
   }
 
   .welcome-panel {
@@ -2647,7 +2775,7 @@
     gap: 12px;
     align-self: center;
     padding-bottom: 16px;
-    transform: translate(14px, -112px);
+    transform: translate(24px, -128px);
   }
 
   .summary-image-button--primary {
