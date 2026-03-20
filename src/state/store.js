@@ -14,7 +14,9 @@ export const state = {
   swipeFeedback: null,
   showQuestionIntro: false,
   showRoadmapCheck: false,
-  roadmapAutoAdvanceDisabled: false
+  roadmapAutoAdvanceDisabled: false,
+  exploreEntryScreen: "summary",
+  studentIdDraft: ""
 };
 
 export function resetState() {
@@ -34,4 +36,6 @@ export function resetState() {
   state.showQuestionIntro = false;
   state.showRoadmapCheck = false;
   state.roadmapAutoAdvanceDisabled = false;
+  state.exploreEntryScreen = "summary";
+  state.studentIdDraft = "";
 }

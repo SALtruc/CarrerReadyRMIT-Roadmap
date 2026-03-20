@@ -71,7 +71,7 @@ export function renderActivityCard({ stageKey, activity, selections }) {
           ${renderIcon(activity)}
         </div>
         <div class="stage-activity-card__copy">
-          <h3>${activity.title}</h3>
+          <h3><strong>${activity.title}</strong></h3>
           <p>${activity.descriptionHtml}</p>
           ${activity.ctaLabel ? `<span class="stage-activity-card__cta">${activity.ctaLabel}</span>` : ""}
         </div>

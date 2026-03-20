@@ -2,8 +2,8 @@ import { getAssetStateClass } from "../utils/assets.js";
 
 export function renderAvatarCard({ avatar, isSelected }) {
   const displayAssetPath = isSelected
-    ? (avatar.selectedAssetPath || avatar.assetPath)
-    : (avatar.nonSelectedAssetPath || avatar.assetPath);
+    ? (avatar.selectedAssetPath || avatar.assetPath || avatar.nonSelectedAssetPath)
+    : (avatar.nonSelectedAssetPath || avatar.assetPath || avatar.selectedAssetPath);
   const assetStateClass = getAssetStateClass(displayAssetPath);
 
   return `

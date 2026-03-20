@@ -1,3 +1,5 @@
+import { playQuestionResponseFeedback } from "./playQuestionResponseFeedback.js";
+
 export function setupQuestionSwipe({ root, state, onAnswer }) {
   const card = root.querySelector("[data-question-card='front']");
   const stack = root.querySelector(".question-stack");
@@ -117,10 +119,11 @@ export function setupQuestionSwipe({ root, state, onAnswer }) {
     card.style.boxShadow = `${12 + (direction > 0 ? 2 : 0)}px 15px 0 rgba(0, 0, 0, 0.92)`;
     card.style.transform = `translate(${targetX}px, ${(currentY * 0.18) - 16}px) rotate(${direction * 12}deg) scale(1.02)`;
     updateSwipePreview(root, { type: answer ? "accept" : "reject" });
+    playQuestionResponseFeedback({ root, answer });
 
     window.setTimeout(() => {
       onAnswer(answer);
-    }, 180);
+    }, 260);
   }
 }
 

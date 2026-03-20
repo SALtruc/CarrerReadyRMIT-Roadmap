@@ -1,20 +1,14 @@
 import { renderActivityCard } from "../components/ActivityCard.js";
 import { renderSectionRibbon } from "../components/SectionRibbon.js";
 import { renderSegmentBar } from "../components/SegmentBar.js";
+import { renderTopBar } from "../components/TopBar.js";
 import {
   activities,
   exploreScoreAssetPath,
   stageActivityScreens
 } from "../data/activities.js";
 import { stageMeta } from "../data/stages.js";
-import { getAssetStateClass } from "../utils/assets.js";
-import { getSelectedAvatar, getStageScore } from "../utils/selectors.js";
-
-const badgeClassByStage = {
-  explore: "stage-badge--explore",
-  develop: "stage-badge--develop",
-  transition: "stage-badge--transition"
-};
+import { getStageScore } from "../utils/selectors.js";
 
 function renderStageStatusBar() {
   return `
@@ -27,41 +21,6 @@ function renderStageStatusBar() {
         <span class="stage-mobile-status__wifi"></span>
         <span class="stage-mobile-status__battery"><b></b></span>
       </div>
-    </div>
-  `;
-}
-
-function renderAvatarChip(state) {
-  const avatar = getSelectedAvatar(state);
-
-  return `
-    <div class="avatar-chip ${avatar ? "" : "hidden"}">
-      ${avatar ? `
-        <div
-          class="avatar-chip__face ${getAssetStateClass(avatar.assetPath)}"
-          data-asset-container="avatar-chip"
-          style="background:linear-gradient(145deg, ${avatar.colors[0]}, ${avatar.colors[1]});"
-        >
-          <img
-            class="avatar-chip__image"
-            data-asset-image="avatar-chip"
-            src="${avatar.assetPath}"
-            alt="${avatar.name} avatar"
-            decoding="async"
-            loading="eager"
-          >
-          <span class="avatar-chip__fallback">${avatar.icon}</span>
-        </div>
-      ` : ""}
-    </div>
-  `;
-}
-
-function renderStageTopBar(state, stageKey) {
-  return `
-    <div class="stage-activities__topbar" data-component="stage-top-bar">
-      <div class="logo-badge stage-badge ${badgeClassByStage[stageKey] || badgeClassByStage.explore}" aria-hidden="true"></div>
-      ${renderAvatarChip(state)}
     </div>
   `;
 }
@@ -100,6 +59,7 @@ export function renderExploreScreen(state) {
   );
   const selections = state.activitySelections[stageKey] || [];
   const score = getStageScore(state, stageKey);
+  const logoVariant = stageKey === "develop" ? "yellow" : "default";
 
   return `
     <section
@@ -109,7 +69,7 @@ export function renderExploreScreen(state) {
       ${renderStageStatusBar()}
       <div class="stage-activities__scroll" data-preserve-scroll="stage-activities-${stageKey}">
         <div class="stage-activities__content">
-          ${renderStageTopBar(state, stageKey)}
+          ${renderTopBar(state, { showAvatar: true, logoVariant })}
           <button class="back-link stage-activities__back" type="button" data-action="stage-back">
             ${screenConfig.backLabel}
           </button>

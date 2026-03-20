@@ -14,10 +14,11 @@ export function renderQuestionDeckScreen(state) {
   const nextQuestion = questions[state.questionIndex + 1];
   const swipeStateClass = state.swipeFeedback ? `is-swipe-${state.swipeFeedback.type}` : "";
   const progressPercent = `${((state.questionIndex + 1) / questions.length) * 100}%`;
+  const logoVariant = currentQuestion.stage === "develop" ? "yellow" : "default";
 
   return `
     <section class="screen screen--question-deck grid-bg ${currentStage.background} ${swipeStateClass}">
-      ${renderTopBar(state, { showAvatar: true })}
+      ${renderTopBar(state, { showAvatar: true, logoVariant })}
       <div class="question-deck__chrome">
         <div class="progress-line" aria-hidden="true">
           <span

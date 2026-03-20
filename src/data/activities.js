@@ -98,7 +98,7 @@ export const activities = {
         "A <strong>video series</strong> produced by Careers team guiding you to build a <strong>professional LinkedIn profile</strong>.",
       iconAssetPath: `${developIconFolder}/develop_icon_4.png`,
       iconAlt: "LinkedIn Leap icon",
-      iconScale: 1.18
+      iconScale: 1.36
     },
     {
       id: "become-club-leader",
@@ -107,7 +107,7 @@ export const activities = {
         "Develop <strong>leadership</strong>, <strong>teamwork</strong>, and <strong>communication skills</strong> by leading or managing student club activities.",
       iconAssetPath: `${developIconFolder}/develop_icon_5.png`,
       iconAlt: "Become Club Leader icon",
-      iconScale: 1.18
+      iconScale: 1.34
     },
     {
       id: "join-competition",
@@ -116,7 +116,7 @@ export const activities = {
         "Apply your knowledge in <strong>real-world challenges</strong> and competitions while building <strong>teamwork</strong> and <strong>problem-solving skills</strong>.",
       iconAssetPath: `${developIconFolder}/develop_icon_6.png`,
       iconAlt: "Join Competition icon",
-      iconScale: 1.18
+      iconScale: 1.34
     },
     {
       id: "employer-group-mentoring",
@@ -125,7 +125,7 @@ export const activities = {
         "Connect with <strong>industry professionals</strong> for quick <strong>career advice</strong>, <strong>insights</strong>, and guidance on your career journey.",
       iconAssetPath: `${developIconFolder}/develop_icon_7.png`,
       iconAlt: "Employer Group Mentoring icon",
-      iconScale: 1.18
+      iconScale: 1.36
     },
     {
       id: "career-ready-hub-drop-in",
@@ -134,7 +134,7 @@ export const activities = {
         "Drop in to get <strong>quick support</strong> from <strong>Career Ready Assistants</strong> on <strong>CVs</strong>, <strong>job applications</strong>, or career questions.",
       iconAssetPath: `${developIconFolder}/develop_icon_8.png`,
       iconAlt: "Career Ready Hub Drop-in icon",
-      iconScale: 1.18
+      iconScale: 1.38
     },
     {
       id: "company-visit",
@@ -143,7 +143,7 @@ export const activities = {
         "Visit companies to learn about <strong>workplace environments</strong>, <strong>industry practices</strong>, and potential <strong>career opportunities</strong>.",
       iconAssetPath: `${developIconFolder}/develop_icon_9.png`,
       iconAlt: "Company Visit icon",
-      iconScale: 1.18
+      iconScale: 1.34
     },
     {
       id: "wil-industry-challenge-projects",
@@ -152,7 +152,7 @@ export const activities = {
         "Work with <strong>real industry partners</strong> on practical projects to gain valuable <strong>hands-on experience</strong>.",
       iconAssetPath: `${developIconFolder}/develop_icon_10.png`,
       iconAlt: "WIL-Industry Challenge Projects icon",
-      iconScale: 1.18
+      iconScale: 1.42
     },
     {
       id: "global-experience-virtual-internships",
@@ -161,7 +161,7 @@ export const activities = {
         "Gain <strong>international experience</strong> through <strong>virtual internships</strong> and projects with global organizations.",
       iconAssetPath: `${developIconFolder}/develop_icon_11.png`,
       iconAlt: "Global Experience / Virtual Internships icon",
-      iconScale: 1.18
+      iconScale: 1.4
     }
   ],
   transition: [
@@ -172,7 +172,7 @@ export const activities = {
         "Support you throughout the <strong>job application journey</strong>, explore a <strong>video series</strong> created with Synthesia, an AI video platform.",
       iconAssetPath: `${transitionIconFolder}/transition_icon_1.png`,
       iconAlt: "Application 101 icon",
-      iconScale: 1.2
+      iconScale: 1.42
     },
     {
       id: "cv360",
@@ -181,7 +181,7 @@ export const activities = {
         "Receive <strong>automated feedback</strong> on your CV to <strong>improve structure</strong>, <strong>clarity</strong>, and impact on job applications.",
       iconAssetPath: `${transitionIconFolder}/transition_icon_2.png`,
       iconAlt: "CV360 icon",
-      iconScale: 1.2
+      iconScale: 1.42
     },
     {
       id: "interview360",
@@ -206,7 +206,7 @@ export const activities = {
         "Meet multiple <strong>employers</strong>, <strong>explore job opportunities</strong>, and expand your <strong>professional network</strong> at this career event.",
       iconAssetPath: `${transitionIconFolder}/transition_icon_5.png`,
       iconAlt: "Careers Festival icon",
-      iconScale: 1.2
+      iconScale: 1.42
     },
     {
       id: "skillboost-101",
@@ -215,7 +215,7 @@ export const activities = {
         "Level up <strong>teamwork</strong>, <strong>leadership</strong>, <strong>presentation</strong> and more by the latest video series created by Careers team.",
       iconAssetPath: `${transitionIconFolder}/transition_icon_6.png`,
       iconAlt: "Skillboost 101 icon",
-      iconScale: 1.2
+      iconScale: 1.42
     },
     {
       id: "employability-skills-workshop",
@@ -224,7 +224,7 @@ export const activities = {
         "Learn skills like <strong>communication</strong>, <strong>teamwork</strong>, <strong>problem-solving</strong> that employers value.",
       iconAssetPath: `${transitionIconFolder}/transition_icon_7.png`,
       iconAlt: "Employability Skills Workshop icon",
-      iconScale: 1.2
+      iconScale: 1.42
     },
     {
       id: "alumni-mentoring",
@@ -233,7 +233,7 @@ export const activities = {
         "Connect with <strong>RMIT alumni</strong> to gain <strong>career advice</strong>, <strong>industry insights</strong>, and guidance for your professional journey.",
       iconAssetPath: `${transitionIconFolder}/transition_icon_8.png`,
       iconAlt: "Alumni Mentoring icon",
-      iconScale: 1.2
+      iconScale: 1.42
     },
     {
       id: "personal-branding-workshops",
@@ -242,7 +242,7 @@ export const activities = {
         "Learn how to <strong>present your skills</strong> and experiences to <strong>employers</strong> and <strong>professional networks</strong>.",
       iconAssetPath: `${transitionIconFolder}/transition_icon_9.png`,
       iconAlt: "Personal Branding Workshops icon",
-      iconScale: 1.2
+      iconScale: 1.42
     },
     {
       id: "future-ready-workshops",

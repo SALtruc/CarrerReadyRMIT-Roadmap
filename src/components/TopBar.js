@@ -1,10 +1,18 @@
 import { getSelectedAvatar } from "../utils/selectors.js";
 import { getAssetStateClass } from "../utils/assets.js";
 
+const logoAssetByVariant = {
+  default: "./src/assets/logo-badge.png",
+  yellow: "./src/assets/logo-badge-yellow.png"
+};
+
 export function renderTopBar(state, options = {}) {
-  const { showAvatar = false } = options;
+  const { showAvatar = false, logoVariant = "default" } = options;
   const avatar = getSelectedAvatar(state);
-  const logoImagePath = "./src/assets/logo-badge.png";
+  const avatarImagePath = avatar
+    ? (avatar.nonSelectedAssetPath || avatar.assetPath)
+    : "";
+  const logoImagePath = logoAssetByVariant[logoVariant] || logoAssetByVariant.default;
   const logoStateClass = getAssetStateClass(logoImagePath);
 
   return `
@@ -23,14 +31,14 @@ export function renderTopBar(state, options = {}) {
       <div class="avatar-chip ${showAvatar && avatar ? "" : "hidden"}">
         ${avatar ? `
           <div
-            class="avatar-chip__face ${getAssetStateClass(avatar.assetPath)}"
+            class="avatar-chip__face ${getAssetStateClass(avatarImagePath)}"
             data-asset-container="avatar-chip"
             style="background:linear-gradient(145deg, ${avatar.colors[0]}, ${avatar.colors[1]});"
           >
             <img
               class="avatar-chip__image"
               data-asset-image="avatar-chip"
-              src="${avatar.assetPath}"
+              src="${avatarImagePath}"
               alt="${avatar.name} avatar"
               decoding="async"
               loading="eager"

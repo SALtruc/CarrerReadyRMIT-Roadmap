@@ -30,7 +30,25 @@ export function dismissQuestionIntro() {
   state.showQuestionIntro = false;
 }
 
-export function openExploreScreen(stage = "explore") {
+export function openSummaryScreen() {
+  state.screen = "summary";
+  state.showRoadmapCheck = false;
+  state.showStageInfo = false;
+}
+
+export function openStudentUnlockScreen() {
+  state.screen = "student-unlock";
+  state.showRoadmapCheck = false;
+  state.showStageInfo = false;
+}
+
+export function openExploreScreen(stage = "explore", options = {}) {
+  const { entryScreen = null } = options;
+
+  if (entryScreen) {
+    state.exploreEntryScreen = entryScreen;
+  }
+
   state.activeStage = stage;
   state.screen = "explore";
   state.showRoadmapCheck = false;
@@ -60,7 +78,9 @@ export function showPreviousStage() {
   const currentIndex = stageSequence.indexOf(state.activeStage);
 
   if (currentIndex <= 0) {
-    state.screen = "roadmap";
+    state.screen = state.exploreEntryScreen === "student-unlock"
+      ? "student-unlock"
+      : "summary";
     state.showRoadmapCheck = false;
     state.roadmapAutoAdvanceDisabled = false;
     state.showStageInfo = false;
@@ -76,6 +96,17 @@ export function toggleStageInfo() {
 
 export function closeStageInfo() {
   state.showStageInfo = false;
+}
+
+export function continueToExplore(entryScreen = null) {
+  const resolvedEntryScreen = entryScreen || (state.screen === "student-unlock"
+    ? "student-unlock"
+    : "summary");
+  openExploreScreen("explore", { entryScreen: resolvedEntryScreen });
+}
+
+export function setStudentIdDraft(value) {
+  state.studentIdDraft = value;
 }
 
 export function answerCurrentQuestion(answer) {

@@ -2,17 +2,22 @@ import { renderApp } from "./renderApp.js";
 import { avatars } from "./data/avatars.js";
 import { getStageActivityAssetPaths } from "./data/activities.js";
 import { questions } from "./data/questions.js";
+import { playQuestionResponseFeedback } from "./interactions/playQuestionResponseFeedback.js";
 import { setupQuestionSwipe } from "./interactions/setupQuestionSwipe.js";
 import { state } from "./state/store.js";
 import {
   answerCurrentQuestion,
   closeStageInfo,
+  continueToExplore,
   dismissQuestionIntro,
   openChooseCharacterScreen,
   openExploreScreen,
   openQuestionDeckScreen,
+  openStudentUnlockScreen,
+  openSummaryScreen,
   openStageDetailScreen,
   restartFlow,
+  setStudentIdDraft,
   selectAvatar,
   showNextStage,
   showPreviousStage,
@@ -27,10 +32,20 @@ let roadmapSummaryTimer = null;
 let roadmapSequenceRunning = false;
 let questionIntroTimer = null;
 let previousQuestionDeckProgress = null;
+let questionButtonAnswerTimer = null;
 const preloadAssetSources = [
   "./src/assets/logo-badge.png",
+  "./src/assets/logo-badge-yellow.png",
   "./src/assets/welcome-coach.png",
   "./src/assets/Map.png",
+  "./src/assets/Portrait/Portrait-1.png",
+  "./src/assets/Portrait/Portrait-2.png",
+  "./src/assets/Portrait/Portrait-3.png",
+  "./src/assets/Portrait/Portrait-4.png",
+  "./src/assets/Portrait/Portrait-5.png",
+  "./src/assets/Portrait/Portrait-6.png",
+  "./src/assets/Portrait/Portrait-7.png",
+  "./src/assets/Portrait/Portrait-8.png",
   "./src/assets/button/no.png",
   "./src/assets/button/yes.png",
   ...new Set(
@@ -190,7 +205,7 @@ function syncRoadmapSequence() {
       return;
     }
 
-    openExploreScreen("explore");
+    openSummaryScreen();
     render();
   }, 5900);
 }
@@ -263,6 +278,46 @@ function dismissQuestionIntroOverlayInPlace() {
 
   overlay.addEventListener("transitionend", removeOverlay, { once: true });
   window.setTimeout(removeOverlay, 220);
+}
+
+function animateQuestionDeckButtonAnswer(answer) {
+  const card = app.querySelector("[data-question-card='front']");
+  const stack = app.querySelector(".question-stack");
+  const direction = answer ? 1 : -1;
+
+  if (stack) {
+    stack.style.setProperty("--stack-back-x", `${direction * 24}px`);
+    stack.style.setProperty("--stack-back-y", "14px");
+    stack.style.setProperty("--stack-back-scale", "0.99");
+    stack.style.setProperty("--stack-back-opacity", "0.74");
+  }
+
+  if (!card) {
+    return;
+  }
+
+  card.classList.remove("is-pressing");
+  card.style.transition = "transform 240ms cubic-bezier(0.22, 0.85, 0.32, 1), opacity 180ms ease, box-shadow 180ms ease, filter 180ms ease";
+  card.style.opacity = "0.93";
+  card.style.filter = "none";
+  card.style.boxShadow = "12px 15px 0 rgba(0, 0, 0, 0.92)";
+  card.style.transform = `translate(${direction * 224}px, -20px) rotate(${direction * 14}deg) scale(1.015)`;
+}
+
+function queueQuestionButtonAnswer(answer, button) {
+  if (state.screen !== "question-deck" || questionButtonAnswerTimer) {
+    return;
+  }
+
+  dismissQuestionIntroOverlayInPlace();
+  animateQuestionDeckButtonAnswer(answer);
+  playQuestionResponseFeedback({ root: app, answer, sourceButton: button });
+
+  questionButtonAnswerTimer = window.setTimeout(() => {
+    questionButtonAnswerTimer = null;
+    answerCurrentQuestion(answer);
+    render();
+  }, 280);
 }
 
 function capturePreservedScroll() {
@@ -340,6 +395,32 @@ function bindAssetImages() {
   });
 }
 
+function handleAppInput(event) {
+  const input = event.target;
+
+  if (!(input instanceof HTMLInputElement)) {
+    return;
+  }
+
+  if (input.dataset.input === "student-id") {
+    setStudentIdDraft(input.value);
+  }
+}
+
+function handleAppSubmit(event) {
+  const form = event.target.closest("[data-form]");
+  if (!form || !app.contains(form)) {
+    return;
+  }
+
+  event.preventDefault();
+
+  if (form.dataset.form === "student-unlock") {
+    continueToExplore("student-unlock");
+    render();
+  }
+}
+
 function handleAppClick(event) {
   const actionElement = event.target.closest("[data-action]");
   if (!actionElement || !app.contains(actionElement)) {
@@ -377,10 +458,16 @@ function handleAppClick(event) {
       dismissQuestionIntro();
       break;
     case "answer-no":
-      answerCurrentQuestion(false);
-      break;
+      queueQuestionButtonAnswer(false, actionElement);
+      return;
     case "answer-yes":
-      answerCurrentQuestion(true);
+      queueQuestionButtonAnswer(true, actionElement);
+      return;
+    case "open-student-unlock":
+      openStudentUnlockScreen();
+      break;
+    case "skip-student-unlock":
+      continueToExplore("summary");
       break;
     case "show-summary":
       openExploreScreen("explore");
@@ -417,4 +504,6 @@ function handleAppClick(event) {
 }
 
 app.addEventListener("click", handleAppClick);
+app.addEventListener("input", handleAppInput);
+app.addEventListener("submit", handleAppSubmit);
 render();
