@@ -37,6 +37,7 @@ let roadmapSequenceRunning = false;
 let questionIntroTimer = null;
 let previousQuestionDeckProgress = null;
 let questionButtonAnswerTimer = null;
+let studentUnlockSubmitTimer = null;
 const preloadAssetSources = [
   "./src/assets/logo-badge.png",
   "./src/assets/logo-badge-yellow.png",
@@ -427,8 +428,23 @@ function handleAppSubmit(event) {
   event.preventDefault();
 
   if (form.dataset.form === "student-unlock") {
-    continueToExplore("student-unlock");
-    render();
+    if (studentUnlockSubmitTimer) {
+      return;
+    }
+
+    const submitButton = form.querySelector(".student-unlock__bubble");
+
+    if (submitButton instanceof HTMLButtonElement) {
+      submitButton.classList.remove("is-celebrating");
+      void submitButton.offsetWidth;
+      submitButton.classList.add("is-celebrating");
+    }
+
+    studentUnlockSubmitTimer = window.setTimeout(() => {
+      studentUnlockSubmitTimer = null;
+      continueToExplore("student-unlock");
+      render();
+    }, 220);
   }
 }
 
