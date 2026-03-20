@@ -1,6 +1,10 @@
-import { renderCoach } from "../components/Coach.js";
 import { renderSegmentBar } from "../components/SegmentBar.js";
 import { renderTopBar } from "../components/TopBar.js";
+
+const studentCoachAssetPath = "./src/assets/student/Student-coach.png";
+const studentStarsAssetPath = "./src/assets/student/Student-1.png";
+const studentSparklesAssetPath = "./src/assets/student/Student-2.png";
+const studentClipAssetPath = "./src/assets/student/Student-3.png";
 
 function escapeAttribute(value) {
   return String(value ?? "")
@@ -21,7 +25,14 @@ export function renderStudentUnlockScreen(state) {
               ${renderSegmentBar(state)}
             </div>
             <div class="student-unlock__clip" aria-hidden="true">
-              <span></span>
+              <img
+                class="student-unlock__clip-image"
+                src="${studentClipAssetPath}"
+                alt=""
+                decoding="async"
+                loading="eager"
+                draggable="false"
+              >
             </div>
             <h1 class="student-unlock__title">
               <span class="student-unlock__title-line">Unlock Your</span>
@@ -42,25 +53,39 @@ export function renderStudentUnlockScreen(state) {
               <span class="student-unlock__input-line" aria-hidden="true"></span>
             </div>
             <div class="student-unlock__sparkles" aria-hidden="true">
-              <span class="student-unlock__spark student-unlock__spark--large"></span>
-              <span class="student-unlock__spark student-unlock__spark--dot"></span>
-              <span class="student-unlock__spark student-unlock__spark--diamond"></span>
+              <img
+                class="student-unlock__sparkles-image"
+                src="${studentSparklesAssetPath}"
+                alt=""
+                decoding="async"
+                loading="eager"
+                draggable="false"
+              >
             </div>
           </div>
           <button class="student-unlock__bubble" type="submit">
-            Please enter your Student ID to see your career roadmap.
+            <span>Please enter your Student ID<br>to see your career roadmap.</span>
           </button>
         </form>
-        <div class="student-unlock__hearts" aria-hidden="true">
-          <span class="student-unlock__heart"></span>
-          <span class="student-unlock__heart"></span>
-          <span class="student-unlock__heart"></span>
-        </div>
         <div class="student-unlock__stars" aria-hidden="true">
-          <span>&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+          <img
+            class="student-unlock__stars-image"
+            src="${studentStarsAssetPath}"
+            alt=""
+            decoding="async"
+            loading="eager"
+            draggable="false"
+          >
         </div>
-        <div class="student-unlock__figure">
-          ${renderCoach()}
+        <div class="student-unlock__figure" aria-hidden="true">
+          <img
+            class="student-unlock__coach-image"
+            src="${studentCoachAssetPath}"
+            alt=""
+            decoding="async"
+            loading="eager"
+            draggable="false"
+          >
         </div>
       </div>
     </section>

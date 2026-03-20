@@ -50,6 +50,10 @@ const preloadAssetSources = [
   "./src/assets/Portrait/Portrait-6.png",
   "./src/assets/Portrait/Portrait-7.png",
   "./src/assets/Portrait/Portrait-8.png",
+  "./src/assets/student/Student-coach.png",
+  "./src/assets/student/Student-1.png",
+  "./src/assets/student/Student-2.png",
+  "./src/assets/student/Student-3.png",
   "./src/assets/button/no.png",
   "./src/assets/button/yes.png",
   ...new Set(
@@ -499,6 +503,9 @@ function handleAppClick(event) {
         actionElement.dataset.stage,
         actionElement.dataset.activityId
       );
+      break;
+    case "roadmap-back":
+      openExploreScreen("transition", { entryScreen: state.exploreEntryScreen });
       break;
     case "restart-flow":
       restartFlow();

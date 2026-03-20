@@ -29,9 +29,9 @@ export const roadmapStageIconSlots = {
     { x: 480, y: 3850, maxWidth: 560, maxHeight: 560, rotate: -3, scale: 1.8}
   ],
   develop: [
-    { x: 400, y: 4950, maxWidth: 560, maxHeight: 560, rotate: -3, scale: 1.8 },
+    { x: 500, y: 4950, maxWidth: 560, maxHeight: 560, rotate: -3, scale: 1.8 },
     { x: 1510, y: 5520, maxWidth: 560, maxHeight: 560, rotate: 3, scale: 1.8 },
-    { x: 1580, y: 6800, maxWidth: 560, maxHeight: 560, rotate: 3, scale: 1.8 }
+    { x: 1400, y: 6800, maxWidth: 560, maxHeight: 560, rotate: 3, scale: 1.8 }
   ],
   transition: [
     { x: 480, y: 7780, maxWidth: 560, maxHeight: 560, rotate: -3, scale: 1.8 },

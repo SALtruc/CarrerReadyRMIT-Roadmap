@@ -15,6 +15,23 @@ export function renderCareerRoadmapScreen(state) {
   return `
     <section class="screen screen--career-roadmap grid-bg bg-transition" data-preserve-scroll="career-roadmap">
       ${renderTopBar(state, { showAvatar: true })}
+      <div class="career-roadmap-toolbar" role="group" aria-label="Roadmap actions">
+        <button
+          class="career-roadmap-toolbar__button career-roadmap-toolbar__button--back"
+          type="button"
+          data-action="roadmap-back"
+        >
+          <span aria-hidden="true">&larr;</span>
+          <span>Back</span>
+        </button>
+        <button
+          class="career-roadmap-toolbar__button career-roadmap-toolbar__button--restart"
+          type="button"
+          data-action="restart-flow"
+        >
+          <span>Reset</span>
+        </button>
+      </div>
       <div class="career-roadmap-shell">
         <div class="career-roadmap-poster" data-roadmap-poster="true">
           <img
