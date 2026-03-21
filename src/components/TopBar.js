@@ -17,7 +17,13 @@ export function renderTopBar(state, options = {}) {
 
   return `
     <div class="topbar" data-component="top-bar">
-      <div class="logo-badge ${logoStateClass}" data-asset-container="logo" aria-hidden="true">
+      <button
+        class="logo-badge ${logoStateClass}"
+        type="button"
+        data-action="restart-flow"
+        data-asset-container="logo"
+        aria-label="Return to the starting screen"
+      >
         <img
           class="logo-badge__image"
           data-asset-image="logo"
@@ -27,7 +33,7 @@ export function renderTopBar(state, options = {}) {
           loading="eager"
           fetchpriority="high"
         >
-      </div>
+      </button>
       <div class="avatar-chip ${showAvatar && avatar ? "" : "hidden"}">
         ${avatar ? `
           <div

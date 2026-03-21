@@ -40,6 +40,7 @@ export function setupQuestionSwipe({ root, state, onAnswer }) {
 
     card.style.transform = `translate(${currentX}px, ${travelY}px) rotate(${rotate}deg) scale(${scale})`;
     card.style.boxShadow = `${4 + Math.round(lift * 8)}px ${6 + Math.round(lift * 7)}px 0 rgba(0, 0, 0, 0.92)`;
+    card.style.filter = `saturate(${(1 + (lift * 0.18)).toFixed(3)}) brightness(${(1 + (lift * 0.05)).toFixed(3)})`;
     updateStackMotion(stack, lift, currentX);
 
     if (currentX > 64) {
@@ -79,6 +80,7 @@ export function setupQuestionSwipe({ root, state, onAnswer }) {
     card.style.transition = "transform 340ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease";
     card.style.transform = "";
     card.style.boxShadow = "";
+    card.style.filter = "";
     updateStackMotion(stack, 0, 0);
     clearSwipePreview(root);
   };
@@ -113,13 +115,25 @@ export function setupQuestionSwipe({ root, state, onAnswer }) {
   function commitSwipe(answer) {
     const direction = answer ? 1 : -1;
     const targetX = direction * Math.max(window.innerWidth, 520);
+    const screen = root.querySelector(".screen--question-deck");
+    const screenRect = screen?.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    const origin = screenRect
+      ? {
+          x: (direction > 0 ? cardRect.right : cardRect.left) - screenRect.left,
+          y: (cardRect.top + (cardRect.height * 0.56)) - screenRect.top
+        }
+      : null;
     updateStackMotion(stack, 1, currentX);
-    card.style.transition = "transform 220ms cubic-bezier(0.22, 0.85, 0.32, 1), opacity 180ms ease, box-shadow 180ms ease";
-    card.style.opacity = "0.92";
-    card.style.boxShadow = `${12 + (direction > 0 ? 2 : 0)}px 15px 0 rgba(0, 0, 0, 0.92)`;
-    card.style.transform = `translate(${targetX}px, ${(currentY * 0.18) - 16}px) rotate(${direction * 12}deg) scale(1.02)`;
+    card.style.transition = "transform 260ms cubic-bezier(0.2, 0.9, 0.28, 1), opacity 180ms ease, box-shadow 180ms ease, filter 180ms ease";
+    card.style.opacity = "0.9";
+    card.style.filter = answer
+      ? "saturate(1.14) brightness(1.04)"
+      : "saturate(1.08) brightness(1.02)";
+    card.style.boxShadow = `${13 + (direction > 0 ? 2 : 0)}px 18px 0 rgba(0, 0, 0, 0.92)`;
+    card.style.transform = `translate(${targetX}px, ${(currentY * 0.22) - 24}px) rotate(${direction * 16}deg) scale(1.03)`;
     updateSwipePreview(root, { type: answer ? "accept" : "reject" });
-    playQuestionResponseFeedback({ root, answer });
+    playQuestionResponseFeedback({ root, answer, origin });
 
     window.setTimeout(() => {
       onAnswer(answer);

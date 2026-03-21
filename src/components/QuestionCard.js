@@ -26,7 +26,9 @@ export function renderQuestionCard({ question, index, stage }) {
         <span style="background:#ffde4c"></span>
       </div>
       <div class="question-card__body">
-        <h2 class="question-card__title">${question.title}</h2>
+        <div class="question-card__headline">
+          <h2 class="question-card__title">${question.title}</h2>
+        </div>
         <div class="question-card__art ${getAssetStateClass(question.assetPath)}" data-asset-container="question-art">
           <img
             class="question-card__image"

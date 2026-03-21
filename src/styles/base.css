@@ -82,6 +82,10 @@ button {
   isolation: isolate;
 }
 
+.app-frame[data-screen="summary"] {
+  border-width: 2px;
+}
+
 .screen {
   min-height: calc(100vh - 40px);
   position: relative;

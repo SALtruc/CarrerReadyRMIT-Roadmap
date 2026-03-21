@@ -40,6 +40,7 @@ let questionButtonAnswerTimer = null;
 let studentUnlockSubmitTimer = null;
 let activitySelectionCelebration = null;
 let activitySelectionCelebrationTimer = null;
+let genericPressedButton = null;
 const logoAssetSources = [
   "./src/assets/logo-badge.png",
   "./src/assets/logo-badge-yellow.png"
@@ -85,6 +86,7 @@ warmAssetSources(criticalAssetSources);
 function render() {
   const preservedScroll = capturePreservedScroll();
   persistAppState();
+  app.dataset.screen = state.screen;
   app.innerHTML = renderApp(state);
   restorePreservedScroll(preservedScroll);
   bindAssetImages();
@@ -504,6 +506,116 @@ function handleAppSubmit(event) {
   }
 }
 
+function getGenericFeedbackButton(target) {
+  const button = target.closest("button");
+
+  if (!button || !app.contains(button) || button.disabled) {
+    return null;
+  }
+
+  if (button.matches(".stage-activity-card, .student-unlock__bubble, .deck-button")) {
+    return null;
+  }
+
+  return button;
+}
+
+function clearGenericPressedButton() {
+  if (!genericPressedButton) {
+    return;
+  }
+
+  genericPressedButton.classList.remove("is-app-pressing");
+  genericPressedButton = null;
+}
+
+function handleGenericButtonPointerDown(event) {
+  const button = getGenericFeedbackButton(event.target);
+  clearGenericPressedButton();
+
+  if (!button) {
+    return;
+  }
+
+  genericPressedButton = button;
+  button.classList.add("is-app-pressing");
+}
+
+function triggerGenericButtonFeedback(button) {
+  if (!button) {
+    return;
+  }
+
+  button.classList.remove("is-app-fired");
+  void button.offsetWidth;
+  button.classList.add("is-app-fired");
+  createGenericButtonBurst(button);
+
+  window.setTimeout(() => {
+    if (button.isConnected) {
+      button.classList.remove("is-app-fired");
+    }
+  }, 360);
+}
+
+function handleGenericButtonClick(event) {
+  const button = getGenericFeedbackButton(event.target);
+  if (!button) {
+    return;
+  }
+
+  triggerGenericButtonFeedback(button);
+}
+
+function createGenericButtonBurst(button) {
+  const rect = button.getBoundingClientRect();
+  const burst = document.createElement("div");
+  burst.className = "app-button-burst";
+  burst.style.left = `${rect.left + (rect.width / 2)}px`;
+  burst.style.top = `${rect.top + (rect.height / 2)}px`;
+
+  const ring = document.createElement("span");
+  ring.className = "app-button-burst__ring";
+  burst.appendChild(ring);
+
+  const glow = document.createElement("span");
+  glow.className = "app-button-burst__glow";
+  burst.appendChild(glow);
+
+  const pieces = [
+    { shape: "star", color: "#fac800", x: -22, y: -34, size: 14, delay: 0, spin: -42 },
+    { shape: "diamond", color: "#57d9ee", x: 26, y: -30, size: 13, delay: 14, spin: 38 },
+    { shape: "dot", color: "#ffffff", x: 34, y: 4, size: 10, delay: 28, spin: 0 },
+    { shape: "dash", color: "#ef70da", x: 18, y: 30, size: 14, delay: 8, spin: 26 },
+    { shape: "diamond", color: "#ffffff", x: -24, y: 28, size: 12, delay: 22, spin: -32 },
+    { shape: "star", color: "#fac800", x: -34, y: -2, size: 12, delay: 12, spin: 24 }
+  ];
+
+  pieces.forEach((piece) => {
+    const particle = document.createElement("span");
+    particle.className = `app-button-burst__piece app-button-burst__piece--${piece.shape}`;
+    particle.style.setProperty("--size", `${piece.size}px`);
+    particle.style.setProperty("--delay", `${piece.delay}ms`);
+    particle.style.setProperty("--offset-x", `${piece.x}px`);
+    particle.style.setProperty("--offset-y", `${piece.y}px`);
+    particle.style.setProperty("--spin", `${piece.spin}deg`);
+    particle.style.setProperty("--piece-color", piece.color);
+    burst.appendChild(particle);
+  });
+
+  document.body.appendChild(burst);
+
+  window.requestAnimationFrame(() => {
+    burst.classList.add("is-active");
+  });
+
+  window.setTimeout(() => {
+    if (burst.isConnected) {
+      burst.remove();
+    }
+  }, 460);
+}
+
 function getQuestionContextAssetSources(questionIndex) {
   return questions
     .slice(questionIndex, questionIndex + 3)
@@ -810,6 +922,10 @@ function createRoadmapPreviewState() {
 }
 
 app.addEventListener("click", handleAppClick);
+app.addEventListener("click", handleGenericButtonClick, true);
 app.addEventListener("input", handleAppInput);
+app.addEventListener("pointerdown", handleGenericButtonPointerDown, true);
 app.addEventListener("submit", handleAppSubmit);
+window.addEventListener("pointerup", clearGenericPressedButton, true);
+window.addEventListener("pointercancel", clearGenericPressedButton, true);
 render();
