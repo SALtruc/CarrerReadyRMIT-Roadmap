@@ -3,8 +3,9 @@ const failedAssetPaths = new Set();
 const warmedAssetPaths = new Set();
 const queuedAssetPaths = new Set();
 const pendingAssetPaths = [];
+const assetStateListeners = new Set();
 
-const MAX_CONCURRENT_WARMS = 2;
+const MAX_CONCURRENT_WARMS = 4;
 
 let activeWarmCount = 0;
 let warmDrainHandle = null;
@@ -20,7 +21,7 @@ function scheduleWarmDrain() {
         warmDrainHandle = null;
         drainWarmQueue();
       },
-      { timeout: 280 }
+      { timeout: 120 }
     );
 
     return;
@@ -87,6 +88,16 @@ function drainWarmQueue() {
   }
 }
 
+function emitAssetStateChange(assetPath, status) {
+  assetStateListeners.forEach((listener) => {
+    try {
+      listener({ assetPath, status });
+    } catch (error) {
+      console.error("Asset state listener failed", error);
+    }
+  });
+}
+
 export function getAssetStateClass(assetPath) {
   return loadedAssetPaths.has(assetPath) ? "has-asset" : "asset-missing";
 }
@@ -96,8 +107,13 @@ export function markAssetLoaded(assetPath) {
     return;
   }
 
+  const didChange = !loadedAssetPaths.has(assetPath) || failedAssetPaths.has(assetPath);
   loadedAssetPaths.add(assetPath);
   failedAssetPaths.delete(assetPath);
+
+  if (didChange) {
+    emitAssetStateChange(assetPath, "loaded");
+  }
 }
 
 export function markAssetFailed(assetPath) {
@@ -105,8 +121,25 @@ export function markAssetFailed(assetPath) {
     return;
   }
 
+  const didChange = !failedAssetPaths.has(assetPath) || loadedAssetPaths.has(assetPath);
   failedAssetPaths.add(assetPath);
   loadedAssetPaths.delete(assetPath);
+
+  if (didChange) {
+    emitAssetStateChange(assetPath, "failed");
+  }
+}
+
+export function subscribeToAssetStateChanges(listener) {
+  if (typeof listener !== "function") {
+    return () => {};
+  }
+
+  assetStateListeners.add(listener);
+
+  return () => {
+    assetStateListeners.delete(listener);
+  };
 }
 
 export function warmAssetSources(assetPaths) {

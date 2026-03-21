@@ -52,6 +52,7 @@ export function setupQuestionSwipe({ root, state, onAnswer }) {
     }
 
     updateSwipePreview(root, state.swipeFeedback);
+    syncQuestionDeckHint(root, state.swipeFeedback);
   };
 
   const onPointerUp = () => {
@@ -83,6 +84,7 @@ export function setupQuestionSwipe({ root, state, onAnswer }) {
     card.style.filter = "";
     updateStackMotion(stack, 0, 0);
     clearSwipePreview(root);
+    syncQuestionDeckHint(root, null);
   };
 
   card.addEventListener("pointerdown", (event) => {
@@ -133,6 +135,7 @@ export function setupQuestionSwipe({ root, state, onAnswer }) {
     card.style.boxShadow = `${13 + (direction > 0 ? 2 : 0)}px 18px 0 rgba(0, 0, 0, 0.92)`;
     card.style.transform = `translate(${targetX}px, ${(currentY * 0.22) - 24}px) rotate(${direction * 16}deg) scale(1.03)`;
     updateSwipePreview(root, { type: answer ? "accept" : "reject" });
+    syncQuestionDeckHint(root, { type: answer ? "accept" : "reject" });
     playQuestionResponseFeedback({ root, answer, origin });
 
     window.setTimeout(() => {
@@ -170,4 +173,25 @@ function updateStackMotion(stack, pull, drift) {
   stack.style.setProperty("--stack-back-y", `${34 - (pull * 22)}px`);
   stack.style.setProperty("--stack-back-scale", `${0.94 + (pull * 0.06)}`);
   stack.style.setProperty("--stack-back-opacity", `${0.04 + (pull * 0.64)}`);
+}
+
+export function syncQuestionDeckHint(root, feedback = null) {
+  const hint = root.querySelector("[data-question-hint]");
+  if (!hint) {
+    return;
+  }
+
+  const type = feedback?.type === "accept" || feedback?.type === "reject"
+    ? feedback.type
+    : "default";
+  const label = type === "accept"
+    ? hint.dataset.acceptLabel
+    : type === "reject"
+      ? hint.dataset.rejectLabel
+      : hint.dataset.defaultLabel;
+
+  hint.textContent = label || "";
+  hint.classList.toggle("is-visible", type !== "default" && Boolean(label));
+  hint.classList.toggle("is-accept", type === "accept");
+  hint.classList.toggle("is-reject", type === "reject");
 }

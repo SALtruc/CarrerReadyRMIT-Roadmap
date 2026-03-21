@@ -44,7 +44,8 @@ export function renderQuestionDeckScreen(state) {
           })}
         </div>
       </div>
-      <div class="deck-actions ${!state.showQuestionIntro ? "" : ""}">
+      ${renderQuestionDeckHint(state)}
+      <div class="deck-actions">
         <button class="deck-button reject" data-action="answer-no" aria-label="Not yet">
           <img class="deck-button__image" src="./src/assets/button/no.png" alt="" draggable="false">
         </button>
@@ -54,6 +55,27 @@ export function renderQuestionDeckScreen(state) {
       </div>
       ${state.showQuestionIntro ? renderQuestionIntroOverlay() : ""}
     </section>  
+  `;
+}
+
+function renderQuestionDeckHint(state) {
+  const feedbackType = state.swipeFeedback?.type ?? "default";
+  const labels = {
+    default: "",
+    accept: "Yay! &#10024;",
+    reject: "Oh! &#128584;"
+  };
+  const activeLabel = feedbackType === "default" ? "" : labels[feedbackType];
+
+  return `
+    <p
+      class="question-deck__hint ${feedbackType === "default" ? "" : `is-visible is-${feedbackType}`}"
+      data-question-hint
+      data-default-label="${labels.default}"
+      data-accept-label="${labels.accept}"
+      data-reject-label="${labels.reject}"
+      aria-live="polite"
+    >${activeLabel}</p>
   `;
 }
 

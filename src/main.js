@@ -5,7 +5,7 @@ import { getRoadmapAssetPaths } from "./data/roadmap.js";
 import { questions } from "./data/questions.js";
 import { exportCareerRoadmap } from "./interactions/exportCareerRoadmap.js";
 import { playQuestionResponseFeedback } from "./interactions/playQuestionResponseFeedback.js";
-import { setupQuestionSwipe } from "./interactions/setupQuestionSwipe.js";
+import { setupQuestionSwipe, syncQuestionDeckHint } from "./interactions/setupQuestionSwipe.js";
 import { state } from "./state/store.js";
 import {
   answerCurrentQuestion,
@@ -26,7 +26,7 @@ import {
   toggleActivitySelection,
   toggleStageInfo
 } from "./state/actions.js";
-import { markAssetFailed, markAssetLoaded, warmAssetSources } from "./utils/assets.js";
+import { markAssetFailed, markAssetLoaded, subscribeToAssetStateChanges, warmAssetSources } from "./utils/assets.js";
 
 const app = document.getElementById("app");
 const APP_STATE_STORAGE_KEY = "career-ready-state-v2";
@@ -41,6 +41,8 @@ let studentUnlockSubmitTimer = null;
 let activitySelectionCelebration = null;
 let activitySelectionCelebrationTimer = null;
 let genericPressedButton = null;
+let assetDomSyncFrame = null;
+const pendingAssetDomUpdates = new Map();
 const logoAssetSources = [
   "./src/assets/logo-badge.png",
   "./src/assets/logo-badge-yellow.png"
@@ -82,6 +84,9 @@ const criticalAssetSources = [...logoAssetSources, ...welcomeAssetSources];
 
 bootstrapAppState();
 warmAssetSources(criticalAssetSources);
+subscribeToAssetStateChanges(({ assetPath, status }) => {
+  queueMountedAssetSync(assetPath, status);
+});
 
 function render() {
   const preservedScroll = capturePreservedScroll();
@@ -92,6 +97,7 @@ function render() {
   bindAssetImages();
   bindSummaryBoardMotion();
   bindQuestionDeckProgress();
+  syncQuestionDeckHint(app, state.swipeFeedback);
   syncActivitySelectionCelebration();
   syncRoadmapSequence();
   syncQuestionIntroOverlay();
@@ -380,6 +386,7 @@ function queueQuestionButtonAnswer(answer, button) {
   }
 
   dismissQuestionIntroOverlayInPlace();
+  syncQuestionDeckHint(app, { type: answer ? "accept" : "reject" });
   animateQuestionDeckButtonAnswer(answer);
   playQuestionResponseFeedback({ root: app, answer, sourceButton: button });
 
@@ -433,21 +440,23 @@ function bindAssetImages() {
     const container = image.closest("[data-asset-container]");
 
     const applyLoaded = () => {
+      markAssetLoaded(image.getAttribute("src") || image.currentSrc);
+
       if (!container) {
         return;
       }
 
-      markAssetLoaded(image.getAttribute("src") || image.currentSrc);
       container.classList.add("has-asset");
       container.classList.remove("asset-missing");
     };
 
     const applyMissing = () => {
+      markAssetFailed(image.getAttribute("src") || image.currentSrc);
+
       if (!container) {
         return;
       }
 
-      markAssetFailed(image.getAttribute("src") || image.currentSrc);
       container.classList.remove("has-asset");
       container.classList.add("asset-missing");
     };
@@ -462,6 +471,54 @@ function bindAssetImages() {
         applyMissing();
       }
     }
+  });
+}
+
+function queueMountedAssetSync(assetPath, status) {
+  if (!assetPath) {
+    return;
+  }
+
+  pendingAssetDomUpdates.set(assetPath, status);
+
+  if (assetDomSyncFrame !== null) {
+    return;
+  }
+
+  assetDomSyncFrame = window.requestAnimationFrame(() => {
+    assetDomSyncFrame = null;
+    flushMountedAssetSync();
+  });
+}
+
+function flushMountedAssetSync() {
+  if (!app.isConnected || pendingAssetDomUpdates.size === 0) {
+    pendingAssetDomUpdates.clear();
+    return;
+  }
+
+  pendingAssetDomUpdates.forEach((status, assetPath) => {
+    syncMountedAssetState(assetPath, status);
+  });
+  pendingAssetDomUpdates.clear();
+}
+
+function syncMountedAssetState(assetPath, status) {
+  const isLoaded = status === "loaded";
+
+  app.querySelectorAll("[data-asset-image]").forEach((image) => {
+    const imagePath = image.getAttribute("src") || image.currentSrc;
+    if (imagePath !== assetPath) {
+      return;
+    }
+
+    const container = image.closest("[data-asset-container]");
+    if (!container) {
+      return;
+    }
+
+    container.classList.toggle("has-asset", isLoaded);
+    container.classList.toggle("asset-missing", !isLoaded);
   });
 }
 

@@ -10,21 +10,6 @@ import {
 import { stageMeta } from "../data/stages.js";
 import { getStageScore } from "../utils/selectors.js";
 
-function renderStageStatusBar() {
-  return `
-    <div class="stage-mobile-status" aria-hidden="true">
-      <span class="stage-mobile-status__time">9:41</span>
-      <div class="stage-mobile-status__right">
-        <span class="stage-mobile-status__signal">
-          <i></i><i></i><i></i><i></i>
-        </span>
-        <span class="stage-mobile-status__wifi"></span>
-        <span class="stage-mobile-status__battery"><b></b></span>
-      </div>
-    </div>
-  `;
-}
-
 function renderStageScore(score, scoreShape) {
   if (scoreShape === "triangle") {
     return `
@@ -66,7 +51,6 @@ export function renderExploreScreen(state) {
       class="screen screen--stage-activities grid-bg ${stage.background} stage-activities--${stageKey}"
       style="--stage-content-width:${screenConfig.contentWidth}px;"
     >
-      ${renderStageStatusBar()}
       <div class="stage-activities__scroll" data-preserve-scroll="stage-activities-${stageKey}">
         <div class="stage-activities__content">
           ${renderTopBar(state, { showAvatar: true, logoVariant })}
