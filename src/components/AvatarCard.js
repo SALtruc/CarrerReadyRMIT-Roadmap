@@ -30,8 +30,8 @@ export function renderAvatarCard({ avatar, isSelected }) {
           draggable="false"
         >
         <span class="avatar-card__fallback">${avatar.icon}</span>
-        ${isSelected ? '<span class="avatar-card__status" aria-hidden="true">&#10003;</span>' : ""}
       </div>
+      ${isSelected ? '<span class="avatar-card__status" aria-hidden="true">&#10003;</span>' : ""}
     </button>
   `;
 }

@@ -86,7 +86,7 @@ export function renderSummaryScreen(state) {
               <button
                 class="summary-image-button summary-image-button--primary"
                 type="button"
-                data-action="open-student-unlock"
+                data-action="start-custom-roadmap-flow"
                 aria-label="Of course, let's go"
               >
                 <img
@@ -102,7 +102,7 @@ export function renderSummaryScreen(state) {
               <button
                 class="summary-image-button summary-image-button--secondary"
                 type="button"
-                data-action="skip-student-unlock"
+                data-action="start-premade-roadmap-flow"
                 aria-label="Ugh, no thanks"
               >
                 <img

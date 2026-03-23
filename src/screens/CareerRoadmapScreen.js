@@ -1,6 +1,7 @@
 import { renderTopBar } from "../components/TopBar.js";
 import {
   ROADMAP_BACKGROUND_ASSET_PATH,
+  ROADMAP_PREMADE_ASSET_PATH,
   ROADMAP_BACKGROUND_SIZE,
   ROADMAP_FACEBOOK_LINKS,
   getRoadmapScores,
@@ -9,8 +10,12 @@ import {
 } from "../data/roadmap.js";
 
 export function renderCareerRoadmapScreen(state) {
+  const isPremadeRoadmap = state.roadmapVariant === "premade";
+  const posterAssetPath = isPremadeRoadmap
+    ? ROADMAP_PREMADE_ASSET_PATH
+    : ROADMAP_BACKGROUND_ASSET_PATH;
   const scores = getRoadmapScores(state);
-  const selections = getRoadmapSelections(state);
+  const selections = isPremadeRoadmap ? [] : getRoadmapSelections(state);
 
   return `
     <section class="screen screen--career-roadmap grid-bg bg-transition" data-preserve-scroll="career-roadmap">
@@ -37,8 +42,8 @@ export function renderCareerRoadmapScreen(state) {
           <img
             class="career-roadmap-poster__base"
             data-asset-image="career-roadmap-poster"
-            src="${ROADMAP_BACKGROUND_ASSET_PATH}"
-            alt="Career roadmap poster"
+            src="${posterAssetPath}"
+            alt="${isPremadeRoadmap ? "Pre-made career roadmap poster" : "Career roadmap poster"}"
             decoding="async"
             loading="eager"
             draggable="false"

@@ -83,9 +83,15 @@ function renderQuestionIntroOverlay() {
   return `
     <div class="question-intro" aria-hidden="true">
       <div class="question-intro__bar">
-        <span class="question-intro__arrow">&larr;</span>
-        <span>Swipe</span>
-        <span class="question-intro__arrow">&rarr;</span>
+        <span class="question-intro__side question-intro__side--reject">
+          <span class="question-intro__arrow">&larr;</span>
+          <span>No</span>
+        </span>
+        <span class="question-intro__swipe">Swipe</span>
+        <span class="question-intro__side question-intro__side--accept">
+          <span>Yes</span>
+          <span class="question-intro__arrow">&rarr;</span>
+        </span>
       </div>
     </div>
   `;

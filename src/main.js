@@ -1,7 +1,7 @@
 import { renderApp } from "./renderApp.js";
 import { avatars } from "./data/avatars.js";
 import { getStageActivityAssetPaths, stageSequence } from "./data/activities.js";
-import { getRoadmapAssetPaths } from "./data/roadmap.js";
+import { getRoadmapAssetPaths, ROADMAP_PREMADE_ASSET_PATH } from "./data/roadmap.js";
 import { questions } from "./data/questions.js";
 import { exportCareerRoadmap } from "./interactions/exportCareerRoadmap.js";
 import { playQuestionResponseFeedback } from "./interactions/playQuestionResponseFeedback.js";
@@ -10,7 +10,7 @@ import { state } from "./state/store.js";
 import {
   answerCurrentQuestion,
   closeStageInfo,
-  continueToExplore,
+  completeStudentUnlock,
   dismissQuestionIntro,
   openChooseCharacterScreen,
   openExploreScreen,
@@ -23,6 +23,8 @@ import {
   selectAvatar,
   showNextStage,
   showPreviousStage,
+  startCustomRoadmapFlow,
+  startPremadeRoadmapFlow,
   toggleActivitySelection,
   toggleStageInfo
 } from "./state/actions.js";
@@ -557,7 +559,7 @@ function handleAppSubmit(event) {
 
     studentUnlockSubmitTimer = window.setTimeout(() => {
       studentUnlockSubmitTimer = null;
-      continueToExplore("student-unlock");
+      completeStudentUnlock();
       render();
     }, 220);
   }
@@ -714,7 +716,12 @@ function getPredictiveAssetSources(currentState) {
         ...getStageActivityAssetPaths("explore")
       ];
     case "student-unlock":
-      return [...studentUnlockAssetSources, ...getStageActivityAssetPaths("explore")];
+      return currentState.roadmapVariant === "premade"
+        ? [...studentUnlockAssetSources, ROADMAP_PREMADE_ASSET_PATH]
+        : [
+            ...studentUnlockAssetSources,
+            ...getRoadmapAssetPaths(getSelectedRoadmapActivityIds(currentState))
+          ];
     case "explore": {
       const activeStage = stageSequence.includes(currentState.activeStage)
         ? currentState.activeStage
@@ -731,7 +738,9 @@ function getPredictiveAssetSources(currentState) {
       return nextAssetSources;
     }
     case "career-roadmap":
-      return getRoadmapAssetPaths(getSelectedRoadmapActivityIds(currentState));
+      return currentState.roadmapVariant === "premade"
+        ? [ROADMAP_PREMADE_ASSET_PATH]
+        : getRoadmapAssetPaths(getSelectedRoadmapActivityIds(currentState));
     default:
       return [];
   }
@@ -779,11 +788,11 @@ function handleAppClick(event) {
     case "answer-yes":
       queueQuestionButtonAnswer(true, actionElement);
       return;
-    case "open-student-unlock":
-      openStudentUnlockScreen();
+    case "start-custom-roadmap-flow":
+      startCustomRoadmapFlow();
       break;
-    case "skip-student-unlock":
-      continueToExplore("summary");
+    case "start-premade-roadmap-flow":
+      startPremadeRoadmapFlow();
       break;
     case "show-summary":
       openExploreScreen("explore");
@@ -819,7 +828,11 @@ function handleAppClick(event) {
       );
       break;
     case "roadmap-back":
-      openExploreScreen("transition", { entryScreen: state.exploreEntryScreen });
+      if (state.roadmapVariant === "premade") {
+        openStudentUnlockScreen();
+      } else {
+        openExploreScreen("transition", { entryScreen: state.exploreEntryScreen });
+      }
       break;
     case "restart-flow":
       restartFlow();
@@ -894,6 +907,8 @@ function persistAppState() {
         activeStage: state.activeStage,
         showRoadmapCheck: state.showRoadmapCheck,
         roadmapAutoAdvanceDisabled: state.roadmapAutoAdvanceDisabled,
+        roadmapVariant: state.roadmapVariant,
+        hasUnlockedRoadmap: state.hasUnlockedRoadmap,
         exploreEntryScreen: state.exploreEntryScreen,
         studentIdDraft: state.studentIdDraft
       })
@@ -937,6 +952,10 @@ function applyStateSnapshot(snapshot) {
     : state.activeStage;
   state.showRoadmapCheck = Boolean(snapshot.showRoadmapCheck);
   state.roadmapAutoAdvanceDisabled = Boolean(snapshot.roadmapAutoAdvanceDisabled);
+  state.roadmapVariant = snapshot.roadmapVariant === "premade"
+    ? "premade"
+    : "custom";
+  state.hasUnlockedRoadmap = Boolean(snapshot.hasUnlockedRoadmap);
   state.exploreEntryScreen = typeof snapshot.exploreEntryScreen === "string"
     ? snapshot.exploreEntryScreen
     : state.exploreEntryScreen;
@@ -973,6 +992,8 @@ function createRoadmapPreviewState() {
     activeStage: "transition",
     showRoadmapCheck: false,
     roadmapAutoAdvanceDisabled: true,
+    roadmapVariant: "custom",
+    hasUnlockedRoadmap: true,
     exploreEntryScreen: "student-unlock",
     studentIdDraft: ""
   };

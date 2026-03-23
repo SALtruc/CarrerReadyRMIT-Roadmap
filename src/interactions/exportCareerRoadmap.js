@@ -1,5 +1,6 @@
 import {
   ROADMAP_BACKGROUND_ASSET_PATH,
+  ROADMAP_PREMADE_ASSET_PATH,
   ROADMAP_BACKGROUND_SIZE,
   getRoadmapScores,
   getRoadmapSelections,
@@ -9,6 +10,10 @@ import {
 const ROADMAP_EXPORT_WIDTH = 1080;
 
 export async function exportCareerRoadmap(state) {
+  const isPremadeRoadmap = state.roadmapVariant === "premade";
+  const backgroundAssetPath = isPremadeRoadmap
+    ? ROADMAP_PREMADE_ASSET_PATH
+    : ROADMAP_BACKGROUND_ASSET_PATH;
   const canvas = document.createElement("canvas");
   const scale = ROADMAP_EXPORT_WIDTH / ROADMAP_BACKGROUND_SIZE.width;
   const exportHeight = Math.round(ROADMAP_BACKGROUND_SIZE.height * scale);
@@ -22,13 +27,15 @@ export async function exportCareerRoadmap(state) {
   canvas.height = exportHeight;
 
   const [backgroundImage, selectionImages] = await Promise.all([
-    loadImage(ROADMAP_BACKGROUND_ASSET_PATH),
-    Promise.all(
-      getRoadmapSelections(state).map(async (selection) => ({
-        selection,
-        image: await loadImage(selection.assetPath)
-      }))
-    )
+    loadImage(backgroundAssetPath),
+    isPremadeRoadmap
+      ? Promise.resolve([])
+      : Promise.all(
+          getRoadmapSelections(state).map(async (selection) => ({
+            selection,
+            image: await loadImage(selection.assetPath)
+          }))
+        )
   ]);
 
   if (document.fonts?.ready) {
@@ -46,11 +53,15 @@ export async function exportCareerRoadmap(state) {
   );
 
   drawRoadmapScores(context, getRoadmapScores(state));
-  drawRoadmapSelections(context, selectionImages);
+
+  if (!isPremadeRoadmap) {
+    drawRoadmapSelections(context, selectionImages);
+  }
+
   context.restore();
 
   const blob = await canvasToBlob(canvas);
-  const filename = `career-roadmap-${new Date().toISOString().slice(0, 10)}.png`;
+  const filename = `${isPremadeRoadmap ? "career-roadmap-premade" : "career-roadmap"}-${new Date().toISOString().slice(0, 10)}.png`;
   await saveRoadmapBlob(blob, filename);
 }
 

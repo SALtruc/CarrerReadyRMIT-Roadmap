@@ -330,6 +330,7 @@
 }
 
 .avatar-card {
+  position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
   background: transparent;
@@ -343,6 +344,7 @@
   -webkit-tap-highlight-color: transparent;
   backface-visibility: hidden;
   transform: translateZ(0);
+  overflow: visible;
 }
 
 .avatar-card.is-selected {
@@ -408,10 +410,10 @@
 
 .avatar-card__status {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 28px;
-  height: 28px;
+  top: -6px;
+  right: -6px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: 2px solid var(--ink);
   background: var(--blue);
@@ -420,8 +422,8 @@
   place-items: center;
   font-size: 16px;
   font-weight: 900;
-  box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.9);
-  z-index: 2;
+  box-shadow: 3px 4px 0 rgba(0, 0, 0, 0.9);
+  z-index: 3;
 }
 
 .segment-bar {

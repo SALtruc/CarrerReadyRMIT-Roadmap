@@ -34,6 +34,8 @@ export function openSummaryScreen() {
   state.screen = "summary";
   state.showRoadmapCheck = false;
   state.showStageInfo = false;
+  state.roadmapVariant = "custom";
+  state.hasUnlockedRoadmap = false;
 }
 
 export function openStudentUnlockScreen() {
@@ -47,6 +49,23 @@ export function openCareerRoadmapScreen() {
   state.showRoadmapCheck = false;
   state.roadmapAutoAdvanceDisabled = true;
   state.showStageInfo = false;
+}
+
+export function startCustomRoadmapFlow() {
+  state.roadmapVariant = "custom";
+  state.hasUnlockedRoadmap = false;
+  openExploreScreen("explore", { entryScreen: "summary" });
+}
+
+export function startPremadeRoadmapFlow() {
+  state.roadmapVariant = "premade";
+  state.hasUnlockedRoadmap = false;
+  openStudentUnlockScreen();
+}
+
+export function completeStudentUnlock() {
+  state.hasUnlockedRoadmap = true;
+  openCareerRoadmapScreen();
 }
 
 export function openExploreScreen(stage = "explore", options = {}) {
@@ -71,6 +90,11 @@ export function showNextStage() {
   const nextStage = stageSequence[currentIndex + 1];
 
   if (!nextStage) {
+    if (!state.hasUnlockedRoadmap) {
+      openStudentUnlockScreen();
+      return;
+    }
+
     openCareerRoadmapScreen();
     return;
   }
@@ -100,13 +124,6 @@ export function toggleStageInfo() {
 
 export function closeStageInfo() {
   state.showStageInfo = false;
-}
-
-export function continueToExplore(entryScreen = null) {
-  const resolvedEntryScreen = entryScreen || (state.screen === "student-unlock"
-    ? "student-unlock"
-    : "summary");
-  openExploreScreen("explore", { entryScreen: resolvedEntryScreen });
 }
 
 export function setStudentIdDraft(value) {

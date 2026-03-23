@@ -15,6 +15,8 @@ export const state = {
   showQuestionIntro: false,
   showRoadmapCheck: false,
   roadmapAutoAdvanceDisabled: false,
+  roadmapVariant: "custom",
+  hasUnlockedRoadmap: false,
   exploreEntryScreen: "summary",
   studentIdDraft: ""
 };
@@ -36,6 +38,8 @@ export function resetState() {
   state.showQuestionIntro = false;
   state.showRoadmapCheck = false;
   state.roadmapAutoAdvanceDisabled = false;
+  state.roadmapVariant = "custom";
+  state.hasUnlockedRoadmap = false;
   state.exploreEntryScreen = "summary";
   state.studentIdDraft = "";
 }
