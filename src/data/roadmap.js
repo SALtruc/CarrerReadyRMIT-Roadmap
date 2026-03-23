@@ -25,18 +25,18 @@ export const roadmapStageScoreLayout = {
 export const roadmapStageIconSlots = {
   explore: [
     { x: 480, y: 2501, maxWidth: 560, maxHeight: 560, rotate: -3, scale: 1.8 },
-    { x: 1450, y: 3070, maxWidth: 560, maxHeight: 560, rotate: 2.5, scale: 2 },
+    { x: 1500, y: 3070, maxWidth: 560, maxHeight: 560, rotate: 3, scale: 2 },
     { x: 480, y: 3850, maxWidth: 560, maxHeight: 560, rotate: -3, scale: 1.8}
   ],
   develop: [
     { x: 500, y: 4950, maxWidth: 560, maxHeight: 560, rotate: -3, scale: 1.8 },
-    { x: 1550, y: 5520, maxWidth: 560, maxHeight: 560, rotate: 3, scale: 1.8 },
-    { x: 1550, y: 6800, maxWidth: 560, maxHeight: 560, rotate: 3, scale: 1.8 }
+    { x: 1500, y: 5520, maxWidth: 560, maxHeight: 560, rotate: 3, scale: 1.8 },
+    { x: 1500, y: 6800, maxWidth: 560, maxHeight: 560, rotate: 3, scale: 1.8 }
   ],
   transition: [
-    { x: 480, y: 7780, maxWidth: 560, maxHeight: 560, rotate: -3, scale: 1.8 },
-    { x: 1460, y: 8470, maxWidth: 560, maxHeight: 560, rotate: 3, scale: 1.85 },
-    { x: 480, y: 9050, maxWidth: 560, maxHeight: 560, rotate: -3, scale: 1.8   }
+    { x: 480, y: 7780, maxWidth: 560, maxHeight: 560, rotate: -3, scale:2},
+    { x: 1500, y: 8470, maxWidth: 560, maxHeight: 560, rotate: 3, scale: 1.8 },
+    { x: 480, y: 9050, maxWidth: 560, maxHeight: 560, rotate: -3, scale: 2}
   ]
 };
 
@@ -52,7 +52,7 @@ const roadmapAssetFileByActivityId = {
   "internship-preparation": `Internship Preparation  Workshop\u00A0.png`,
   "internship-enhancement": "Internship Enhancement  Workshop.png",
   "linkedin-leap": "LinkedIn Leap.png",
-  "become-club-leader": "Become  Club Leader.png",
+  "become-club-leader": "Become Club Leader.png",
   "join-competition": "Join Competition.png",
   "employer-group-mentoring": "Employer Group Mentoring.png",
   "career-ready-hub-drop-in": `Career Ready Hub Drop-in\u00A0.png`,
