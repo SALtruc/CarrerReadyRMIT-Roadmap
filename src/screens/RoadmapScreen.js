@@ -1,6 +1,7 @@
 import { renderTopBar } from "../components/TopBar.js";
 
-const roadmapVideoPath = "./src/assets/loading animation.mp4";
+const roadmapVideoPath = "src/assets/2880H.gif";
+
 
 export function renderRoadmapScreen(state) {
   const content = state.showRoadmapCheck
@@ -16,16 +17,11 @@ export function renderRoadmapScreen(state) {
     : `
       <div class="roadmap-journey">
         <div class="roadmap-video-shell">
-          <video
+          <img
             class="roadmap-video"
             src="${roadmapVideoPath}"
-            autoplay
-            muted
-            loop
-            playsinline
-            preload="auto"
             aria-label="Career roadmap loading animation"
-          ></video>
+          ></img>
           <p class="roadmap-journey__note">It's never too late to start your Career Roadmap!</p>
         </div>
       </div>
