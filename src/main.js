@@ -264,17 +264,30 @@ function setStudentUnlockStatus(message, tone = "") {
   status.classList.toggle("is-success", tone === "success");
 }
 
+function syncStudentUnlockButtonState() {
+  const submitButton = app.querySelector(".student-unlock__bubble");
+
+  if (!(submitButton instanceof HTMLButtonElement)) {
+    return;
+  }
+
+  const hasCompleteStudentId = String(state.studentIdDraft || "").length === 7;
+  submitButton.classList.toggle("is-hidden", !hasCompleteStudentId);
+  submitButton.disabled = !hasCompleteStudentId || studentUnlockRequestInFlight;
+  submitButton.setAttribute("aria-hidden", hasCompleteStudentId ? "false" : "true");
+}
+
 async function submitStudentUnlock(form) {
   if (studentUnlockRequestInFlight) {
     return;
   }
 
-  const studentId = String(state.studentIdDraft || "").trim();
+  const studentIdDigits = String(state.studentIdDraft || "").trim();
   const trapField = form.querySelector("[data-student-unlock-trap]");
   const submitButton = form.querySelector(".student-unlock__bubble");
 
-  if (!studentId) {
-    setStudentUnlockStatus("Please enter your Student ID.", "error");
+  if (studentIdDigits.length !== 7) {
+    setStudentUnlockStatus("Please enter the 7 digits after S.", "error");
     return;
   }
 
@@ -297,7 +310,7 @@ async function submitStudentUnlock(form) {
         Accept: "application/json"
       },
       body: JSON.stringify({
-        studentId,
+        studentId: `S${studentIdDigits}`,
         roadmapVariant: state.roadmapVariant,
         answers: state.answers,
         website: trapField instanceof HTMLInputElement ? trapField.value : ""
@@ -324,9 +337,10 @@ async function submitStudentUnlock(form) {
     studentUnlockRequestInFlight = false;
 
     if (submitButton instanceof HTMLButtonElement && submitButton.isConnected) {
-      submitButton.disabled = false;
       submitButton.removeAttribute("aria-busy");
     }
+
+    syncStudentUnlockButtonState();
   }
 }
 
@@ -611,6 +625,11 @@ function handleAppInput(event) {
 
   if (input.dataset.input === "student-id") {
     setStudentIdDraft(input.value);
+    input.value = state.studentIdDraft;
+    if (state.screen === "student-unlock") {
+      setStudentUnlockStatus("");
+      syncStudentUnlockButtonState();
+    }
   }
 }
 
@@ -1022,7 +1041,7 @@ function applyStateSnapshot(snapshot) {
     ? snapshot.exploreEntryScreen
     : state.exploreEntryScreen;
   state.studentIdDraft = typeof snapshot.studentIdDraft === "string"
-    ? snapshot.studentIdDraft
+    ? snapshot.studentIdDraft.replace(/\D/g, "").slice(0, 7)
     : "";
   state.showStageInfo = false;
   state.swipeFeedback = null;

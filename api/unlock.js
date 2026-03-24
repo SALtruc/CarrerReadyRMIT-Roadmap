@@ -5,7 +5,7 @@ const QUESTION_IDS_BY_STAGE = {
 };
 
 const MAX_BODY_LENGTH = 20000;
-const STUDENT_ID_PATTERN = /^[A-Za-z0-9]{6,12}$/;
+const STUDENT_ID_PATTERN = /^S\d{7}$/;
 
 function json(res, status, body) {
   return res.status(status).json(body);
@@ -154,7 +154,7 @@ module.exports = async function handler(req, res) {
       return json(res, 400, {
         ok: false,
         error: "invalid_student_id",
-        message: "Please enter a valid Student ID."
+        message: "Please enter a valid student number."
       });
     }
 
@@ -191,3 +191,4 @@ module.exports = async function handler(req, res) {
     });
   }
 };
+

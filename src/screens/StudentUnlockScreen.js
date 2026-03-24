@@ -15,6 +15,8 @@ function escapeAttribute(value) {
 }
 
 export function renderStudentUnlockScreen(state) {
+  const hasCompleteStudentId = state.studentIdDraft.length === 7;
+
   return `
     <section class="screen screen--student-unlock grid-bg bg-transition">
       ${renderTopBar(state, { showAvatar: true })}
@@ -39,20 +41,27 @@ export function renderStudentUnlockScreen(state) {
                 <span class="student-unlock__title-line">Unlock Your</span>
                 <span class="student-unlock__title-line accent">Career Roadmap</span>
               </h1>
+              <p class="student-unlock__prompt">Please enter your student number</p>
               <div class="student-unlock__field">
-                <label class="sr-only" for="student-id-input">Student ID</label>
-                <input
-                  id="student-id-input"
-                  class="student-unlock__input"
-                  type="text"
-                  inputmode="numeric"
-                  autocomplete="off"
-                  placeholder="Enter your Student ID"
-                  value="${escapeAttribute(state.studentIdDraft)}"
-                  data-input="student-id"
-                >
+                <label class="sr-only" for="student-id-input">Student number</label>
+                <div class="student-unlock__input-wrap">
+                  <span class="student-unlock__prefix" aria-hidden="true">S</span>
+                  <input
+                    id="student-id-input"
+                    class="student-unlock__input"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    placeholder="1234567"
+                    value="${escapeAttribute(state.studentIdDraft)}"
+                    maxlength="7"
+                    data-input="student-id"
+                    aria-describedby="student-id-hint"
+                  >
+                </div>
                 <span class="student-unlock__input-line" aria-hidden="true"></span>
               </div>
+              <p class="student-unlock__hint" id="student-id-hint">Numbers only, 7 digits after S.</p>
               <p
                 class="student-unlock__status"
                 data-student-unlock-status
@@ -79,8 +88,13 @@ export function renderStudentUnlockScreen(state) {
                 >
               </div>
             </div>
-            <button class="student-unlock__bubble" type="submit">
-              <span>Please enter your Student ID<br>to see your career roadmap.</span>
+            <button
+              class="student-unlock__bubble ${hasCompleteStudentId ? "" : "is-hidden"}"
+              type="submit"
+              ${hasCompleteStudentId ? "" : "disabled"}
+              aria-hidden="${hasCompleteStudentId ? "false" : "true"}"
+            >
+              <span>Let's see you</span>
             </button>
           </form>
           <div class="student-unlock__stars" aria-hidden="true">

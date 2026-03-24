@@ -127,7 +127,9 @@ export function closeStageInfo() {
 }
 
 export function setStudentIdDraft(value) {
-  state.studentIdDraft = value;
+  state.studentIdDraft = String(value ?? "")
+    .replace(/\D/g, "")
+    .slice(0, 7);
 }
 
 export function answerCurrentQuestion(answer) {
