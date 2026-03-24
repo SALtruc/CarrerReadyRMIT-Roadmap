@@ -53,7 +53,6 @@ export function renderStudentUnlockScreen(state) {
                 >
                 <span class="student-unlock__input-line" aria-hidden="true"></span>
               </div>
-              <div class="student-unlock__captcha" data-student-unlock-captcha></div>
               <p
                 class="student-unlock__status"
                 data-student-unlock-status

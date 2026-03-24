@@ -1795,8 +1795,8 @@
   left: 2.9851cqw;
   top: 44.2786cqw;
   width: 94.0299cqw;
-  min-height: 101.4925cqw;
-  padding: 17.1642cqw 7.9602cqw 12.9353cqw;
+  min-height: 79.1045cqw;
+  padding: 17.1642cqw 7.9602cqw 11.4428cqw;
   background: rgba(255, 255, 255, 0.98);
   border: 1.5px solid var(--ink);
   border-radius: 9px;
@@ -1882,19 +1882,10 @@
   box-shadow: 0 0 0 3px rgba(30, 80, 210, 0.12);
 }
 
-.student-unlock__captcha {
-  width: min(100%, 80.0995cqw);
-  min-height: 20.1493cqw;
-  margin: 7.4627cqw auto 0;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
-
 .student-unlock__status {
   width: min(100%, 73.6318cqw);
   min-height: 6.4677cqw;
-  margin: 2.4876cqw auto 0;
+  margin: 7.4627cqw auto 0;
   position: relative;
   z-index: 2;
   font-family: "Helvetica Neue", Arial, sans-serif;
@@ -1924,7 +1915,7 @@
 .student-unlock__bubble {
   position: absolute;
   left: 8.9552cqw;
-  top: 154.2289cqw;
+  top: 132.3383cqw;
   width: 58.2089cqw;
   min-height: 11.9403cqw;
   padding: 2.9851cqw 4.2289cqw 2.4876cqw;
@@ -3132,8 +3123,8 @@
     left: 0.2cqw;
     top: 36.8cqw;
     width: 99.2cqw;
-    min-height: 105.5cqw;
-    padding: 17.2cqw 7.2cqw 12.4cqw;
+    min-height: 84.8cqw;
+    padding: 17.2cqw 7.2cqw 11.4cqw;
   }
 
   .student-unlock__field {
@@ -3141,21 +3132,15 @@
     margin-top: 12cqw;
   }
 
-  .student-unlock__captcha {
-    width: min(100%, 84cqw);
-    min-height: 20cqw;
-    margin-top: 7.6cqw;
-  }
-
   .student-unlock__status {
     width: min(100%, 79cqw);
     min-height: 8cqw;
-    margin-top: 2.8cqw;
+    margin-top: 7.2cqw;
     font-size: clamp(11px, 3.1cqw, 13.6px);
   }
 
   .student-unlock__bubble {
-    top: 154cqw;
+    top: 135.8cqw;
     left: 1.8cqw;
     width: 70.6cqw;
     min-height: 15.2cqw;

@@ -31,15 +31,6 @@ async function parseRequestBody(req) {
   return {};
 }
 
-function readRemoteIp(req) {
-  const forwardedFor = req.headers["x-forwarded-for"];
-  const value = Array.isArray(forwardedFor) ? forwardedFor[0] : forwardedFor;
-
-  return typeof value === "string"
-    ? value.split(",")[0].trim()
-    : "";
-}
-
 function isValidStudentId(studentId) {
   return STUDENT_ID_PATTERN.test(studentId);
 }
@@ -64,34 +55,6 @@ function getStageScore(answers, stage) {
     (score, questionId) => score + (answers[questionId] === true ? 33 : 0),
     0
   );
-}
-
-async function verifyTurnstileToken(token, remoteIp) {
-  const formData = new URLSearchParams();
-  formData.set("secret", process.env.TURNSTILE_SECRET_KEY || "");
-  formData.set("response", token);
-
-  if (remoteIp) {
-    formData.set("remoteip", remoteIp);
-  }
-
-  const response = await fetch(
-    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      body: formData
-    }
-  );
-
-  const result = await response.json();
-
-  return {
-    ok: Boolean(response.ok && result.success),
-    codes: Array.isArray(result["error-codes"]) ? result["error-codes"] : []
-  };
 }
 
 async function appendUnlockRow(payload) {
@@ -120,8 +83,26 @@ async function appendUnlockRow(payload) {
 
   return {
     ok: Boolean(response.ok && result.ok),
-    error: result.error || null
+    error: result.error || null,
+    status: response.status
   };
+}
+
+function getAppsScriptErrorMessage(errorCode, statusCode) {
+  switch (errorCode) {
+    case "unauthorized":
+      return "Apps Script secret mismatch. Check APPS_SCRIPT_SECRET and INGEST_SECRET.";
+    case "missing_sheet":
+      return "Google Sheet tab 'Roadmap' was not found.";
+    case "invalid_apps_script_response":
+      return "Apps Script returned an invalid response. Use the deployed /exec URL and set access to Anyone.";
+    default:
+      if (statusCode === 401 || statusCode === 403) {
+        return "Apps Script access is blocked. Redeploy the web app with access set to Anyone.";
+      }
+
+      return "We couldn't save your roadmap right now. Please try again.";
+  }
 }
 
 module.exports = async function handler(req, res) {
@@ -142,14 +123,6 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  if (!process.env.TURNSTILE_SECRET_KEY) {
-    return json(res, 500, {
-      ok: false,
-      error: "missing_turnstile_secret",
-      message: "Missing Turnstile configuration."
-    });
-  }
-
   try {
     const requestBody = await parseRequestBody(req);
     const serializedBody = JSON.stringify(requestBody);
@@ -166,7 +139,6 @@ module.exports = async function handler(req, res) {
     const roadmapVariant = requestBody.roadmapVariant === "premade"
       ? "premade"
       : "custom";
-    const turnstileToken = String(requestBody.turnstileToken || "").trim();
     const honeypot = String(requestBody.website || "").trim();
     const answers = sanitizeAnswers(requestBody.answers);
 
@@ -186,24 +158,6 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    if (!turnstileToken) {
-      return json(res, 400, {
-        ok: false,
-        error: "missing_turnstile_token",
-        message: "Please complete the security check."
-      });
-    }
-
-    const verification = await verifyTurnstileToken(turnstileToken, readRemoteIp(req));
-
-    if (!verification.ok) {
-      return json(res, 400, {
-        ok: false,
-        error: "turnstile_verification_failed",
-        message: "Security check failed. Please try again."
-      });
-    }
-
     const payload = {
       submittedAt: new Date().toISOString(),
       studentId,
@@ -220,7 +174,7 @@ module.exports = async function handler(req, res) {
       return json(res, 502, {
         ok: false,
         error: appendResult.error || "apps_script_failed",
-        message: "We couldn't save your roadmap right now. Please try again."
+        message: getAppsScriptErrorMessage(appendResult.error, appendResult.status)
       });
     }
 
