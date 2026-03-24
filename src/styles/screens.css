@@ -1795,8 +1795,8 @@
   left: 2.9851cqw;
   top: 44.2786cqw;
   width: 94.0299cqw;
-  min-height: 68.1592cqw;
-  padding: 17.1642cqw 7.9602cqw 10.9453cqw;
+  min-height: 101.4925cqw;
+  padding: 17.1642cqw 7.9602cqw 12.9353cqw;
   background: rgba(255, 255, 255, 0.98);
   border: 1.5px solid var(--ink);
   border-radius: 9px;
@@ -1895,6 +1895,8 @@
   width: min(100%, 73.6318cqw);
   min-height: 6.4677cqw;
   margin: 2.4876cqw auto 0;
+  position: relative;
+  z-index: 2;
   font-family: "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(11px, 2.9851cqw, 13px);
   line-height: 1.25;
@@ -1922,7 +1924,7 @@
 .student-unlock__bubble {
   position: absolute;
   left: 8.9552cqw;
-  top: 122.3881cqw;
+  top: 154.2289cqw;
   width: 58.2089cqw;
   min-height: 11.9403cqw;
   padding: 2.9851cqw 4.2289cqw 2.4876cqw;
@@ -3130,8 +3132,8 @@
     left: 0.2cqw;
     top: 36.8cqw;
     width: 99.2cqw;
-    min-height: 72cqw;
-    padding: 17.2cqw 7.2cqw 10.6cqw;
+    min-height: 105.5cqw;
+    padding: 17.2cqw 7.2cqw 12.4cqw;
   }
 
   .student-unlock__field {
@@ -3153,7 +3155,7 @@
   }
 
   .student-unlock__bubble {
-    top: 120.8cqw;
+    top: 154cqw;
     left: 1.8cqw;
     width: 70.6cqw;
     min-height: 15.2cqw;
