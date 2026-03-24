@@ -1882,6 +1882,43 @@
   box-shadow: 0 0 0 3px rgba(30, 80, 210, 0.12);
 }
 
+.student-unlock__captcha {
+  width: min(100%, 80.0995cqw);
+  min-height: 20.1493cqw;
+  margin: 7.4627cqw auto 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.student-unlock__status {
+  width: min(100%, 73.6318cqw);
+  min-height: 6.4677cqw;
+  margin: 2.4876cqw auto 0;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(11px, 2.9851cqw, 13px);
+  line-height: 1.25;
+  text-align: center;
+  color: #000054;
+}
+
+.student-unlock__status.is-error {
+  color: #b9161c;
+}
+
+.student-unlock__status.is-success {
+  color: #0d7d38;
+}
+
+.student-unlock__trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .student-unlock__bubble {
   position: absolute;
   left: 8.9552cqw;
@@ -1950,6 +1987,11 @@
 
 .student-unlock__bubble.is-celebrating::after {
   animation: student-unlock-bubble-sheen 220ms ease-out;
+}
+
+.student-unlock__bubble[aria-busy="true"] {
+  opacity: 0.88;
+  pointer-events: none;
 }
 
 .student-unlock__bubble span {
@@ -3095,6 +3137,19 @@
   .student-unlock__field {
     width: min(100%, 80.5cqw);
     margin-top: 12cqw;
+  }
+
+  .student-unlock__captcha {
+    width: min(100%, 84cqw);
+    min-height: 20cqw;
+    margin-top: 7.6cqw;
+  }
+
+  .student-unlock__status {
+    width: min(100%, 79cqw);
+    min-height: 8cqw;
+    margin-top: 2.8cqw;
+    font-size: clamp(11px, 3.1cqw, 13.6px);
   }
 
   .student-unlock__bubble {

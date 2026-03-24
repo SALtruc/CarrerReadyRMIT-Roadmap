@@ -53,6 +53,22 @@ export function renderStudentUnlockScreen(state) {
                 >
                 <span class="student-unlock__input-line" aria-hidden="true"></span>
               </div>
+              <div class="student-unlock__captcha" data-student-unlock-captcha></div>
+              <p
+                class="student-unlock__status"
+                data-student-unlock-status
+                role="status"
+                aria-live="polite"
+              ></p>
+              <input
+                class="student-unlock__trap"
+                type="text"
+                name="website"
+                tabindex="-1"
+                autocomplete="off"
+                data-student-unlock-trap
+                aria-hidden="true"
+              >
               <div class="student-unlock__sparkles" aria-hidden="true">
                 <img
                   class="student-unlock__sparkles-image"

@@ -39,7 +39,11 @@ let roadmapSequenceRunning = false;
 let questionIntroTimer = null;
 let previousQuestionDeckProgress = null;
 let questionButtonAnswerTimer = null;
-let studentUnlockSubmitTimer = null;
+let studentUnlockRequestInFlight = false;
+let studentUnlockCaptchaToken = "";
+let studentUnlockCaptchaWidgetId = null;
+let studentUnlockConfigPromise = null;
+let studentUnlockCaptchaRetryTimer = null;
 let activitySelectionCelebration = null;
 let activitySelectionCelebrationTimer = null;
 let genericPressedButton = null;
@@ -103,6 +107,7 @@ function render() {
   syncActivitySelectionCelebration();
   syncRoadmapSequence();
   syncQuestionIntroOverlay();
+  void syncStudentUnlockSecurity();
   warmAssetSources(getPredictiveAssetSources(state));
 
   if (state.screen === "question-deck") {
@@ -250,6 +255,214 @@ function syncActivitySelectionCelebration() {
     activitySelectionCelebration = null;
     activitySelectionCelebrationTimer = null;
   }, 360);
+}
+
+function clearStudentUnlockSecurity() {
+  studentUnlockCaptchaToken = "";
+  studentUnlockCaptchaWidgetId = null;
+  studentUnlockRequestInFlight = false;
+
+  if (studentUnlockCaptchaRetryTimer) {
+    window.clearTimeout(studentUnlockCaptchaRetryTimer);
+    studentUnlockCaptchaRetryTimer = null;
+  }
+}
+
+function setStudentUnlockStatus(message, tone = "") {
+  const status = app.querySelector("[data-student-unlock-status]");
+
+  if (!status) {
+    return;
+  }
+
+  status.textContent = message || "";
+  status.classList.toggle("is-error", tone === "error");
+  status.classList.toggle("is-success", tone === "success");
+}
+
+function scheduleStudentUnlockCaptchaRetry(delay = 160) {
+  if (studentUnlockCaptchaRetryTimer || state.screen !== "student-unlock") {
+    return;
+  }
+
+  studentUnlockCaptchaRetryTimer = window.setTimeout(() => {
+    studentUnlockCaptchaRetryTimer = null;
+    void syncStudentUnlockSecurity();
+  }, delay);
+}
+
+function resetStudentUnlockCaptcha() {
+  studentUnlockCaptchaToken = "";
+
+  if (
+    typeof window.turnstile !== "undefined" &&
+    typeof window.turnstile.reset === "function" &&
+    studentUnlockCaptchaWidgetId !== null
+  ) {
+    try {
+      window.turnstile.reset(studentUnlockCaptchaWidgetId);
+    } catch (error) {
+      console.warn("Failed to reset Turnstile widget", error);
+      studentUnlockCaptchaWidgetId = null;
+      scheduleStudentUnlockCaptchaRetry(0);
+    }
+  }
+}
+
+async function getStudentUnlockConfig() {
+  if (studentUnlockConfigPromise) {
+    return studentUnlockConfigPromise;
+  }
+
+  studentUnlockConfigPromise = fetch("/api/config", {
+    method: "GET",
+    headers: {
+      Accept: "application/json"
+    }
+  })
+    .then(async (response) => {
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok || !payload.turnstileSiteKey) {
+        throw new Error("Security configuration is unavailable.");
+      }
+
+      return payload;
+    })
+    .catch((error) => {
+      studentUnlockConfigPromise = null;
+      throw error;
+    });
+
+  return studentUnlockConfigPromise;
+}
+
+async function syncStudentUnlockSecurity() {
+  if (state.screen !== "student-unlock") {
+    clearStudentUnlockSecurity();
+    return;
+  }
+
+  const captchaContainer = app.querySelector("[data-student-unlock-captcha]");
+
+  if (!captchaContainer) {
+    return;
+  }
+
+  if (captchaContainer.dataset.bound === "true") {
+    return;
+  }
+
+  if (
+    typeof window.turnstile === "undefined" ||
+    typeof window.turnstile.render !== "function"
+  ) {
+    scheduleStudentUnlockCaptchaRetry();
+    return;
+  }
+
+  try {
+    const { turnstileSiteKey } = await getStudentUnlockConfig();
+
+    if (state.screen !== "student-unlock" || captchaContainer.dataset.bound === "true") {
+      return;
+    }
+
+    captchaContainer.dataset.bound = "true";
+    studentUnlockCaptchaToken = "";
+    studentUnlockCaptchaWidgetId = window.turnstile.render(captchaContainer, {
+      sitekey: turnstileSiteKey,
+      theme: "light",
+      callback: (token) => {
+        studentUnlockCaptchaToken = token;
+        setStudentUnlockStatus("");
+      },
+      "expired-callback": () => {
+        studentUnlockCaptchaToken = "";
+        setStudentUnlockStatus("Security check expired. Please verify again.", "error");
+      },
+      "error-callback": () => {
+        studentUnlockCaptchaToken = "";
+        setStudentUnlockStatus("Security check failed. Please reload and try again.", "error");
+      }
+    });
+  } catch (error) {
+    console.error("Failed to initialize unlock security", error);
+    setStudentUnlockStatus("Security check unavailable. Please reload and try again.", "error");
+  }
+}
+
+async function submitStudentUnlock(form) {
+  if (studentUnlockRequestInFlight) {
+    return;
+  }
+
+  const studentId = String(state.studentIdDraft || "").trim();
+  const trapField = form.querySelector("[data-student-unlock-trap]");
+  const submitButton = form.querySelector(".student-unlock__bubble");
+
+  if (!studentId) {
+    setStudentUnlockStatus("Please enter your Student ID.", "error");
+    return;
+  }
+
+  if (!studentUnlockCaptchaToken) {
+    setStudentUnlockStatus("Please complete the security check.", "error");
+    return;
+  }
+
+  studentUnlockRequestInFlight = true;
+  setStudentUnlockStatus("Saving your roadmap...");
+
+  if (submitButton instanceof HTMLButtonElement) {
+    submitButton.classList.remove("is-celebrating");
+    void submitButton.offsetWidth;
+    submitButton.classList.add("is-celebrating");
+    submitButton.disabled = true;
+    submitButton.setAttribute("aria-busy", "true");
+  }
+
+  try {
+    const response = await fetch("/api/unlock", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify({
+        studentId,
+        roadmapVariant: state.roadmapVariant,
+        answers: state.answers,
+        turnstileToken: studentUnlockCaptchaToken,
+        website: trapField instanceof HTMLInputElement ? trapField.value : ""
+      })
+    });
+
+    const payload = await response.json().catch(() => ({}));
+
+    if (!response.ok || !payload.ok) {
+      throw new Error(payload.message || "We couldn't save your roadmap right now. Please try again.");
+    }
+
+    completeStudentUnlock();
+    render();
+  } catch (error) {
+    console.error("Student unlock submission failed", error);
+    resetStudentUnlockCaptcha();
+    setStudentUnlockStatus(
+      error instanceof Error
+        ? error.message
+        : "We couldn't save your roadmap right now. Please try again.",
+      "error"
+    );
+  } finally {
+    studentUnlockRequestInFlight = false;
+
+    if (submitButton instanceof HTMLButtonElement && submitButton.isConnected) {
+      submitButton.disabled = false;
+      submitButton.removeAttribute("aria-busy");
+    }
+  }
 }
 
 function syncRoadmapSequence() {
@@ -545,23 +758,7 @@ function handleAppSubmit(event) {
   event.preventDefault();
 
   if (form.dataset.form === "student-unlock") {
-    if (studentUnlockSubmitTimer) {
-      return;
-    }
-
-    const submitButton = form.querySelector(".student-unlock__bubble");
-
-    if (submitButton instanceof HTMLButtonElement) {
-      submitButton.classList.remove("is-celebrating");
-      void submitButton.offsetWidth;
-      submitButton.classList.add("is-celebrating");
-    }
-
-    studentUnlockSubmitTimer = window.setTimeout(() => {
-      studentUnlockSubmitTimer = null;
-      completeStudentUnlock();
-      render();
-    }, 220);
+    void submitStudentUnlock(form);
   }
 }
 
