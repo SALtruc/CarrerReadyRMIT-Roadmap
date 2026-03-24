@@ -3170,9 +3170,9 @@
 
   .student-unlock__card {
     left: 0.2cqw;
-    top: 28.8cqw;
+    top: 20.8cqw;
     width: 99.2cqw;
-    min-height: 80.8cqw;
+    min-height: 60.8cqw;
     padding: 17.2cqw 7.2cqw 11.4cqw;
   }
 
@@ -3209,16 +3209,16 @@
 
   .student-unlock__status {
     width: min(100%, 79cqw);
-    min-height: 8cqw;
+    min-height: 0cqw;
     margin-top: 2.8cqw;
     font-size: clamp(11px, 3.1cqw, 13.6px);
   }
 
   .student-unlock__bubble {
-    top: 120.8cqw;
-    left: 1.8cqw;
-    width: 70.6cqw;
-    min-height: 15.2cqw;
+    top: 110.8cqw;
+    left: 10cqw;
+    width: 50.6cqw;
+    min-height: 5.2cqw;
     padding: 3.45cqw 4.6cqw 3cqw;
     font-size: clamp(17.6px, 3.48cqw, 25.6px);
     line-height: 1.1;
@@ -3226,14 +3226,14 @@
 
   .student-unlock__stars {
     left: 5.2cqw;
-    bottom: 15.2cqw;
+    bottom: 40.2cqw;
     width: 45.8cqw;
   }
 
   .student-unlock__figure {
     width: 97cqw;
     right: -10.8cqw;
-    bottom: -36cqw;
+    bottom: -14cqw;
   }
 
   .screen--stage-activities .logo-badge,
