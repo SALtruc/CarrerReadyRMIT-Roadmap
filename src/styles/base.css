@@ -104,14 +104,26 @@ button {
 
 .bg-explore {
   background-color: #fac800;
+  background-image: url("../assets/lite/background/iPhone 17 - 88.png");
+  background-position: top center;
+  background-repeat: repeat-y;
+  background-size: 100% auto;
 }
 
 .bg-develop {
   background-color: #e61d2a;
+  background-image: url("../assets/lite/background/iPhone 17 - 89.png");
+  background-position: top center;
+  background-repeat: repeat-y;
+  background-size: 100% auto;
 }
 
 .bg-transition {
   background-color: #1e50d2;
+  background-image: url("../assets/lite/background/iPhone 17 - 87.png");
+  background-position: top center;
+  background-repeat: repeat-y;
+  background-size: 100% auto;
   color: var(--white);
 }
 

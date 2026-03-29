@@ -1,7 +1,7 @@
 import {
   ROADMAP_BACKGROUND_ASSET_PATH,
   ROADMAP_PREMADE_ASSET_PATH,
-  ROADMAP_BACKGROUND_SIZE,
+  getRoadmapPosterSize,
   getRoadmapScores,
   getRoadmapSelections,
   roadmapStageScoreLayout
@@ -14,9 +14,10 @@ export async function exportCareerRoadmap(state) {
   const backgroundAssetPath = isPremadeRoadmap
     ? ROADMAP_PREMADE_ASSET_PATH
     : ROADMAP_BACKGROUND_ASSET_PATH;
+  const posterSize = getRoadmapPosterSize(state.roadmapVariant);
   const canvas = document.createElement("canvas");
-  const scale = ROADMAP_EXPORT_WIDTH / ROADMAP_BACKGROUND_SIZE.width;
-  const exportHeight = Math.round(ROADMAP_BACKGROUND_SIZE.height * scale);
+  const scale = ROADMAP_EXPORT_WIDTH / posterSize.width;
+  const exportHeight = Math.round(posterSize.height * scale);
   const context = canvas.getContext("2d");
 
   if (!context) {
@@ -48,13 +49,12 @@ export async function exportCareerRoadmap(state) {
     backgroundImage,
     0,
     0,
-    ROADMAP_BACKGROUND_SIZE.width,
-    ROADMAP_BACKGROUND_SIZE.height
+    posterSize.width,
+    posterSize.height
   );
 
-  drawRoadmapScores(context, getRoadmapScores(state));
-
   if (!isPremadeRoadmap) {
+    drawRoadmapScores(context, getRoadmapScores(state));
     drawRoadmapSelections(context, selectionImages);
   }
 

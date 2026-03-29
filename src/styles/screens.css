@@ -3412,3 +3412,619 @@
     height: 75px;
   }
 }
+
+.screen--summary,
+.screen--student-unlock {
+  padding:
+    calc(env(safe-area-inset-top, 0px) + 84px)
+    14px
+    calc(env(safe-area-inset-bottom, 0px) + 22px);
+  overflow-y: auto;
+}
+
+.screen--summary {
+  --summary-shell-width: min(100%, 398px);
+  --summary-line-width: 6px;
+  --summary-hero-coach-column: 190px;
+  --summary-hero-gap: 8px;
+  --summary-hero-offset-y: -12px;
+  --summary-hero-overlap-y: -80px;
+  --summary-coach-height: 228px;
+  --summary-coach-shift-x: 0px;
+  --summary-coach-shift-y: -12px;
+  --summary-callout-offset-y: -28px;
+  --summary-callout-shift-x: 0px;
+  --summary-callout-shift-y: -14px;
+  --summary-score-font-size: clamp(20px, 6vw, 30px);
+  /* Score coordinates: default layout */
+  --summary-score-explore-x: 82%;
+  --summary-score-explore-y: 60%;
+  --summary-score-develop-x: 82%;
+  --summary-score-develop-y: 48%;
+  --summary-score-transition-x: 83%;
+  --summary-score-transition-y: 50%;
+}
+
+.screen--summary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: var(--summary-line-width);
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.98);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.screen--summary .topbar,
+.screen--student-unlock .topbar,
+.screen--career-roadmap .topbar {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
+  left: 14px;
+  right: 14px;
+  width: auto;
+  margin: 0;
+  transform: none;
+  z-index: 6;
+}
+
+.summary-viewport,
+.student-unlock-viewport {
+  position: relative;
+  inset: auto;
+  display: block;
+  padding: 0;
+  overflow: visible;
+  z-index: 1;
+}
+
+.summary-shell {
+  position: relative;
+  width: var(--summary-shell-width);
+  margin: 0 auto;
+  transform: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  isolation: isolate;
+}
+
+.summary-shell > * {
+  position: relative;
+  z-index: 1;
+}
+
+.student-unlock {
+  width: min(100%, 356px);
+  margin: 0 auto;
+  transform: none;
+}
+
+.summary-results__hero {
+  display: grid;
+  grid-template-columns: var(--summary-hero-coach-column) minmax(0, 1fr);
+  gap: var(--summary-hero-gap);
+  align-items: end;
+  width: 100%;
+  margin-top: var(--summary-hero-offset-y);
+  margin-bottom: var(--summary-hero-overlap-y);
+  z-index: 1;
+}
+
+.summary-results__coach {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: var(--summary-coach-height);
+  margin-top: 0;
+  transform:
+    translate(var(--summary-coach-shift-x), var(--summary-coach-shift-y))
+    scale(var(--summary-coach-scale, 1));
+  transform-origin: center bottom;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.summary-results__callout {
+  position: relative;
+  padding-top: 0;
+  margin-top: var(--summary-callout-offset-y);
+  z-index: 4;
+  transform:
+    translate(var(--summary-callout-shift-x), var(--summary-callout-shift-y))
+    scale(var(--summary-bubble-scale, var(--summary-callout-scale, 1)));
+  transform-origin: left bottom;
+}
+
+.summary-results__bubble {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(6px 8px 0 rgba(0, 0, 0, 0.92));
+}
+
+.summary-results__info {
+  position: absolute;
+  right: var(--summary-info-offset-x, -4px);
+  bottom: var(--summary-info-offset-y, -4px);
+  width: var(--summary-info-size, 32px);
+  height: var(--summary-info-size, 32px);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.92);
+  color: #000054;
+  font-family: "Museo", var(--font-display);
+  font-size: calc(var(--summary-info-size, 32px) * 0.59);
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.summary-results__cards {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.summary-result-card {
+  position: relative;
+}
+
+.summary-result-card__image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.summary-result-card__score {
+  position: absolute;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  color: var(--ink);
+  font-family: "Museo", var(--font-display);
+  font-size: var(--summary-score-font-size);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+.summary-result-card--explore .summary-result-card__score {
+  left: var(--summary-score-explore-x);
+  top: var(--summary-score-explore-y);
+}
+
+.summary-result-card--develop .summary-result-card__score {
+  left: var(--summary-score-develop-x);
+  top: var(--summary-score-develop-y);
+}
+
+.summary-result-card--transition .summary-result-card__score {
+  left: var(--summary-score-transition-x);
+  top: var(--summary-score-transition-y);
+}
+
+.summary-results__actions {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 4px;
+  width: 100%;
+}
+
+.summary-results__next {
+  min-width: 118px;
+  min-height: 56px;
+  padding: 13px 22px 13px 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--blue);
+  box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.98);
+  color: var(--white);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 21px;
+  line-height: 1;
+}
+
+.summary-results__next::after {
+  content: ">";
+  font-size: 24px;
+  line-height: 1;
+}
+
+.student-unlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  container-type: inline-size;
+}
+
+.student-unlock__stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.student-unlock__board {
+  position: relative;
+  width: var(--student-unlock-board-width, 100%);
+  align-self: center;
+  transform:
+    translate(
+      var(--student-unlock-board-shift-x, 0px),
+      var(--student-unlock-board-shift-y, 0px)
+    )
+    scale(var(--student-unlock-board-scale, 1));
+  transform-origin: center top;
+}
+
+.student-unlock__board-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.student-unlock__field {
+  position: absolute;
+  left: 20%;
+  right: 16%;
+  bottom: 16%;
+  margin: 0;
+}
+
+.student-unlock__input-wrap {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+}
+
+.student-unlock__prefix {
+  flex: 0 0 auto;
+  padding-bottom: 4px;
+  color: #000054;
+  font-family: "Museo", var(--font-display);
+  font-size: clamp(24px, 7.2cqw, 33px);
+  line-height: 1;
+  font-weight: 600;
+}
+
+.student-unlock__input {
+  width: calc(7ch + 0.8em);
+  border: 0;
+  padding: 0 0 4px;
+  background: transparent;
+  text-align: center;
+  color: #000054;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(24px, 6.6cqw, 31px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+  line-height: 1.1;
+  outline: none;
+}
+
+.student-unlock__input::placeholder {
+  color: rgba(0, 0, 84, 0.24);
+  font-weight: 400;
+}
+
+.student-unlock__status {
+  width: min(100%, 292px);
+  min-height: 20px;
+  margin: 8px auto 0;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.3;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.student-unlock__status.is-error {
+  color: #ffd8dd;
+}
+
+.student-unlock__status.is-success {
+  color: #d9ffe2;
+}
+
+.student-unlock__trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.student-unlock__bubble {
+  display: block;
+  align-self: center;
+  width: min(100%, var(--student-unlock-bubble-width, 316px));
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  opacity: 0.8;
+  transform: translate(var(--student-unlock-bubble-shift-x, 0px), var(--student-unlock-bubble-shift-y, 2px));
+  transition: transform 160ms ease, opacity 160ms ease, filter 160ms ease;
+}
+
+.student-unlock__bubble.is-ready {
+  opacity: 1;
+  filter: brightness(1.02);
+}
+
+.student-unlock__bubble[aria-busy="true"] {
+  opacity: 0.82;
+}
+
+.student-unlock__bubble-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.student-unlock__character {
+  align-self: center;
+  width: var(--student-unlock-character-width, 500px);
+  max-width: none;
+  margin-top: 0;
+  margin-right: 0;
+  transform:
+    translate(
+      var(--student-unlock-character-shift-x, 0px),
+      var(--student-unlock-character-shift-y, -18px)
+    )
+    scale(var(--student-unlock-character-scale, 1));
+  transform-origin: center top;
+}
+
+.student-unlock__character-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.screen--career-roadmap {
+  padding: 0 0 calc(env(safe-area-inset-bottom, 0px) + 22px);
+}
+
+.career-roadmap-toolbar {
+  top: calc(env(safe-area-inset-top, 0px) + 62px);
+}
+
+.career-roadmap-shell {
+  width: min(100%, 400px);
+  margin: 0 auto;
+  padding:
+    calc(env(safe-area-inset-top, 0px) + 102px)
+    10px
+    calc(env(safe-area-inset-bottom, 0px) + 28px);
+}
+
+.career-roadmap-poster__base {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 480px) {
+  .screen--summary,
+  .screen--student-unlock {
+    padding:
+      calc(env(safe-area-inset-top, 0px) + 82px)
+      12px
+      calc(env(safe-area-inset-bottom, 0px) + 20px);
+  }
+
+  .screen--summary {
+    --summary-shell-width: min(100%, 404px);
+    --summary-line-width: 7px;
+    --summary-hero-coach-column: 280px;
+    --summary-hero-gap: 20px;
+    --summary-hero-offset-y: 0px;
+    --summary-hero-overlap-y: -90px;
+    --summary-coach-height: 272px;
+    --summary-coach-shift-x: 0px;
+    --summary-coach-shift-y: -18px;
+    --summary-callout-offset-y: -70px;
+    --summary-callout-shift-x: 0px;
+    --summary-callout-shift-y: -30px;
+    --summary-score-font-size: clamp(30px, 7.2vw, 50px);
+    /* Score coordinates: responsive layout */
+    --summary-score-explore-x: 82.8%;
+    --summary-score-explore-y: 57%;
+    --summary-score-develop-x: 82.2%;
+    --summary-score-develop-y: 48%;
+    --summary-score-transition-x: 83.2%;
+    --summary-score-transition-y:48%;
+  }
+
+  .screen--summary .topbar,
+  .screen--student-unlock .topbar,
+  .screen--career-roadmap .topbar {
+    left: 12px;
+    right: 12px;
+  }
+
+  .summary-results__hero {
+    width: 100%;
+  }
+
+  .summary-results__coach {
+    height: var(--summary-coach-height);
+    margin-top: 0;
+  }
+
+  .summary-results__info {
+    width: var(--summary-info-size, 30px);
+    height: var(--summary-info-size, 30px);
+    font-size: calc(var(--summary-info-size, 30px) * 0.59);
+  }
+
+  .summary-result-card__score {
+    font-size: var(--summary-score-font-size);
+  }
+
+  .student-unlock {
+    width: min(100%, 360px);
+  }
+
+  .student-unlock__field {
+    left: 19%;
+    right: 15%;
+    bottom: 16.5%;
+  }
+
+  .student-unlock__character {
+    width: min(100%, 240px);
+    margin-top: -14px;
+    margin-right: -2px;
+  }
+
+  .career-roadmap-toolbar {
+    width: min(calc(100vw - 12px), 372px);
+    padding: 0 8px;
+  }
+
+  .career-roadmap-shell {
+    width: 100%;
+    padding:
+      calc(env(safe-area-inset-top, 0px) + 98px)
+      8px
+      calc(env(safe-area-inset-bottom, 0px) + 24px);
+  }
+}
+
+/* RESULTS QUICK CONTROLS
+   Edit only this block for the Results screen.
+   Desktop values below are overridden by the mobile block when screen width <= 480px.
+*/
+.screen--summary {
+  --summary-shell-width: min(100%, 398px);
+  --summary-line-width: 6px;
+
+  /* Hero placement */
+  --summary-hero-coach-column: 152px;
+  --summary-hero-gap: 8px;
+  --summary-hero-offset-y: -12px;
+  --summary-hero-overlap-y: -78px;
+
+  /* Coach placement */
+  --summary-coach-height: 240px;
+  --summary-coach-scale: 1.4;
+  --summary-coach-shift-x: 30px;
+  --summary-coach-shift-y: 60px;
+
+  /* Bubble + info button placement */
+  --summary-callout-offset-y: -28ưpx;
+  --summary-callout-shift-x: 38px;
+  --summary-callout-shift-y: -150px;
+  --summary-bubble-scale: 0.86;
+  --summary-callout-scale: 1;
+  --summary-info-size: 40px;
+  --summary-info-offset-x: 20px;
+  --summary-info-offset-y: -100px;
+
+  /* Scores */
+  --summary-score-font-size: clamp(20px, 6vw, 30px);
+  --summary-score-explore-x: 82%;
+  --summary-score-explore-y: 60%;
+  --summary-score-develop-x: 82%;
+  --summary-score-develop-y: 48%;
+  --summary-score-transition-x: 83%;
+  --summary-score-transition-y: 50%;
+}
+
+@media (max-width: 480px) {
+  .screen--summary {
+    --summary-shell-width: min(100%, 404px);
+    --summary-line-width: 7px;
+
+    /* Hero placement */
+    --summary-hero-coach-column: 280px;
+    --summary-hero-gap: 20px;
+    --summary-hero-offset-y: 0px;
+    --summary-hero-overlap-y: -98px;
+
+    /* Coach placement */
+    --summary-coach-height: 272px;
+    --summary-coach-scale: 0.9;
+    --summary-coach-shift-x: -20px;
+    --summary-coach-shift-y: -68px;
+
+    /* Bubble + info button placement */
+    --summary-callout-offset-y: -18px;
+    --summary-callout-shift-x: -88px;
+    --summary-callout-shift-y: -200px;
+    --summary-bubble-scale: 1.9;
+    --summary-callout-scale: 1.08;
+    --summary-info-size: 25px;
+    --summary-info-offset-x: 10px;
+    --summary-info-offset-y: -60px;
+
+    /* Scores */
+    --summary-score-font-size: clamp(30px, 7.2vw, 50px);
+    --summary-score-explore-x: 82.8%;
+    --summary-score-explore-y: 57%;
+    --summary-score-develop-x: 82.2%;
+    --summary-score-develop-y: 48%;
+    --summary-score-transition-x: 83.2%;
+    --summary-score-transition-y: 48%;
+  }
+}
+
+/* STUDENT UNLOCK QUICK CONTROLS
+   Edit only this block for the SID unlock screen.
+   Mobile values below override the desktop values when screen width <= 480px.
+*/
+.screen--student-unlock {
+  --student-unlock-board-width: 100%;
+  --student-unlock-board-shift-x: 0px;
+  --student-unlock-board-shift-y: 0px;
+  --student-unlock-board-scale: 1;
+
+  --student-unlock-character-width: 252px;
+  --student-unlock-character-scale: 1;
+  --student-unlock-character-shift-x: 60px;
+  --student-unlock-character-shift-y: -25px;
+
+  --student-unlock-bubble-width: 220px;
+  --student-unlock-bubble-shift-x: -20px;
+  --student-unlock-bubble-shift-y: -190px;
+}
+
+@media (max-width: 480px) {
+  .screen--student-unlock {
+    --student-unlock-board-width: 104%;
+    --student-unlock-board-shift-x: 5px;
+    --student-unlock-board-shift-y: 40px;
+    --student-unlock-board-scale: 1.11;
+
+    --student-unlock-character-width: 348px;
+    --student-unlock-character-scale: 1.18;
+    --student-unlock-character-shift-x: 80px;
+    --student-unlock-character-shift-y: 90px;
+
+    --student-unlock-bubble-width: 280px;
+    --student-unlock-bubble-shift-x: -50px;
+    --student-unlock-bubble-shift-y: -30px;
+  }
+}

@@ -31,7 +31,7 @@ import {
 import { markAssetFailed, markAssetLoaded, subscribeToAssetStateChanges, warmAssetSources } from "./utils/assets.js";
 
 const app = document.getElementById("app");
-const APP_STATE_STORAGE_KEY = "career-ready-state-v2";
+const APP_STATE_STORAGE_KEY = "career-ready-state-v3";
 const previewMode = new URLSearchParams(window.location.search).get("preview");
 let roadmapCheckTimer = null;
 let roadmapSummaryTimer = null;
@@ -54,20 +54,18 @@ const welcomeAssetSources = [
 ];
 const summaryAssetSources = [
   "./src/assets/Map.png",
-  "./src/assets/Portrait/Portrait-1.png",
-  "./src/assets/Portrait/Portrait-2.png",
-  "./src/assets/Portrait/Portrait-3.png",
-  "./src/assets/Portrait/Portrait-4.png",
-  "./src/assets/Portrait/Portrait-5.png",
-  "./src/assets/Portrait/Portrait-6.png",
-  "./src/assets/Portrait/Portrait-7.png",
-  "./src/assets/Portrait/Portrait-8.png"
+  "./src/assets/welcome-coach.png",
+  "./src/assets/lite/result/Bubble Chat2.png",
+  "./src/assets/lite/result/Frame 157.png",
+  "./src/assets/lite/result/Frame 158.png",
+  "./src/assets/lite/result/Frame 159.png",
+  "./src/assets/lite/result/Frame 160.png",
+  "./src/assets/lite/result/Group (9) 1.png"
 ];
 const studentUnlockAssetSources = [
-  "./src/assets/student/Student-coach.png",
-  "./src/assets/student/Student-1.png",
-  "./src/assets/student/Student-2.png",
-  "./src/assets/student/Student-3.png"
+  "./src/assets/lite/studentUnclock/Group 195.png",
+  "./src/assets/lite/studentUnclock/Bubble Chat.png",
+  "./src/assets/lite/studentUnclock/Character.png"
 ];
 const questionActionAssetSources = [
   "./src/assets/button/no.png",
@@ -104,6 +102,10 @@ function render() {
   syncRoadmapSequence();
   syncQuestionIntroOverlay();
   warmAssetSources(getPredictiveAssetSources(state));
+
+  if (state.screen === "student-unlock") {
+    syncStudentUnlockButtonState();
+  }
 
   if (state.screen === "question-deck") {
     setupQuestionSwipe({
@@ -272,9 +274,9 @@ function syncStudentUnlockButtonState() {
   }
 
   const hasCompleteStudentId = String(state.studentIdDraft || "").length === 7;
-  submitButton.classList.toggle("is-hidden", !hasCompleteStudentId);
-  submitButton.disabled = !hasCompleteStudentId || studentUnlockRequestInFlight;
-  submitButton.setAttribute("aria-hidden", hasCompleteStudentId ? "false" : "true");
+  submitButton.classList.toggle("is-ready", hasCompleteStudentId);
+  submitButton.disabled = studentUnlockRequestInFlight;
+  submitButton.setAttribute("aria-disabled", studentUnlockRequestInFlight ? "true" : "false");
 }
 
 async function submitStudentUnlock(form) {
@@ -292,7 +294,7 @@ async function submitStudentUnlock(form) {
   }
 
   studentUnlockRequestInFlight = true;
-  setStudentUnlockStatus("Saving your roadmap...");
+  setStudentUnlockStatus("Unlocking your roadmap...");
 
   if (submitButton instanceof HTMLButtonElement) {
     submitButton.classList.remove("is-celebrating");
@@ -794,7 +796,7 @@ function getPredictiveAssetSources(currentState) {
       return [
         ...summaryAssetSources,
         ...studentUnlockAssetSources,
-        ...getStageActivityAssetPaths("explore")
+        ROADMAP_PREMADE_ASSET_PATH
       ];
     case "student-unlock":
       return currentState.roadmapVariant === "premade"
@@ -1073,7 +1075,7 @@ function createRoadmapPreviewState() {
     activeStage: "transition",
     showRoadmapCheck: false,
     roadmapAutoAdvanceDisabled: true,
-    roadmapVariant: "custom",
+    roadmapVariant: "premade",
     hasUnlockedRoadmap: true,
     exploreEntryScreen: "student-unlock",
     studentIdDraft: ""

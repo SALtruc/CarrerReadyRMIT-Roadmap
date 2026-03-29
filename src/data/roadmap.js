@@ -2,17 +2,23 @@ import { activities, stageSequence } from "./activities.js";
 import { getStageScore } from "../utils/selectors.js";
 
 const roadmapAssetFolder = "./src/assets/Roadmap";
+const liteRoadmapAssetFolder = "./src/assets/lite";
 
 export const ROADMAP_BACKGROUND_SIZE = {
   width: 1980,
-  height: 12017
+  height: 12117
+};
+
+export const ROADMAP_PREMADE_SIZE = {
+  width: 118,
+  height: 1024
 };
 
 export const ROADMAP_BACKGROUND_ASSET_PATH =
   `${roadmapAssetFolder}/Background cho Roadmap.png`;
 
 export const ROADMAP_PREMADE_ASSET_PATH =
-  `${roadmapAssetFolder}/Placeholder map.png`;
+  `${liteRoadmapAssetFolder}/lite_roadmap.jpg`;
 
 export const ROADMAP_FACEBOOK_LINKS = {
   sgs: "https://www.facebook.com/RMITCareerReadySGS",
@@ -91,6 +97,10 @@ export function getRoadmapScores(state) {
   return Object.fromEntries(
     stageSequence.map((stage) => [stage, getStageScore(state, stage)])
   );
+}
+
+export function getRoadmapPosterSize(roadmapVariant = "custom") {
+  return roadmapVariant === "premade" ? ROADMAP_PREMADE_SIZE : ROADMAP_BACKGROUND_SIZE;
 }
 
 export function getRoadmapSelections(state) {

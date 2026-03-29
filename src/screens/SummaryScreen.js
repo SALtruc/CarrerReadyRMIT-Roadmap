@@ -1,16 +1,30 @@
-import { renderCoach } from "../components/Coach.js";
 import { renderStageInfoModal } from "../components/StageInfoModal.js";
 import { renderTopBar } from "../components/TopBar.js";
 import { getStageScore } from "../utils/selectors.js";
 
-const summaryPromptAssetPath = "./src/assets/Portrait/Portrait-1.png";
-const summarySkipAssetPath = "./src/assets/Portrait/Portrait-2.png";
-const summaryPrimaryAssetPath = "./src/assets/Portrait/Portrait-3.png";
-const summaryBoardAssetPath = "./src/assets/Portrait/Portrait-4.png";
-const summaryClickAssetPath = "./src/assets/Portrait/Portrait-5.png";
-const summaryExploreAssetPath = "./src/assets/Portrait/Portrait-6.png";
-const summaryDevelopAssetPath = "./src/assets/Portrait/Portrait-7.png";
-const summaryTransitionAssetPath = "./src/assets/Portrait/Portrait-8.png";
+const resultsCoachAssetPath = "./src/assets/welcome-coach.png";
+const resultsBubbleAssetPath = "./src/assets/lite/result/Bubble Chat2.png";
+const resultsExploreAssetPath = "./src/assets/lite/result/Frame 157.png";
+const resultsDevelopAssetPath = "./src/assets/lite/result/Frame 158.png";
+const resultsTransitionAssetPath = "./src/assets/lite/result/Frame 159.png";
+
+const resultCards = [
+  {
+    stage: "explore",
+    label: "Explore",
+    assetPath: resultsExploreAssetPath
+  },
+  {
+    stage: "develop",
+    label: "Develop",
+    assetPath: resultsDevelopAssetPath
+  },
+  {
+    stage: "transition",
+    label: "Transition",
+    assetPath: resultsTransitionAssetPath
+  }
+];
 
 export function renderSummaryScreen(state) {
   const scores = {
@@ -23,99 +37,56 @@ export function renderSummaryScreen(state) {
     <section class="screen screen--summary grid-bg bg-transition">
       ${renderTopBar(state, { showAvatar: true })}
       <div class="summary-viewport">
-        <div class="summary-shell">
-          <button
-            class="summary-board"
-            type="button"
-            data-summary-board="true"
-            data-action="toggle-stage-info"
-            aria-label="Open your career roadmap overview"
-          >
+        <div class="summary-shell" data-preserve-scroll="summary-results">
+          <div class="summary-results__hero">
             <img
-              class="summary-board__base"
-              data-asset-image="summary-board"
-              src="${summaryBoardAssetPath}"
+              class="summary-results__coach"
+              data-asset-image="summary-results-coach"
+              src="${resultsCoachAssetPath}"
               alt=""
               decoding="async"
               loading="eager"
               draggable="false"
             >
-            <img
-              class="summary-board__click"
-              data-asset-image="summary-click"
-              src="${summaryClickAssetPath}"
-              alt=""
-              decoding="async"
-              loading="eager"
-              draggable="false"
-              aria-hidden="true"
+            <div class="summary-results__callout">
+              <img
+                class="summary-results__bubble"
+                data-asset-image="summary-results-bubble"
+                src="${resultsBubbleAssetPath}"
+                alt="This is your current readiness. Next, explore activities to improve your score."
+                decoding="async"
+                loading="eager"
+                draggable="false"
+              >
+              <button
+                class="summary-results__info"
+                type="button"
+                data-action="toggle-stage-info"
+                aria-label="Open stage overview"
+              >
+                i
+              </button>
+            </div>
+          </div>
+          <div class="summary-results__cards" aria-label="Career readiness scores">
+            ${resultCards
+              .map((card) =>
+                renderResultCard({
+                  ...card,
+                  score: scores[card.stage]
+                })
+              )
+              .join("")}
+          </div>
+          <div class="summary-results__actions">
+            <button
+              class="summary-results__next"
+              type="button"
+              data-action="start-premade-roadmap-flow"
+              aria-label="Continue to student ID unlock"
             >
-            ${renderSummaryStageArt({
-              className: "summary-stage-art--transition",
-              label: "Transition",
-              score: scores.transition,
-              assetPath: summaryTransitionAssetPath
-            })}
-            ${renderSummaryStageArt({
-              className: "summary-stage-art--explore",
-              label: "Explore",
-              score: scores.explore,
-              assetPath: summaryExploreAssetPath
-            })}
-            ${renderSummaryStageArt({
-              className: "summary-stage-art--develop",
-              label: "Develop",
-              score: scores.develop,
-              assetPath: summaryDevelopAssetPath
-            })}
-          </button>
-          <img
-            class="summary-prompt-image"
-            data-asset-image="summary-prompt"
-            src="${summaryPromptAssetPath}"
-            alt="Ready to build your own career roadmap?"
-            decoding="async"
-            loading="eager"
-            draggable="false"
-          >
-          <div class="summary-bottom">
-            <div class="summary-coach-wrap">
-              ${renderCoach()}
-            </div>
-            <div class="summary-action-stack">
-              <button
-                class="summary-image-button summary-image-button--primary"
-                type="button"
-                data-action="start-custom-roadmap-flow"
-                aria-label="Of course, let's go"
-              >
-                <img
-                  class="summary-image-button__art"
-                  data-asset-image="summary-primary-cta"
-                  src="${summaryPrimaryAssetPath}"
-                  alt=""
-                  decoding="async"
-                  loading="eager"
-                  draggable="false"
-                >
-              </button>
-              <button
-                class="summary-image-button summary-image-button--secondary"
-                type="button"
-                data-action="start-premade-roadmap-flow"
-                aria-label="Ugh, no thanks"
-              >
-                <img
-                  class="summary-image-button__art"
-                  data-asset-image="summary-secondary-cta"
-                  src="${summarySkipAssetPath}"
-                  alt=""
-                  decoding="async"
-                  loading="eager"
-                  draggable="false"
-                >
-              </button>
-            </div>
+              <span>Next</span>
+            </button>
           </div>
         </div>
       </div>
@@ -124,19 +95,19 @@ export function renderSummaryScreen(state) {
   `;
 }
 
-function renderSummaryStageArt({ className, label, score, assetPath }) {
+function renderResultCard({ stage, label, score, assetPath }) {
   return `
-    <div class="summary-stage-art ${className}" role="img" aria-label="${label} ${score} percent">
+    <article class="summary-result-card summary-result-card--${stage}" aria-label="${label} ${score} percent">
       <img
-        class="summary-stage-art__image"
-        data-asset-image="${label.toLowerCase()}-summary-stage"
+        class="summary-result-card__image"
+        data-asset-image="${stage}-result-card"
         src="${assetPath}"
         alt=""
         decoding="async"
         loading="eager"
         draggable="false"
       >
-      <b class="summary-stage-art__score">${score}%</b>
-    </div>
+      <b class="summary-result-card__score" aria-hidden="true">${score}%</b>
+    </article>
   `;
 }
