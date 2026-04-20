@@ -3716,7 +3716,7 @@
   top: 0;
   bottom: 0;
   left: 50%;
-  width: min(100%, 403.63px);
+  width: min(100%, 398px);
   display: block;
   padding: 0;
   gap: 0;
@@ -3740,11 +3740,11 @@
 
 .summary-v2-cards {
   position: absolute;
-  top: calc(18.9% - 15px);
+  top: calc(18.9% - 12px);
   left: 50%;
-  width: min(calc(105% - 20px), 430px);
+  width: min(calc(100% - 22px), 384px);
   display: grid;
-  gap: 10px;
+  gap: 8px;
   min-height: auto;
   margin-top: 0;
   padding-top: 0;
@@ -3821,9 +3821,9 @@
 
 .summary-v2-bubble-wrap {
   position: absolute;
-  top: calc(57.4% - 5px);
-  right: 8px;
-  width: min(calc(100% - 44px), 292px);
+  top: calc(58.8% + 6px);
+  right: 12px;
+  width: min(calc(100% - 58px), 272px);
   min-width: auto;
   padding-bottom: 0;
   align-self: auto;
@@ -3836,7 +3836,7 @@
   display: block;
   width: 100%;
   height: auto;
-  transform: scale(1.05);
+  transform: scale(1.02);
   transform-origin: right center;
   filter: drop-shadow(4px 5px 0 rgba(0, 0, 0, 0.9));
 }
@@ -3845,19 +3845,19 @@
    edit `transform` on `.coach` to nudge the artwork inside the crop. */
 .summary-v2-coach-wrap {
   position: absolute;
-  left: -20px;
-  top: calc(57.8% + 15px);
-  width: 310px;
-  height: 400px;
+  left: -28px;
+  top: calc(60.4% + 18px);
+  width: 292px;
+  height: 378px;
   align-self: auto;
   overflow: hidden;
   z-index: 1;
 }
 
 .screen--summary .summary-v2-coach-wrap .coach {
-  width: 344px !important;
-  height: 600px !important;
-  transform: translate(-8px, 34px) !important;
+  width: 326px !important;
+  height: 570px !important;
+  transform: translate(-8px, 40px) !important;
   transform-origin: top left !important;
 }
 
@@ -3867,10 +3867,10 @@
 
 .summary-v2-actions {
   position: absolute;
-  top: calc(66.8% - 15px);
-  right: -5px;
+  top: calc(69.1% - 8px);
+  right: 6px;
   display: grid;
-  gap: 5px;
+  gap: 6px;
   justify-items: start;
   z-index: 2;
 }
@@ -3890,7 +3890,7 @@
 }
 
 .summary-v2-cta {
-  width: 220px;
+  width: 210px;
   min-height: auto;
   padding: 0;
   border: 0;
@@ -3916,7 +3916,7 @@
 }
 
 .summary-v2-skip {
-  width: 156px;
+  width: 150px;
   min-height: 36px;
   justify-content: center;
   background: rgba(255, 255, 255, 0.92);
@@ -3924,15 +3924,15 @@
 
 @media (max-width: 380px) {
   .summary-v2-actions {
-    right: 8px;
+    right: 10px;
   }
 
   .summary-v2-cta {
-    width: 205px;
+    width: 198px;
   }
 
   .summary-v2-skip {
-    width: 148px;
+    width: 144px;
     font-size: 13px;
   }
 }
