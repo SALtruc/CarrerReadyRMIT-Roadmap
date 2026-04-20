@@ -1,22 +1,18 @@
 import {
-  ROADMAP_BACKGROUND_ASSET_PATH,
-  ROADMAP_PREMADE_ASSET_PATH,
-  ROADMAP_BACKGROUND_SIZE,
+  getRoadmapPosterConfig,
   getRoadmapScores,
-  getRoadmapSelections,
-  roadmapStageScoreLayout
+  getRoadmapSelections
 } from "../data/roadmap.js";
 
 const ROADMAP_EXPORT_WIDTH = 1080;
 
 export async function exportCareerRoadmap(state) {
   const isPremadeRoadmap = state.roadmapVariant === "premade";
-  const backgroundAssetPath = isPremadeRoadmap
-    ? ROADMAP_PREMADE_ASSET_PATH
-    : ROADMAP_BACKGROUND_ASSET_PATH;
+  const posterConfig = getRoadmapPosterConfig(state.roadmapVariant);
+  const backgroundAssetPath = posterConfig.assetPath;
   const canvas = document.createElement("canvas");
-  const scale = ROADMAP_EXPORT_WIDTH / ROADMAP_BACKGROUND_SIZE.width;
-  const exportHeight = Math.round(ROADMAP_BACKGROUND_SIZE.height * scale);
+  const scale = ROADMAP_EXPORT_WIDTH / posterConfig.size.width;
+  const exportHeight = Math.round(posterConfig.size.height * scale);
   const context = canvas.getContext("2d");
 
   if (!context) {
@@ -33,7 +29,10 @@ export async function exportCareerRoadmap(state) {
       : Promise.all(
           getRoadmapSelections(state).map(async (selection) => ({
             selection,
-            image: await loadImage(selection.assetPath)
+            image: await loadImage(selection.assetPath),
+            detailImage: selection.detailAssetPath
+              ? await loadImage(selection.detailAssetPath)
+              : null
           }))
         )
   ]);
@@ -48,13 +47,14 @@ export async function exportCareerRoadmap(state) {
     backgroundImage,
     0,
     0,
-    ROADMAP_BACKGROUND_SIZE.width,
-    ROADMAP_BACKGROUND_SIZE.height
+    posterConfig.size.width,
+    posterConfig.size.height
   );
 
-  drawRoadmapScores(context, getRoadmapScores(state));
+  drawRoadmapScores(context, getRoadmapScores(state), posterConfig.stageScoreLayout);
 
   if (!isPremadeRoadmap) {
+    drawRoadmapSelectionDetails(context, selectionImages, posterConfig);
     drawRoadmapSelections(context, selectionImages);
   }
 
@@ -65,9 +65,9 @@ export async function exportCareerRoadmap(state) {
   await saveRoadmapBlob(blob, filename);
 }
 
-function drawRoadmapScores(context, scores) {
+function drawRoadmapScores(context, scores, stageScoreLayout) {
   Object.entries(scores).forEach(([stage, score]) => {
-    const layout = roadmapStageScoreLayout[stage];
+    const layout = stageScoreLayout[stage];
 
     context.save();
     context.fillStyle = "#000000";
@@ -105,6 +105,28 @@ function drawRoadmapSelections(context, selectionImages) {
       -drawHeight / 2,
       drawWidth,
       drawHeight
+    );
+    context.restore();
+  });
+}
+
+function drawRoadmapSelectionDetails(context, selectionImages, posterConfig) {
+  selectionImages.forEach(({ selection, detailImage }) => {
+    if (!detailImage) {
+      return;
+    }
+
+    const detailSlot = selection.detailSlot;
+    const drawSize = Math.round(detailSlot.boxSize * detailSlot.scale);
+
+    context.save();
+    context.translate(detailSlot.x, detailSlot.y + detailSlot.shiftY);
+    context.drawImage(
+      detailImage,
+      -drawSize / 2,
+      -drawSize / 2,
+      drawSize,
+      drawSize
     );
     context.restore();
   });

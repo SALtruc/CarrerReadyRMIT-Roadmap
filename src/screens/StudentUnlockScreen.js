@@ -1,4 +1,5 @@
 import { renderSegmentBar } from "../components/SegmentBar.js";
+import { isUnlockSubmissionBypassed } from "../config/runtime.js";
 import { renderTopBar } from "../components/TopBar.js";
 
 const studentCoachAssetPath = "./src/assets/student/Student-coach.png";
@@ -15,7 +16,16 @@ function escapeAttribute(value) {
 }
 
 export function renderStudentUnlockScreen(state) {
-  const hasCompleteStudentId = state.studentIdDraft.length === 7;
+  const isPremadeRoadmap = state.roadmapVariant === "premade";
+  const hasCompleteStudentId =
+    isUnlockSubmissionBypassed || state.studentIdDraft.length === 7;
+  const promptText = isUnlockSubmissionBypassed
+    ? "Local mode detected. You can continue without saving your student number."
+    : "Please enter your student number";
+  const hintText = isUnlockSubmissionBypassed
+    ? "Student ID storage and Google Sheets sync are bypassed in local mode."
+    : "Numbers only, 7 digits after S.";
+  const submitLabel = isUnlockSubmissionBypassed ? "Open roadmap" : "Let's see you";
 
   return `
     <section class="screen screen--student-unlock grid-bg bg-transition">
@@ -37,11 +47,15 @@ export function renderStudentUnlockScreen(state) {
                   draggable="false"
                 >
               </div>
-              <h1 class="student-unlock__title">
-                <span class="student-unlock__title-line">Unlock Your</span>
-                <span class="student-unlock__title-line accent">Career Roadmap</span>
+              <h1 class="student-unlock__title ${isPremadeRoadmap ? "student-unlock__title--premade" : ""}">
+                <span class="student-unlock__title-line ${isPremadeRoadmap ? "student-unlock__title-line--intro" : ""}">
+                  ${isPremadeRoadmap ? "It's okay! You'd still have your" : "Unlock Your"}
+                </span>
+                <span class="student-unlock__title-line ${isPremadeRoadmap ? "student-unlock__title-line--roadmap accent" : "accent"}">
+                  Career Roadmap
+                </span>
               </h1>
-              <p class="student-unlock__prompt">Please enter your student number</p>
+              <p class="student-unlock__prompt">${promptText}</p>
               <div class="student-unlock__field">
                 <label class="sr-only" for="student-id-input">Student number</label>
                 <div class="student-unlock__input-wrap">
@@ -61,7 +75,7 @@ export function renderStudentUnlockScreen(state) {
                 </div>
                 <span class="student-unlock__input-line" aria-hidden="true"></span>
               </div>
-              <p class="student-unlock__hint" id="student-id-hint">Numbers only, 7 digits after S.</p>
+              <p class="student-unlock__hint" id="student-id-hint">${hintText}</p>
               <p
                 class="student-unlock__status"
                 data-student-unlock-status
@@ -94,7 +108,7 @@ export function renderStudentUnlockScreen(state) {
               ${hasCompleteStudentId ? "" : "disabled"}
               aria-hidden="${hasCompleteStudentId ? "false" : "true"}"
             >
-              <span>Let's see you</span>
+              <span>${submitLabel}</span>
             </button>
           </form>
           <div class="student-unlock__stars" aria-hidden="true">

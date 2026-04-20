@@ -1062,6 +1062,7 @@
   overflow: visible;
   pointer-events: none;
   filter: drop-shadow(11px 14px 0 rgba(0, 0, 0, 0.24));
+  z-index: 2;
 }
 
 .career-roadmap-selection__image {
@@ -1071,6 +1072,27 @@
   object-fit: contain;
   backface-visibility: hidden;
   transform: translateZ(0);
+}
+
+.career-roadmap-selection-detail {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.career-roadmap-selection-detail__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  backface-visibility: hidden;
+  transform: translateY(var(--roadmap-detail-shift-y, 0px)) scale(var(--roadmap-detail-scale, 1));
+  transform-origin: center center;
 }
 
 .career-roadmap-download-hotspot,
@@ -1084,7 +1106,7 @@
 
 .career-roadmap-download-hotspot {
   left: 21.1%;
-  top: 84.5%;
+  top: 87.5%;
   width: 57.5%;
   height: 2.08%;
   border-radius: 999px;
@@ -1092,14 +1114,14 @@
 
 .career-roadmap-social-link--sgs {
   left: 28.1%;
-  top: 90.22%;
+  top: 91.84%;
   width: 49%;
   height: 1%;
 }
 
 .career-roadmap-social-link--hanoi {
   left: 28.1%;
-  top: 90.84%;
+  top: 92.8%;
   width: 49%;
   height: 1%;
 }
@@ -1842,6 +1864,27 @@
 
 .student-unlock__title .accent {
   color: var(--red);
+}
+
+.student-unlock__title--premade {
+  width: min(100%, 82cqw);
+  margin-inline: auto;
+}
+
+.student-unlock__title--premade .student-unlock__title-line--intro {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-weight: 400;
+  font-size: clamp(16px, 4.9751cqw, 24px);
+  line-height: 1.16;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.student-unlock__title--premade .student-unlock__title-line--roadmap {
+  margin-top: 1.2438cqw;
+  font-size: clamp(40px, 11.1940cqw, 58px);
+  line-height: 0.94;
+  letter-spacing: -0.055em;
 }
 
 .student-unlock__prompt {
@@ -3187,6 +3230,18 @@
     font-size: clamp(12px, 3.45cqw, 14px);
   }
 
+  .student-unlock__title--premade {
+    width: min(100%, 86cqw);
+  }
+
+  .student-unlock__title--premade .student-unlock__title-line--intro {
+    font-size: clamp(14px, 4cqw, 21px);
+  }
+
+  .student-unlock__title--premade .student-unlock__title-line--roadmap {
+    font-size: clamp(34px, 10cqw, 50px);
+  }
+
   .student-unlock__input-wrap {
     gap: 1.5cqw;
   }
@@ -3410,5 +3465,435 @@
   .deck-button {
     width: 68px;
     height: 75px;
+  }
+}
+
+/* ─── Summary v2 ─────────────────────────────────────────────────────────── */
+
+.summary-v2-layout {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  /* ↓ top padding (below topbar), side padding, bottom padding */
+  padding:
+    calc(env(safe-area-inset-top, 0px) + 6px)
+    12px  /* ← side padding */
+    calc(env(safe-area-inset-bottom, 0px) + 14px);
+  gap: 0;
+  overflow: hidden;
+}
+
+/* ── Header: coach (upper half only) + speech bubble ── */
+.summary-v2-header {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  flex-shrink: 0;
+  /* ↓ âm = coach chồng xuống card; tăng số để card nhích lên sát coach hơn */
+  margin-bottom: -8px;
+  z-index: 1;
+}
+
+/* ── COACH TUNING ──────────────────────────────────────────
+   width/height on .coach   = rendered size of the full illustration
+   height on .coach-wrap     = how many px are visible (crop window)
+   Increase width to make coach bigger.
+   Increase wrap height to reveal more body.
+   ────────────────────────────────────────────────────────── */
+.summary-v2-coach-wrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 200px;   /* ← chiều ngang coach trong header */
+  overflow: hidden;
+  height: 320px;  /* ← bao nhiêu px thân coach hiện ra */
+  align-self: flex-end;
+  z-index: 1;
+}
+
+.screen--summary .summary-v2-coach-wrap .coach {
+  width: 220px !important;   /* ← to coach lên (rộng hơn wrap = lấn ra ngoài trái) */
+  height: 550px !important;
+  transform: translateX(10px) !important; /* ← dịch trái để căn giữa hơn */
+  transform-origin: bottom left !important;
+}
+
+.screen--summary .summary-v2-coach-wrap .coach__image {
+  object-position: top center !important;
+}
+
+.summary-v2-bubble-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  padding-bottom: 4px;
+  align-self: flex-end;
+  transform: translateY(-40px); /* ← tăng số = bubble xuống thấp hơn */
+  overflow: visible;
+  z-index: 3;
+}
+
+.summary-v2-bubble {
+  display: block;
+  width: 105%;
+  height: auto;
+  transform: scale(1.12);
+  transform-origin: right center;
+  filter: drop-shadow(4px 5px 0 rgba(0, 0, 0, 0.88));
+}
+
+/* ── Stage cards ── */
+.summary-v2-cards {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  justify-content: flex-start;  /* cards bắt đầu ngay từ trên */
+  padding-top: 0;
+  margin-top: -14px;
+  z-index: 2;
+}
+
+.summary-v2-card {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 20px;
+  max-height: 142px;   /* ← cap each card height; lower = smaller cards */
+}
+
+.summary-v2-card__bg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  filter: drop-shadow(5px 6px 0 rgba(0, 0, 0, 0.88));
+}
+
+/* Score overlaid on the shape */
+.summary-v2-card__score {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Museo", var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--ink);
+  pointer-events: none;
+  font-size: clamp(20px, 6vw, 32px);
+}
+
+/* Explore – cyan triangle */
+.summary-v2-card__score--explore {
+  left: 83%;
+  top: 55%;
+}
+
+/* Develop – pink pill */
+.summary-v2-card__score--develop {
+  left: 83%;
+  top: 50%;
+}
+
+/* Transition – red circle */
+.summary-v2-card__score--transition {
+  left: 83%;
+  top: 52%;
+  color: #fff;
+}
+
+/* ── Footer: Next button ── */
+.summary-v2-footer {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0;
+}
+
+.summary-v2-next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 130px;
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 999px;
+  border: 2.5px solid var(--ink);
+  background: #fff;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.92);
+  font-family: "Museo", var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.summary-v2-next:hover,
+.summary-v2-next:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 4px 6px 0 rgba(0, 0, 0, 0.92);
+}
+
+.summary-v2-next:active {
+  transform: translateY(2px);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.92);
+}
+
+/* Summary v2 override: refined to match the new mockup more closely. */
+.summary-v2-layout {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: min(100%, 403.63px);
+  display: block;
+  padding: 0;
+  gap: 0;
+  transform: translateX(-50%);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.summary-v2-spine {
+  position: absolute;
+  top: calc(-43.5% - 30px);
+  left: 50%;
+  width: 10px;
+  height: 135%;
+  background: #ffffff;
+  border: 1px solid var(--ink);
+  transform: translateX(calc(-50% - 0.82px));
+  pointer-events: none;
+  z-index: 0;
+}
+
+.summary-v2-cards {
+  position: absolute;
+  top: calc(18.9% - 15px);
+  left: 50%;
+  width: min(calc(105% - 20px), 430px);
+  display: grid;
+  gap: 10px;
+  min-height: auto;
+  margin-top: 0;
+  padding-top: 0;
+  transform:
+    translateX(-50%)
+    perspective(1200px)
+    rotateX(var(--summary-rotate-x, 0deg))
+    rotateY(var(--summary-rotate-y, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  touch-action: none;
+  z-index: 2;
+}
+
+.summary-v2-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2244 / 590;
+  flex: none;
+  min-height: auto;
+  max-height: none;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.summary-v2-card--explore {
+  transform: translate3d(0, var(--explore-lift, 0px), 0) rotate(var(--explore-rotate, 0deg));
+}
+
+.summary-v2-card--develop {
+  transform: translate3d(0, var(--develop-lift, 0px), 0) rotate(var(--develop-rotate, 0deg));
+}
+
+.summary-v2-card--transition {
+  transform: translate3d(0, var(--transition-lift, 0px), 0) rotate(var(--transition-rotate, 0deg));
+}
+
+.summary-v2-card__bg {
+  object-fit: fill;
+}
+
+.summary-v2-card__score {
+  display: block;
+  width: auto;
+  min-width: 0;
+  height: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  clip-path: none;
+  filter: none;
+  font-size: clamp(20px, 7.4vw, 28px);
+  z-index: 1;
+}
+
+/* Score tuning: edit `left` / `top` below to move the 3 percentage labels. */
+.summary-v2-card__score--explore {
+  left: 84%;
+  top: 57%;
+}
+
+.summary-v2-card__score--develop {
+  left: 84%;
+  top: 48%;
+}
+
+.summary-v2-card__score--transition {
+  left: 85%;
+  top: 49%;
+  color: var(--ink);
+}
+
+.summary-v2-info {
+  position: absolute;
+  top: calc(15.2% - 15px);
+  right: 28px;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.92);
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 24px;
+  font-style: italic;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  z-index: 3;
+}
+
+.summary-v2-info:hover,
+.summary-v2-info:focus-visible {
+  transform: translateY(-1px);
+}
+
+.summary-v2-bubble-wrap {
+  position: absolute;
+  top: calc(57.4% - 20px);
+  right: 8px;
+  width: min(calc(100% - 44px), 292px);
+  min-width: auto;
+  padding-bottom: 0;
+  align-self: auto;
+  transform: none;
+  overflow: visible;
+  z-index: 2;
+}
+
+.summary-v2-bubble {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: scale(1.05);
+  transform-origin: right center;
+  filter: drop-shadow(4px 5px 0 rgba(0, 0, 0, 0.9));
+}
+
+/* Coach tuning: edit `left`, `top`, `width`, `height` on the wrap;
+   edit `transform` on `.coach` to nudge the artwork inside the crop. */
+.summary-v2-coach-wrap {
+  position: absolute;
+  left: -20px;
+  top: 57.8%;
+  width: 310px;
+  height: 400px;
+  align-self: auto;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.screen--summary .summary-v2-coach-wrap .coach {
+  width: 344px !important;
+  height: 600px !important;
+  transform: translate(-8px, 34px) !important;
+  transform-origin: top left !important;
+}
+
+.screen--summary .summary-v2-coach-wrap .coach__image {
+  object-position: top center !important;
+}
+
+.summary-v2-actions {
+  position: absolute;
+  top: calc(66.8% - 30px);
+  right: -5px;
+  display: grid;
+  gap: 5px;
+  justify-items: start;
+  z-index: 2;
+}
+
+.summary-v2-cta,
+.summary-v2-skip {
+  min-height: 32px;
+  padding: 8px 16px;
+  border-width: 2px;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.92);
+  font-family: "Museo", var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.summary-v2-cta {
+  width: 220px;
+  min-height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.summary-v2-cta__art {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(4px 4px 0 rgba(0, 0, 0, 0.92));
+  transition: transform 160ms ease, filter 160ms ease;
+}
+
+.summary-v2-cta:hover .summary-v2-cta__art,
+.summary-v2-cta:focus-visible .summary-v2-cta__art {
+  transform: translateY(-1px);
+}
+
+.summary-v2-cta:active .summary-v2-cta__art {
+  transform: translateY(1px);
+}
+
+.summary-v2-skip {
+  width: 156px;
+  min-height: 36px;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+@media (max-width: 380px) {
+  .summary-v2-actions {
+    right: 8px;
+  }
+
+  .summary-v2-cta {
+    width: 205px;
+  }
+
+  .summary-v2-skip {
+    width: 148px;
+    font-size: 13px;
   }
 }

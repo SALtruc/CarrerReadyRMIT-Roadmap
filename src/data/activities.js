@@ -11,7 +11,7 @@ export const activities = {
       id: "career-assessment",
       title: "Career Assessment",
       descriptionHtml:
-        "Discover your <strong>interests</strong>, <strong>strengths</strong>, and <strong>work preferences</strong> through guided assessments that help you explore suitable career pathways.",
+        "Understand your <strong>personality</strong>, <strong>interests</strong>, and <strong>strengths</strong> through <strong>self-assessments</strong> to explore careers that may suit you.",
       iconAssetPath: `${exploreIconFolder}/explore_icon_1.png`,
       iconAlt: "Career Assessment icon"
     },
@@ -35,7 +35,7 @@ export const activities = {
       id: "career-online-portal",
       title: "Career Online Portal",
       descriptionHtml:
-        "Access RMIT's online career platform to explore <strong>jobs</strong>, <strong>career tools</strong>, and useful <strong>resources</strong> in one place.",
+        "Explore <strong>job opportunities</strong> &amp; <strong>AI Career Development tools</strong> through RMIT's online career platform.",
       iconAssetPath: `${exploreIconFolder}/explore_icon_4.png`,
       iconAlt: "Career Online Portal icon"
     },
@@ -43,7 +43,7 @@ export const activities = {
       id: "career-starter-pack",
       title: "How to get Career Ready",
       descriptionHtml:
-        "Build the foundations to become <strong>career ready</strong> by learning how to <strong>plan</strong>, <strong>prepare</strong>, and take your next steps with confidence.",
+        "Learn the <strong>fundamentals</strong> of career <strong>planning</strong>, developing <strong>skills</strong> and <strong>experience</strong> to <strong>get ready</strong> for <strong>future opportunities</strong>.",
       iconAssetPath: `${exploreIconFolder}/explore_icon_5.png`,
       iconAlt: "How to get Career Ready icon"
     },
@@ -79,7 +79,7 @@ export const activities = {
       id: "internship-preparation",
       title: "Internship Preparation Workshop",
       descriptionHtml:
-        "Prepare for your internship by learning what employers expect and how to <strong>present yourself professionally</strong> from day one.",
+        "Get ready for internships by <strong>learning important expectations</strong>, <strong>practical application tips</strong>, and the <strong>workplace skills</strong> you'll need to succeed.",
       iconAssetPath: `${developIconFolder}/develop_icon_2.png`,
       iconAlt: "Internship Preparation Workshop icon"
     },
@@ -87,7 +87,7 @@ export const activities = {
       id: "internship-enhancement",
       title: "Internship Enhancement Workshop",
       descriptionHtml:
-        "Reflect on your internship experience and learn how to <strong>articulate your strengths</strong>, achievements, and growth for future opportunities.",
+        "Develop <strong>interns' employability skills</strong> to support <strong>workplace adaptation</strong> and <strong>effective contribution</strong>.",
       iconAssetPath: `${developIconFolder}/develop_icon_3.png`,
       iconAlt: "Internship Enhancement Workshop icon"
     },
@@ -95,7 +95,7 @@ export const activities = {
       id: "linkedin-leap",
       title: "LinkedIn Leap",
       descriptionHtml:
-        "Build a <strong>professional LinkedIn profile</strong>, strengthen your online presence, and learn how to connect with employers and opportunities.",
+        "A <strong>video series produced</strong> by the <strong>Careers team</strong> guiding you to <strong>build a professional LinkedIn profile</strong>.",
       iconAssetPath: `${developIconFolder}/develop_icon_4.png`,
       iconAlt: "LinkedIn Leap icon",
       iconScale: 1.36
@@ -104,7 +104,7 @@ export const activities = {
       id: "become-club-leader",
       title: "Become A Club Leader",
       descriptionHtml:
-        "Take on a student leadership role to build <strong>leadership</strong>, <strong>teamwork</strong>, and <strong>communication skills</strong> through real experience.",
+        "Develop <strong>leadership</strong>, <strong>teamwork</strong>, and <strong>communication skills</strong> by <strong>leading</strong> or <strong>managing</strong> student club activities.",
       iconAssetPath: `${developIconFolder}/develop_icon_5.png`,
       iconAlt: "Become A Club Leader icon",
       iconScale: 1.34
@@ -122,7 +122,7 @@ export const activities = {
       id: "employer-group-mentoring",
       title: "Employer Group Mentoring",
       descriptionHtml:
-        "Learn directly from <strong>industry professionals</strong> in small-group sessions and gain <strong>career advice</strong>, <strong>industry insights</strong>, and practical guidance.",
+        "Connect with <strong>industry professionals</strong> for <strong>career advice</strong>, <strong>insights</strong>, and <strong>guidance</strong> on your career journey.",
       iconAssetPath: `${developIconFolder}/develop_icon_7.png`,
       iconAlt: "Employer Group Mentoring icon",
       iconScale: 1.36
@@ -131,7 +131,7 @@ export const activities = {
       id: "career-ready-hub-drop-in",
       title: "Career Ready Hub Drop-in",
       descriptionHtml:
-        "Drop in for quick, practical support with your <strong>CV</strong>, <strong>applications</strong>, and career questions from the Career Ready team.",
+        "Drop in to get <strong>quick support</strong> from <strong>Career Ready Assistants</strong> on <strong>CVs</strong>, <strong>job applications</strong>, or <strong>career-related questions</strong>.",
       iconAssetPath: `${developIconFolder}/develop_icon_8.png`,
       iconAlt: "Career Ready Hub Drop-in icon",
       iconScale: 1.38
@@ -149,7 +149,7 @@ export const activities = {
       id: "wil-industry-challenge-projects",
       title: "In-Class Projects",
       descriptionHtml:
-        "Work on <strong>course-based projects</strong> that mirror real industry challenges and help you build <strong>practical experience</strong> through your classes.",
+        "Develop <strong>skills</strong> through <strong>practical projects</strong> or <strong>course assignments</strong>.",
       iconAssetPath: `${developIconFolder}/develop_icon_10.png`,
       iconAlt: "In-Class Projects icon",
       iconScale: 1.42
@@ -158,7 +158,7 @@ export const activities = {
       id: "global-experience-virtual-internships",
       title: "Global Experience / Virtual Internships",
       descriptionHtml:
-        "Gain <strong>global experience</strong> through virtual internships and projects with <strong>international organizations</strong>, teams, and partners.",
+        "Gain <strong>international exposure</strong> through <strong>virtual internships</strong>, <strong>study abroad</strong> or <strong>projects</strong> with <strong>global organizations</strong>.",
       iconAssetPath: `${developIconFolder}/develop_icon_11.png`,
       iconAlt: "Global Experience / Virtual Internships icon",
       iconScale: 1.4
@@ -169,7 +169,7 @@ export const activities = {
       id: "application-101",
       title: "Application 101",
       descriptionHtml:
-        "Build confidence across the <strong>application process</strong> with practical guidance on preparing stronger, more targeted job applications.",
+        "This <strong>video series</strong>, created with <strong>Synthesia</strong>, an <strong>AI-powered video platform</strong>, guides you through <strong>CV writing</strong>, <strong>cover letters</strong>, and <strong>confident interviewing</strong>.",
       iconAssetPath: `${transitionIconFolder}/transition_icon_1.png`,
       iconAlt: "Application 101 icon",
       iconScale: 1.42
@@ -195,7 +195,7 @@ export const activities = {
       id: "meet-your-employer",
       title: "Meet your Employer",
       descriptionHtml:
-        "Meet employers, hear what they look for in candidates, and gain <strong>first-hand insight</strong> into roles, recruitment, and workplace expectations.",
+        "Engage directly with <strong>employers</strong> to <strong>discover</strong> their <strong>company culture</strong>, <strong>understand expectations</strong>, and <strong>explore exciting career opportunities</strong>.",
       iconAssetPath: `${transitionIconFolder}/transition_icon_4.png`,
       iconAlt: "Meet your Employer icon"
     },
@@ -203,7 +203,7 @@ export const activities = {
       id: "careers-festival",
       title: "Careers Festival",
       descriptionHtml:
-        "Meet a range of <strong>employers</strong>, discover opportunities, and expand your <strong>professional network</strong> at this large-scale career event.",
+        "Connect with a <strong>variety of employers</strong>, <strong>uncover new career opportunities</strong>, and <strong>grow</strong> your <strong>professional network</strong> at this <strong>dynamic career event</strong>.",
       iconAssetPath: `${transitionIconFolder}/transition_icon_5.png`,
       iconAlt: "Careers Festival icon",
       iconScale: 1.42
@@ -212,7 +212,7 @@ export const activities = {
       id: "skillboost-101",
       title: "Skillboost 101",
       descriptionHtml:
-        "Develop essential <strong>employability skills</strong> such as teamwork, leadership, communication, and presentation through short, practical learning content.",
+        "This <strong>video series</strong>, created using <strong>Synthesia</strong>, an <strong>AI-powered tool</strong>, helps you <strong>level up essential skills</strong>: <strong>teamwork</strong>, <strong>leadership</strong>, <strong>presentation</strong>, and more.",
       iconAssetPath: `${transitionIconFolder}/transition_icon_6.png`,
       iconAlt: "Skillboost 101 icon",
       iconScale: 1.42
@@ -221,7 +221,7 @@ export const activities = {
       id: "employability-skills-workshop",
       title: "Employability Skills Workshop",
       descriptionHtml:
-        "Strengthen the <strong>core skills</strong> employers value most, including communication, teamwork, problem-solving, and workplace professionalism.",
+        "Learn <strong>skills</strong> like <strong>communication</strong>, <strong>teamwork</strong>, <strong>problem-solving</strong> that employers value.",
       iconAssetPath: `${transitionIconFolder}/transition_icon_7.png`,
       iconAlt: "Employability Skills Workshop icon",
       iconScale: 1.42
@@ -239,7 +239,7 @@ export const activities = {
       id: "personal-branding-workshops",
       title: "Personal Branding Workshops",
       descriptionHtml:
-        "Learn how to communicate your <strong>strengths</strong>, <strong>experience</strong>, and <strong>professional identity</strong> clearly across applications and networking.",
+        "Figure out <strong>your unique value</strong>, turn it into a <strong>clear personal brand</strong>, present it confidently on your <strong>CV</strong>, <strong>LinkedIn</strong>, and when <strong>networking</strong>.",
       iconAssetPath: `${transitionIconFolder}/transition_icon_9.png`,
       iconAlt: "Personal Branding Workshops icon",
       iconScale: 1.42

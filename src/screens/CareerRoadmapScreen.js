@@ -1,19 +1,15 @@
 import { renderTopBar } from "../components/TopBar.js";
 import {
-  ROADMAP_BACKGROUND_ASSET_PATH,
-  ROADMAP_PREMADE_ASSET_PATH,
-  ROADMAP_BACKGROUND_SIZE,
   ROADMAP_FACEBOOK_LINKS,
+  getRoadmapPosterConfig,
   getRoadmapScores,
-  getRoadmapSelections,
-  roadmapStageScoreLayout
+  getRoadmapSelections
 } from "../data/roadmap.js";
 
 export function renderCareerRoadmapScreen(state) {
   const isPremadeRoadmap = state.roadmapVariant === "premade";
-  const posterAssetPath = isPremadeRoadmap
-    ? ROADMAP_PREMADE_ASSET_PATH
-    : ROADMAP_BACKGROUND_ASSET_PATH;
+  const posterConfig = getRoadmapPosterConfig(state.roadmapVariant);
+  const posterAssetPath = posterConfig.assetPath;
   const scores = getRoadmapScores(state);
   const selections = isPremadeRoadmap ? [] : getRoadmapSelections(state);
 
@@ -48,10 +44,12 @@ export function renderCareerRoadmapScreen(state) {
             loading="eager"
             draggable="false"
           >
-          ${renderRoadmapScore("explore", scores.explore)}
-          ${renderRoadmapScore("develop", scores.develop)}
-          ${renderRoadmapScore("transition", scores.transition)}
-          ${selections.map(renderRoadmapSelection).join("")}
+          ${renderRoadmapScore("explore", scores.explore, posterConfig)}
+          ${renderRoadmapScore("develop", scores.develop, posterConfig)}
+          ${renderRoadmapScore("transition", scores.transition, posterConfig)}
+          ${selections
+            .map((selection) => renderRoadmapSelection(selection, posterConfig))
+            .join("")}
           <button
             class="career-roadmap-download-hotspot"
             type="button"
@@ -84,16 +82,17 @@ export function renderCareerRoadmapScreen(state) {
   `;
 }
 
-function renderRoadmapScore(stage, score) {
-  const layout = roadmapStageScoreLayout[stage];
+function renderRoadmapScore(stage, score, posterConfig) {
+  const layout = posterConfig.stageScoreLayout[stage];
+  const { width, height } = posterConfig.size;
 
   return `
     <div
       class="career-roadmap-score career-roadmap-score--${stage}"
       style="${formatRoadmapStyle({
-        left: `${toPercent(layout.x, ROADMAP_BACKGROUND_SIZE.width)}%`,
-        top: `${toPercent(layout.y, ROADMAP_BACKGROUND_SIZE.height)}%`,
-        "--roadmap-score-font": `${toPercent(layout.fontSize, ROADMAP_BACKGROUND_SIZE.width)}cqw`
+        left: `${toPercent(layout.x, width)}%`,
+        top: `${toPercent(layout.y, height)}%`,
+        "--roadmap-score-font": `${toPercent(layout.fontSize, width)}cqw`
       })}"
       aria-label="${stage} score ${score} percent"
     >
@@ -102,18 +101,21 @@ function renderRoadmapScore(stage, score) {
   `;
 }
 
-function renderRoadmapSelection(selection) {
+function renderRoadmapSelection(selection, posterConfig) {
   const { slot } = selection;
   const scale = slot.scale || 1;
+  const { width, height } = posterConfig.size;
+  const detailSlot = selection.detailAssetPath ? selection.detailSlot : null;
 
   return `
+    ${detailSlot ? renderRoadmapSelectionDetail(selection, detailSlot, posterConfig) : ""}
     <div
       class="career-roadmap-selection career-roadmap-selection--${selection.stage}"
       style="${formatRoadmapStyle({
-        left: `${toPercent(slot.x, ROADMAP_BACKGROUND_SIZE.width)}%`,
-        top: `${toPercent(slot.y, ROADMAP_BACKGROUND_SIZE.height)}%`,
-        width: `${toPercent(slot.maxWidth * scale, ROADMAP_BACKGROUND_SIZE.width)}%`,
-        height: `${toPercent(slot.maxHeight * scale, ROADMAP_BACKGROUND_SIZE.height)}%`,
+        left: `${toPercent(slot.x, width)}%`,
+        top: `${toPercent(slot.y, height)}%`,
+        width: `${toPercent(slot.maxWidth * scale, width)}%`,
+        height: `${toPercent(slot.maxHeight * scale, height)}%`,
         "--roadmap-item-rotate": `${slot.rotate}deg`
       })}"
       aria-hidden="true"
@@ -123,6 +125,35 @@ function renderRoadmapSelection(selection) {
         data-asset-image="career-roadmap-${selection.activityId}"
         src="${selection.assetPath}"
         alt="${selection.title}"
+        decoding="async"
+        loading="lazy"
+        draggable="false"
+      >
+    </div>
+  `;
+}
+
+function renderRoadmapSelectionDetail(selection, detailSlot, posterConfig) {
+  const { width, height } = posterConfig.size;
+
+  return `
+    <div
+      class="career-roadmap-selection-detail career-roadmap-selection-detail--${detailSlot.direction || ""}"
+      style="${formatRoadmapStyle({
+        left: `${toPercent(detailSlot.x, width)}%`,
+        top: `${toPercent(detailSlot.y, height)}%`,
+        width: `${toPercent(detailSlot.boxSize, width)}%`,
+        height: `${toPercent(detailSlot.boxSize, height)}%`,
+        "--roadmap-detail-scale": detailSlot.scale,
+        "--roadmap-detail-shift-y": `${detailSlot.shiftY}px`
+      })}"
+      aria-hidden="true"
+    >
+      <img
+        class="career-roadmap-selection-detail__image"
+        data-asset-image="career-roadmap-detail-${selection.activityId}"
+        src="${selection.detailAssetPath}"
+        alt=""
         decoding="async"
         loading="lazy"
         draggable="false"

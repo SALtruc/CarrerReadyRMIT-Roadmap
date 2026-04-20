@@ -2,53 +2,160 @@ import { activities, stageSequence } from "./activities.js";
 import { getStageScore } from "../utils/selectors.js";
 
 const roadmapAssetFolder = "./src/assets/Roadmap";
+const roadmapDetailAssetFolder = `${roadmapAssetFolder}/Roadmap_node_des`;
 
-export const ROADMAP_BACKGROUND_SIZE = {
+const ROADMAP_REFERENCE_SIZE = {
   width: 1980,
   height: 12017
 };
 
+const ROADMAP_CUSTOM_SIZE = {
+  width: 1212,
+  height: 10746
+};
+
+const ROADMAP_PREMADE_SIZE = {
+  width: 1212,
+  height: 10488
+};
+
+export const ROADMAP_BACKGROUND_SIZE = { ...ROADMAP_CUSTOM_SIZE };
+
 export const ROADMAP_BACKGROUND_ASSET_PATH =
-  `${roadmapAssetFolder}/Background cho Roadmap.png`;
+  `${roadmapAssetFolder}/Placeholder map.png`;
 
 export const ROADMAP_PREMADE_ASSET_PATH =
-  `${roadmapAssetFolder}/Placeholder map.png`;
+  `${roadmapAssetFolder}/Already_put_Roadmap.png`;
 
 export const ROADMAP_FACEBOOK_LINKS = {
   sgs: "https://www.facebook.com/RMITCareerReadySGS",
   hanoi: "https://www.facebook.com/RMITCareerReadyHN"
 };
 
-export const roadmapStageScoreLayout = {
-  explore: { x: 458, y: 1970, fontSize: 120 },
-  develop: { x: 989, y: 1970, fontSize: 120 },
-  transition: { x: 1520, y: 1970, fontSize: 120 }
+const roadmapReferenceStageScoreLayout = {
+  explore: { x: 470, y: 1310, fontSize: 125 },
+  develop: { x: 989, y: 1310, fontSize: 125 },
+  transition: { x: 1520, y: 1310, fontSize: 125 }
 };
 
-export const roadmapStageIconSlots = {
+const roadmapReferenceStageIconSlots = {
   explore: [
-    { x: 480, y: 2501, maxWidth: 560, maxHeight: 560, rotate: -3, scale: 1.6 },
-    { x: 1500, y: 3270, maxWidth: 560, maxHeight: 560, rotate: 3, scale: 1.8 },
-    { x: 480, y: 3850, maxWidth: 560, maxHeight: 560, rotate: -3, scale: 1.6}
+    { x: 480, y: 2820, maxWidth: 560, maxHeight: 560, rotate: -3.2, scale: 2 },
+    { x: 1520, y: 3450, maxWidth: 560, maxHeight: 560, rotate: 3.2, scale: 2 },
+    { x: 480, y: 3950, maxWidth: 560, maxHeight: 560, rotate: -3.2, scale: 2 }
   ],
   develop: [
-    { x: 1500, y: 5470,  maxWidth: 560, maxHeight: 560, rotate: 3, scale: 1.6 },
-    { x: 480, y: 5950, maxWidth: 560, maxHeight: 560, rotate: -3, scale: 1.8 },
-    { x: 1500, y: 6800, maxWidth: 560, maxHeight: 560, rotate: 3, scale: 1.6 }
+    { x: 1520, y: 5780, maxWidth: 560, maxHeight: 560, rotate: 3.2, scale: 1.8 },
+    { x: 460, y: 6250, maxWidth: 560, maxHeight: 560, rotate: -3.2, scale: 1.8},
+    { x: 1520, y: 6830, maxWidth: 560, maxHeight: 560, rotate: 3.2, scale: 1.8 }
   ],
   transition: [
-    { x: 480, y: 7780, maxWidth: 560, maxHeight: 560, rotate: -3, scale: 1.8},
-    { x: 1500, y: 8280, maxWidth: 560, maxHeight: 560, rotate: 3, scale: 1.6 },
-    { x: 480, y: 9050, maxWidth: 560, maxHeight: 560, rotate: -3, scale: 1.8}
+    { x: 480, y: 8700, maxWidth: 560, maxHeight: 560, rotate: -3.2, scale: 1.8},
+    { x: 1550, y: 9350, maxWidth: 560, maxHeight: 560, rotate: 3.2, scale: 2 },
+    { x: 460, y: 9890, maxWidth: 560, maxHeight: 560, rotate: -3.2, scale: 1.8 }
   ]
 };
+
+const roadmapReferenceStageDetailSlots = {
+  explore: [
+    { x: 1510, y: 2850, boxSize: 560, scale: 1.6, shiftYRatio: 0.04, direction: "right" },
+    { x: 460, y: 3370, boxSize: 560, scale: 1.6, shiftYRatio: 0.04, direction: "left" },
+    { x: 1510, y: 3915, boxSize: 560, scale: 1.6, shiftYRatio: 0.04, direction: "right" }
+  ],
+  develop: [
+    { x: 460, y: 5700, boxSize: 580, scale: 1.5, shiftYRatio: 0.04, direction: "left" },
+    { x: 1520, y: 6250, boxSize: 580, scale: 1.6, shiftYRatio: 0.04, direction: "right" },
+    { x: 460, y: 6750, boxSize: 580, scale: 1.5, shiftYRatio: 0.04, direction: "left" }
+  ],
+  transition: [
+    { x: 1520, y: 8680, boxSize: 580, scale: 1.6, shiftYRatio: 0.04, direction: "right" },
+    { x: 460, y: 9300, boxSize: 580, scale: 1.6, shiftYRatio: 0.04, direction: "left" },
+    { x: 1520, y: 9890, boxSize: 580, scale: 1.6, shiftYRatio: 0.04, direction: "right" }
+  ]
+};
+
+function scaleRoadmapX(value, width) {
+  return Math.round((value / ROADMAP_REFERENCE_SIZE.width) * width);
+}
+
+function scaleRoadmapY(value, height) {
+  return Math.round((value / ROADMAP_REFERENCE_SIZE.height) * height);
+}
+
+function createRoadmapStageScoreLayout(size) {
+  return Object.fromEntries(
+    Object.entries(roadmapReferenceStageScoreLayout).map(([stage, layout]) => [
+      stage,
+      {
+        x: scaleRoadmapX(layout.x, size.width),
+        y: scaleRoadmapY(layout.y, size.height),
+        fontSize: scaleRoadmapX(layout.fontSize, size.width)
+      }
+    ])
+  );
+}
+
+function createRoadmapStageIconSlots(size) {
+  return Object.fromEntries(
+    Object.entries(roadmapReferenceStageIconSlots).map(([stage, slots]) => [
+      stage,
+      slots.map((slot) => ({
+        ...slot,
+        x: scaleRoadmapX(slot.x, size.width),
+        y: scaleRoadmapY(slot.y, size.height),
+        maxWidth: scaleRoadmapX(slot.maxWidth, size.width),
+        maxHeight: scaleRoadmapY(slot.maxHeight, size.height)
+      }))
+    ])
+  );
+}
+
+function createRoadmapStageDetailSlots(size) {
+  return Object.fromEntries(
+    Object.entries(roadmapReferenceStageDetailSlots).map(([stage, slots]) => [
+      stage,
+      slots.map((slot) => ({
+        ...slot,
+        x: scaleRoadmapX(slot.x, size.width),
+        y: scaleRoadmapY(slot.y, size.height),
+        boxSize: scaleRoadmapX(slot.boxSize, size.width),
+        shiftY: Math.round(scaleRoadmapX(slot.boxSize, size.width) * slot.shiftYRatio)
+      }))
+    ])
+  );
+}
+
+export const roadmapStageScoreLayout = createRoadmapStageScoreLayout(ROADMAP_CUSTOM_SIZE);
+export const roadmapStageIconSlots = createRoadmapStageIconSlots(ROADMAP_CUSTOM_SIZE);
+export const roadmapStageDetailSlots = createRoadmapStageDetailSlots(ROADMAP_CUSTOM_SIZE);
+
+const roadmapPosterConfigByVariant = {
+  custom: {
+    assetPath: ROADMAP_BACKGROUND_ASSET_PATH,
+    size: ROADMAP_CUSTOM_SIZE,
+    stageScoreLayout: roadmapStageScoreLayout,
+    stageIconSlots: roadmapStageIconSlots,
+    stageDetailSlots: roadmapStageDetailSlots
+  },
+  premade: {
+    assetPath: ROADMAP_PREMADE_ASSET_PATH,
+    size: ROADMAP_PREMADE_SIZE,
+    stageScoreLayout: createRoadmapStageScoreLayout(ROADMAP_PREMADE_SIZE),
+    stageIconSlots: createRoadmapStageIconSlots(ROADMAP_PREMADE_SIZE),
+    stageDetailSlots: createRoadmapStageDetailSlots(ROADMAP_PREMADE_SIZE)
+  }
+};
+
+export function getRoadmapPosterConfig(variant = "custom") {
+  return roadmapPosterConfigByVariant[variant === "premade" ? "premade" : "custom"];
+}
 
 const roadmapAssetFileByActivityId = {
   "career-assessment": "Career Assessment.png",
   consultation: "1_1 Consultations.png",
   "cv-consults": "CV Consults.png",
   "career-online-portal": "Careers Online Portal.png",
-  "career-starter-pack": "How 2 get career ready.png",
+  "career-starter-pack": "Career Starter Pack Workshop.png",
   "volunteer-program": "Volunteer Program.png",
   "career-ready-award": "Career Ready Award.png",
   "job-search-strategy": `Job Search Strategy Workshop\u00A0.png`,
@@ -74,6 +181,37 @@ const roadmapAssetFileByActivityId = {
   "future-ready-workshops": "Future Ready Workshops.png"
 };
 
+const roadmapDetailAssetFileByActivityId = {
+  "career-assessment": "Career Assessment.png",
+  consultation: "1_1 Consultations.png",
+  "cv-consults": "CV Consults.png",
+  "career-online-portal": "Career Online Portal (COP).png",
+  "career-starter-pack": "How 2 get career ready.png",
+  "volunteer-program": "Volunteer Program.png",
+  "career-ready-award": "Career Ready Award.png",
+  "job-search-strategy": `Job Search Strategy Workshop\u00A0.png`,
+  "internship-preparation": `Internship Preparation  Workshop\u00A0.png`,
+  "internship-enhancement": "Internship Enhancement Workshop.png",
+  "linkedin-leap": "LinkedIn Leap.png",
+  "become-club-leader": "Become A Club Leader.png",
+  "join-competition": "Join Competition.png",
+  "employer-group-mentoring": "Employer Group Mentoring.png",
+  "career-ready-hub-drop-in": "Career Ready Hub Drop-in.png",
+  "company-visit": "Company Visit.png",
+  "wil-industry-challenge-projects": "WIL-Industry  Challenge Projects.png",
+  "global-experience-virtual-internships": "Global experience-Virtual Internships.png",
+  "application-101": "APPLICATION 102.png",
+  cv360: "CV360.png",
+  interview360: "INTERVIEW360.png",
+  "meet-your-employer": "MEET YOUR EMPLOYER.png",
+  "careers-festival": "CAREERS FESTIVAL.png",
+  "skillboost-101": "SKILLBOOST 102.png",
+  "employability-skills-workshop": "EMPLOYABILITY SKILLS WS.png",
+  "alumni-mentoring": "ALUMINI MENTORING.png",
+  "personal-branding-workshops": "PERSONAL BRANDING WS.png",
+  "future-ready-workshops": "FUTURE READY WS.png"
+};
+
 const activityById = Object.fromEntries(
   Object.values(activities)
     .flat()
@@ -87,6 +225,13 @@ export const roadmapActivityAssetPathById = Object.fromEntries(
   ])
 );
 
+export const roadmapActivityDetailAssetPathById = Object.fromEntries(
+  Object.entries(roadmapDetailAssetFileByActivityId).map(([activityId, filename]) => [
+    activityId,
+    `${roadmapDetailAssetFolder}/${filename}`
+  ])
+);
+
 export function getRoadmapScores(state) {
   return Object.fromEntries(
     stageSequence.map((stage) => [stage, getStageScore(state, stage)])
@@ -94,15 +239,19 @@ export function getRoadmapScores(state) {
 }
 
 export function getRoadmapSelections(state) {
+  const { stageIconSlots, stageDetailSlots } = getRoadmapPosterConfig(state?.roadmapVariant);
+
   return stageSequence.flatMap((stage) =>
     (state.activitySelections[stage] || [])
       .slice(0, 3)
       .map((activityId, index) => {
-        const slot = roadmapStageIconSlots[stage][index];
+        const slot = stageIconSlots[stage][index];
+        const detailSlot = stageDetailSlots[stage][index];
         const assetPath = roadmapActivityAssetPathById[activityId];
+        const detailAssetPath = roadmapActivityDetailAssetPathById[activityId];
         const activity = activityById[activityId];
 
-        if (!slot || !assetPath || !activity) {
+        if (!slot || !detailSlot || !assetPath || !activity) {
           return null;
         }
 
@@ -111,6 +260,8 @@ export function getRoadmapSelections(state) {
           stage,
           title: activity.title,
           assetPath,
+          detailAssetPath,
+          detailSlot,
           slot
         };
       })
@@ -127,8 +278,21 @@ export function getRoadmapAssetPaths(activityIds = null) {
     ROADMAP_BACKGROUND_ASSET_PATH,
     ...new Set(
       resolvedActivityIds
-        .map((activityId) => roadmapActivityAssetPathById[activityId])
+        .flatMap((activityId) => [
+          roadmapActivityAssetPathById[activityId],
+          roadmapActivityDetailAssetPathById[activityId]
+        ])
         .filter(Boolean)
     )
   ];
+}
+
+export function getRoadmapDetailAssetPaths(activityIds = null) {
+  const resolvedActivityIds = Array.isArray(activityIds)
+    ? activityIds
+    : Object.keys(roadmapActivityDetailAssetPathById);
+
+  return resolvedActivityIds
+    .map((activityId) => roadmapActivityDetailAssetPathById[activityId])
+    .filter(Boolean);
 }

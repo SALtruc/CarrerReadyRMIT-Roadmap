@@ -7,6 +7,10 @@ const QUESTION_IDS_BY_STAGE = {
 const MAX_BODY_LENGTH = 20000;
 const STUDENT_ID_PATTERN = /^S\d{7}$/;
 
+function isTruthyEnvFlag(value) {
+  return typeof value === "string" && ["1", "true", "yes", "on"].includes(value.trim().toLowerCase());
+}
+
 function json(res, status, body) {
   return res.status(status).json(body);
 }
@@ -112,6 +116,13 @@ module.exports = async function handler(req, res) {
       ok: false,
       error: "method_not_allowed",
       message: "Unsupported request method."
+    });
+  }
+
+  if (isTruthyEnvFlag(process.env.BYPASS_UNLOCK_STORAGE)) {
+    return json(res, 200, {
+      ok: true,
+      bypassed: true
     });
   }
 

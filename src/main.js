@@ -1,4 +1,5 @@
 import { renderApp } from "./renderApp.js";
+import { isUnlockSubmissionBypassed } from "./config/runtime.js";
 import { avatars } from "./data/avatars.js";
 import { getStageActivityAssetPaths, stageSequence } from "./data/activities.js";
 import { getRoadmapAssetPaths, ROADMAP_PREMADE_ASSET_PATH } from "./data/roadmap.js";
@@ -271,7 +272,8 @@ function syncStudentUnlockButtonState() {
     return;
   }
 
-  const hasCompleteStudentId = String(state.studentIdDraft || "").length === 7;
+  const hasCompleteStudentId =
+    isUnlockSubmissionBypassed || String(state.studentIdDraft || "").length === 7;
   submitButton.classList.toggle("is-hidden", !hasCompleteStudentId);
   submitButton.disabled = !hasCompleteStudentId || studentUnlockRequestInFlight;
   submitButton.setAttribute("aria-hidden", hasCompleteStudentId ? "false" : "true");
@@ -285,6 +287,12 @@ async function submitStudentUnlock(form) {
   const studentIdDigits = String(state.studentIdDraft || "").trim();
   const trapField = form.querySelector("[data-student-unlock-trap]");
   const submitButton = form.querySelector(".student-unlock__bubble");
+
+  if (isUnlockSubmissionBypassed) {
+    completeStudentUnlock();
+    render();
+    return;
+  }
 
   if (studentIdDigits.length !== 7) {
     setStudentUnlockStatus("Please enter the 7 digits after S.", "error");
@@ -991,7 +999,7 @@ function persistAppState() {
         roadmapVariant: state.roadmapVariant,
         hasUnlockedRoadmap: state.hasUnlockedRoadmap,
         exploreEntryScreen: state.exploreEntryScreen,
-        studentIdDraft: state.studentIdDraft
+        studentIdDraft: isUnlockSubmissionBypassed ? "" : state.studentIdDraft
       })
     );
   } catch (error) {
@@ -1040,9 +1048,11 @@ function applyStateSnapshot(snapshot) {
   state.exploreEntryScreen = typeof snapshot.exploreEntryScreen === "string"
     ? snapshot.exploreEntryScreen
     : state.exploreEntryScreen;
-  state.studentIdDraft = typeof snapshot.studentIdDraft === "string"
-    ? snapshot.studentIdDraft.replace(/\D/g, "").slice(0, 7)
-    : "";
+  state.studentIdDraft = isUnlockSubmissionBypassed
+    ? ""
+    : (typeof snapshot.studentIdDraft === "string"
+      ? snapshot.studentIdDraft.replace(/\D/g, "").slice(0, 7)
+      : "");
   state.showStageInfo = false;
   state.swipeFeedback = null;
   state.showQuestionIntro = false;

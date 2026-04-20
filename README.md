@@ -6,6 +6,13 @@ This is a lightweight mobile-web prototype built with plain HTML, CSS, and JavaS
 
 Open `index.html` in a browser.
 
+## Local Unlock Bypass
+
+- Frontend automatically bypasses student ID submission when the app runs on `file://`, `localhost`, `127.0.0.1`, or `[::1]`.
+- In that local mode, the roadmap can be opened without entering `S` ID, no `/api/unlock` request is sent, and `studentIdDraft` is not persisted in local storage.
+- If you run the API locally as well, set `BYPASS_UNLOCK_STORAGE=true` in your env so `/api/unlock` returns `ok` without calling Google Sheets.
+- See `.env.example` for the supported API env keys.
+
 ## Files
 
 - `index.html`: app shell that loads the modular app
