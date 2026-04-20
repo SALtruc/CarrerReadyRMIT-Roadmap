@@ -25,7 +25,9 @@ export function renderStudentUnlockScreen(state) {
   const hintText = isUnlockSubmissionBypassed
     ? "Student ID storage and Google Sheets sync are bypassed in local mode."
     : "Numbers only, 7 digits after S.";
-  const submitLabel = isUnlockSubmissionBypassed ? "Open roadmap" : "Let's see you";
+  const submitLabel = isUnlockSubmissionBypassed
+    ? "Click here to reveal it!"
+    : (hasCompleteStudentId ? "Click here to reveal it!" : "Let's see you");
 
   return `
     <section class="screen screen--student-unlock grid-bg bg-transition">
@@ -33,6 +35,15 @@ export function renderStudentUnlockScreen(state) {
       <div class="student-unlock-viewport">
         <div class="student-unlock">
           <form class="student-unlock__stage" data-form="student-unlock">
+            <button
+              class="student-unlock__back"
+              type="button"
+              data-action="student-unlock-back"
+              aria-label="Go back"
+            >
+              <span class="student-unlock__back-icon" aria-hidden="true">&lt;</span>
+              <span>Back</span>
+            </button>
             <div class="student-unlock__card">
               <div class="student-unlock__card-header">
                 ${renderSegmentBar(state)}
@@ -108,7 +119,7 @@ export function renderStudentUnlockScreen(state) {
               ${hasCompleteStudentId ? "" : "disabled"}
               aria-hidden="${hasCompleteStudentId ? "false" : "true"}"
             >
-              <span>${submitLabel}</span>
+              <span data-student-unlock-button-label>${submitLabel}</span>
             </button>
           </form>
           <div class="student-unlock__stars" aria-hidden="true">

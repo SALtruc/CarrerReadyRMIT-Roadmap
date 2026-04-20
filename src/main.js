@@ -19,7 +19,9 @@ import {
   openStudentUnlockScreen,
   openSummaryScreen,
   openStageDetailScreen,
+  openCareerRoadmapScreen,
   restartFlow,
+  returnFromStudentUnlock,
   setStudentIdDraft,
   selectAvatar,
   showNextStage,
@@ -37,6 +39,7 @@ const previewMode = new URLSearchParams(window.location.search).get("preview");
 let roadmapCheckTimer = null;
 let roadmapSummaryTimer = null;
 let roadmapSequenceRunning = false;
+let unlockTransitionTimer = null;
 let questionIntroTimer = null;
 let previousQuestionDeckProgress = null;
 let questionButtonAnswerTimer = null;
@@ -70,6 +73,9 @@ const studentUnlockAssetSources = [
   "./src/assets/student/Student-2.png",
   "./src/assets/student/Student-3.png"
 ];
+const unlockTransitionAssetSources = [
+  "./src/assets/Unclock_animation.gif"
+];
 const questionActionAssetSources = [
   "./src/assets/button/no.png",
   "./src/assets/button/yes.png"
@@ -102,6 +108,7 @@ function render() {
   bindQuestionDeckProgress();
   syncQuestionDeckHint(app, state.swipeFeedback);
   syncActivitySelectionCelebration();
+  syncUnlockTransitionSequence();
   syncRoadmapSequence();
   syncQuestionIntroOverlay();
   warmAssetSources(getPredictiveAssetSources(state));
@@ -274,6 +281,14 @@ function syncStudentUnlockButtonState() {
 
   const hasCompleteStudentId =
     isUnlockSubmissionBypassed || String(state.studentIdDraft || "").length === 7;
+  const submitButtonLabel = submitButton.querySelector("[data-student-unlock-button-label]");
+
+  if (submitButtonLabel) {
+    submitButtonLabel.textContent = isUnlockSubmissionBypassed
+      ? "Open roadmap"
+      : (hasCompleteStudentId ? "Click here to reveal it!" : "Let's see you");
+  }
+
   submitButton.classList.toggle("is-hidden", !hasCompleteStudentId);
   submitButton.disabled = !hasCompleteStudentId || studentUnlockRequestInFlight;
   submitButton.setAttribute("aria-hidden", hasCompleteStudentId ? "false" : "true");
@@ -386,6 +401,35 @@ function syncRoadmapSequence() {
     openSummaryScreen();
     render();
   }, 5900);
+}
+
+function syncUnlockTransitionSequence() {
+  if (state.screen !== "unlock-transition") {
+    clearUnlockTransitionSequence();
+    return;
+  }
+
+  if (unlockTransitionTimer) {
+    return;
+  }
+
+  unlockTransitionTimer = window.setTimeout(() => {
+    if (state.screen !== "unlock-transition") {
+      return;
+    }
+
+    openCareerRoadmapScreen();
+    render();
+  }, 2600);
+}
+
+function clearUnlockTransitionSequence() {
+  if (!unlockTransitionTimer) {
+    return;
+  }
+
+  window.clearTimeout(unlockTransitionTimer);
+  unlockTransitionTimer = null;
 }
 
 function clearRoadmapSequence() {
@@ -806,11 +850,19 @@ function getPredictiveAssetSources(currentState) {
       ];
     case "student-unlock":
       return currentState.roadmapVariant === "premade"
-        ? [...studentUnlockAssetSources, ROADMAP_PREMADE_ASSET_PATH]
+        ? [...studentUnlockAssetSources, ...unlockTransitionAssetSources, ROADMAP_PREMADE_ASSET_PATH]
         : [
             ...studentUnlockAssetSources,
+            ...unlockTransitionAssetSources,
             ...getRoadmapAssetPaths(getSelectedRoadmapActivityIds(currentState))
           ];
+    case "unlock-transition":
+      return [
+        ...unlockTransitionAssetSources,
+        ...(currentState.roadmapVariant === "premade"
+          ? [ROADMAP_PREMADE_ASSET_PATH]
+          : getRoadmapAssetPaths(getSelectedRoadmapActivityIds(currentState)))
+      ];
     case "explore": {
       const activeStage = stageSequence.includes(currentState.activeStage)
         ? currentState.activeStage
@@ -894,6 +946,9 @@ function handleAppClick(event) {
       break;
     case "stage-next":
       showNextStage();
+      break;
+    case "student-unlock-back":
+      returnFromStudentUnlock();
       break;
     case "toggle-stage-info":
       toggleStageInfo();

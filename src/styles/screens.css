@@ -1798,6 +1798,31 @@
   height: 52px;
 }
 
+.student-unlock__back {
+  position: absolute;
+  left: 1.4925cqw;
+  top: 20px;
+  min-height: 8.4577cqw;
+  padding: 0 4.2289cqw;
+  display: inline-flex;
+  align-items: center;
+  gap: 1.7413cqw;
+  border: 0;
+  background: transparent;
+  color: var(--white);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(28px, 3.4826cqw, 30px);
+  line-height: 1;
+  font-weight: 400;
+  z-index: 4;
+}
+
+.student-unlock__back-icon {
+  display: inline-block;
+  font-weight: 700;
+  transform: translateY(-1px);
+}
+
 .student-unlock {
   position: relative;
   flex: 0 0 auto;
@@ -1815,7 +1840,7 @@
 .student-unlock__card {
   position: absolute;
   left: 2.9851cqw;
-  top: 44.2786cqw;
+  top: 46.7662cqw;
   width: 94.0299cqw;
   min-height: 79.1045cqw;
   padding: 17.1642cqw 7.9602cqw 11.4428cqw;
@@ -2001,7 +2026,7 @@
 .student-unlock__bubble {
   position: absolute;
   left: 8.9552cqw;
-  top: 132.3383cqw;
+  top: 134.8259cqw;
   width: 58.2089cqw;
   min-height: 11.9403cqw;
   padding: 2.9851cqw 4.2289cqw 2.4876cqw;
@@ -2100,7 +2125,7 @@
 .student-unlock__stars {
   position: absolute;
   left: 15.9204cqw;
-  bottom: 37.8109cqw;
+  bottom: 35.3233cqw;
   width: 30.6318cqw;
   pointer-events: none;
   z-index: 4;
@@ -2115,7 +2140,7 @@
 .student-unlock__figure {
   position: absolute;
   right: -4.9751cqw;
-  bottom: -10.6965cqw;
+  bottom: -13.1841cqw;
   width: 74.6269cqw;
   pointer-events: none;
   z-index: 2;
@@ -2140,6 +2165,33 @@
 .student-unlock__input:focus-visible {
   outline: 3px solid rgba(255, 255, 255, 0.98);
   outline-offset: 3px;
+}
+
+.student-unlock__back:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.98);
+  outline-offset: 3px;
+}
+
+.screen--unlock-transition {
+  min-height: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  background-color: #1e50d2;
+  overflow: hidden;
+}
+
+.unlock-transition__media-wrap {
+  width: 100%;
+  height: 100%;
+}
+
+.unlock-transition__media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 @keyframes roadmap-draw-line {
@@ -2507,6 +2559,10 @@
 .stage-activities--develop .stage-activities__back,
 .stage-activities--transition .stage-activities__back {
   color: var(--white);
+}
+
+.screen--stage-activities.stage-activities--transition {
+  background-color: #000054;
 }
 
 .stage-activities__hero {
@@ -3211,9 +3267,18 @@
     margin-top: 0;
   }
 
+  .student-unlock__back {
+    left: -2px;
+    top: 4cqw;
+    min-height: 8.2cqw;
+    padding: 0 4.4cqw;
+    gap: 1.8cqw;
+    font-size: clamp(18px, 3.5cqw, 26px);
+  }
+
   .student-unlock__card {
     left: 0.2cqw;
-    top: 20.8cqw;
+    top: 23.3cqw;
     width: 99.2cqw;
     min-height: 60.8cqw;
     padding: 17.2cqw 7.2cqw 11.4cqw;
@@ -3270,7 +3335,7 @@
   }
 
   .student-unlock__bubble {
-    top: 110.8cqw;
+    top: 113.3cqw;
     left: 10cqw;
     width: 50.6cqw;
     min-height: 5.2cqw;
@@ -3281,14 +3346,14 @@
 
   .student-unlock__stars {
     left: 5.2cqw;
-    bottom: 40.2cqw;
+    bottom: 37.7cqw;
     width: 45.8cqw;
   }
 
   .student-unlock__figure {
     width: 97cqw;
     right: -10.8cqw;
-    bottom: -14cqw;
+    bottom: -16.5cqw;
   }
 
   .screen--stage-activities .logo-badge,
@@ -3754,35 +3819,9 @@
   color: var(--ink);
 }
 
-.summary-v2-info {
-  position: absolute;
-  top: calc(15.2% - 15px);
-  right: 28px;
-  width: 28px;
-  height: 28px;
-  border: 2px solid var(--ink);
-  border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.92);
-  color: var(--ink);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 24px;
-  font-style: italic;
-  line-height: 1;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  z-index: 3;
-}
-
-.summary-v2-info:hover,
-.summary-v2-info:focus-visible {
-  transform: translateY(-1px);
-}
-
 .summary-v2-bubble-wrap {
   position: absolute;
-  top: calc(57.4% - 20px);
+  top: calc(57.4% - 5px);
   right: 8px;
   width: min(calc(100% - 44px), 292px);
   min-width: auto;
@@ -3807,7 +3846,7 @@
 .summary-v2-coach-wrap {
   position: absolute;
   left: -20px;
-  top: 57.8%;
+  top: calc(57.8% + 15px);
   width: 310px;
   height: 400px;
   align-self: auto;
@@ -3828,7 +3867,7 @@
 
 .summary-v2-actions {
   position: absolute;
-  top: calc(66.8% - 30px);
+  top: calc(66.8% - 15px);
   right: -5px;
   display: grid;
   gap: 5px;

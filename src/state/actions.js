@@ -44,6 +44,12 @@ export function openStudentUnlockScreen() {
   state.showStageInfo = false;
 }
 
+export function openUnlockTransitionScreen() {
+  state.screen = "unlock-transition";
+  state.showRoadmapCheck = false;
+  state.showStageInfo = false;
+}
+
 export function openCareerRoadmapScreen() {
   state.screen = "career-roadmap";
   state.showRoadmapCheck = false;
@@ -65,7 +71,16 @@ export function startPremadeRoadmapFlow() {
 
 export function completeStudentUnlock() {
   state.hasUnlockedRoadmap = true;
-  openCareerRoadmapScreen();
+  openUnlockTransitionScreen();
+}
+
+export function returnFromStudentUnlock() {
+  if (state.roadmapVariant === "premade") {
+    openSummaryScreen();
+    return;
+  }
+
+  openExploreScreen("transition", { entryScreen: state.exploreEntryScreen });
 }
 
 export function openExploreScreen(stage = "explore", options = {}) {

@@ -140,7 +140,7 @@ const roadmapPosterConfigByVariant = {
   premade: {
     assetPath: ROADMAP_PREMADE_ASSET_PATH,
     size: ROADMAP_PREMADE_SIZE,
-    stageScoreLayout: createRoadmapStageScoreLayout(ROADMAP_PREMADE_SIZE),
+    stageScoreLayout: roadmapStageScoreLayout,
     stageIconSlots: createRoadmapStageIconSlots(ROADMAP_PREMADE_SIZE),
     stageDetailSlots: createRoadmapStageDetailSlots(ROADMAP_PREMADE_SIZE)
   }

@@ -1,5 +1,4 @@
 import { renderCoach } from "../components/Coach.js";
-import { renderStageInfoModal } from "../components/StageInfoModal.js";
 import { renderTopBar } from "../components/TopBar.js";
 import { getStageScore } from "../utils/selectors.js";
 
@@ -61,15 +60,6 @@ export function renderSummaryScreen(state) {
           </div>
         </div>
 
-        <button
-          class="summary-v2-info"
-          type="button"
-          data-action="toggle-stage-info"
-          aria-label="About the three career stages"
-        >
-          i
-        </button>
-
         <div class="summary-v2-bubble-wrap">
           <img
             class="summary-v2-bubble"
@@ -114,8 +104,6 @@ export function renderSummaryScreen(state) {
           </button>
         </div>
       </div>
-
-      ${state.showStageInfo ? renderStageInfoModal() : ""}
     </section>
   `;
 }
