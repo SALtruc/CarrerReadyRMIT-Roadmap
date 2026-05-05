@@ -5,10 +5,10 @@ import { renderWelcomeBubble } from "../components/WelcomeBubble.js";
 export function renderWelcomeScreen(state) {
   return `
     <section class="screen screen--welcome grid-bg bg-explore">
+      ${renderTopBar(state)}
       <div class="welcome-panel">
         ${renderWelcomeBubble()}
         <div class="welcome-panel__content">
-          ${renderTopBar(state)}
           <div class="welcome-copy">
             <h1 class="welcome-title">
               <span class="welcome-title__line">Am I...</span>

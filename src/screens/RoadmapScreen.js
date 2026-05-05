@@ -1,6 +1,8 @@
 import { renderTopBar } from "../components/TopBar.js";
+import { renderRoadmapStage } from "../components/RoadmapStage.js";
 
 const roadmapVideoPath = "src/assets/2880H.gif";
+const desktopPromptImagePath = "./src/assets/question_char/transition_3.png";
 
 
 export function renderRoadmapScreen(state) {
@@ -24,12 +26,36 @@ export function renderRoadmapScreen(state) {
           ></img>
           <p class="roadmap-journey__note">It's never too late to start your Career Roadmap!</p>
         </div>
+        <div class="roadmap-desktop-journey" aria-hidden="true">
+          <aside class="roadmap-desktop-card">
+            <div class="roadmap-desktop-card__paper">
+              <p>
+                I feel <span>ready to<br>start working!</span>
+              </p>
+              <img
+                class="roadmap-desktop-card__image"
+                src="${desktopPromptImagePath}"
+                alt=""
+                decoding="async"
+                loading="eager"
+                draggable="false"
+              >
+            </div>
+          </aside>
+          <div class="roadmap-desktop-path">
+            <span class="roadmap-desktop-path__line"></span>
+            ${renderRoadmapStage({ variant: "explore", number: "01", label: "Explore" })}
+            ${renderRoadmapStage({ variant: "develop", number: "02", label: "Develop" })}
+            ${renderRoadmapStage({ variant: "transition", number: "03", label: "Transition" })}
+            <p class="roadmap-desktop-path__note">It's never too late to start your Career Roadmap!</p>
+          </div>
+        </div>
       </div>
     `;
 
   return `
     <section class="screen screen--roadmap grid-bg bg-transition ${state.showRoadmapCheck ? "is-complete" : ""}">
-      ${state.showRoadmapCheck ? "" : renderTopBar(state, { showAvatar: true })}
+      ${renderTopBar(state, { showAvatar: true })}
       ${content}
     </section>
   `;

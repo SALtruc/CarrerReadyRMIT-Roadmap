@@ -158,3 +158,41 @@ button {
     min-height: 100vh;
   }
 }
+
+@media (min-width: 901px) {
+  :root {
+    --frame-width: 100vw;
+    --desktop-page-x: clamp(64px, 4.6vw, 96px);
+    --desktop-page-top: clamp(34px, 4vh, 48px);
+    --desktop-grid-size: clamp(54px, 3.85vw, 68px);
+  }
+
+  body {
+    background: #111111;
+  }
+
+  .page-shell {
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .app-frame {
+    width: 100vw;
+    height: 100vh;
+    min-height: 100vh;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden;
+  }
+
+  .screen {
+    min-height: 100vh;
+    height: 100vh;
+    padding: var(--desktop-page-top) var(--desktop-page-x);
+  }
+
+  .grid-bg {
+    background-size: var(--desktop-grid-size) var(--desktop-grid-size);
+  }
+}
