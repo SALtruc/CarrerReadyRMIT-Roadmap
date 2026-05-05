@@ -5460,4 +5460,139 @@
     left: clamp(250px, 18vw, 370px);
     bottom: clamp(56px, 5vh, 82px);
   }
+
+  .screen--stage-activities {
+    --stage-desktop-left-width: clamp(390px, 27vw, 500px);
+    --stage-desktop-panel-top: clamp(170px, 15vh, 210px);
+  }
+
+  .stage-activities__content {
+    padding-left: calc(var(--stage-desktop-left) + var(--stage-desktop-left-width) + clamp(116px, 8vw, 150px));
+  }
+
+  .stage-activities__hero {
+    top: calc(var(--stage-desktop-panel-top) + 28px);
+    min-height: clamp(132px, 13vh, 168px);
+    padding: clamp(18px, 1.7vh, 26px) clamp(20px, 1.45vw, 28px);
+    border-radius: 0 22px 22px 22px;
+  }
+
+  .stage-activities__segments {
+    top: var(--stage-desktop-panel-top);
+  }
+
+  .stage-activities__hero-copy,
+  .stage-activities--explore .stage-activities__hero-copy,
+  .stage-activities--develop .stage-activities__hero-copy,
+  .stage-activities--transition .stage-activities__hero-copy {
+    max-width: clamp(220px, 15.5vw, 290px);
+  }
+
+  .stage-activities__title,
+  .stage-activities__hero--light .stage-activities__title {
+    font-size: clamp(42px, 3.2vw, 64px);
+  }
+
+  .stage-activities__subtitle,
+  .stage-activities__hero--light .stage-activities__subtitle {
+    max-width: clamp(220px, 15.5vw, 290px);
+    font-size: clamp(14px, 0.88vw, 17px);
+    line-height: 1.08;
+  }
+
+  .stage-activities__score--triangle {
+    width: clamp(86px, 6vw, 116px);
+    height: clamp(78px, 5.5vw, 104px);
+  }
+
+  .stage-activities__score--pill {
+    width: clamp(90px, 6.4vw, 116px);
+    height: clamp(56px, 4vw, 74px);
+  }
+
+  .stage-activities__score--circle {
+    width: clamp(90px, 6.6vw, 118px);
+    height: clamp(90px, 6.6vw, 118px);
+  }
+
+  .stage-activities__score-value,
+  .stage-activities__score--triangle .stage-activities__score-value {
+    font-size: clamp(24px, 1.75vw, 34px);
+  }
+
+  .screen--stage-activities::before {
+    left: calc(var(--stage-desktop-left) + clamp(196px, 13.5vw, 260px));
+    top: clamp(384px, 39vh, 462px);
+    width: clamp(250px, 16.5vw, 315px);
+    min-height: clamp(64px, 6vh, 88px);
+    padding: 15px 19px;
+    border-radius: 18px;
+    font-size: clamp(12.5px, 0.78vw, 16px);
+    line-height: 1.08;
+    z-index: 7;
+  }
+
+  .screen--stage-activities::after {
+    left: clamp(54px, 4vw, 86px);
+    bottom: clamp(-96px, -7vh, -44px);
+    width: clamp(270px, 20vw, 370px);
+    height: clamp(340px, 36vh, 480px);
+    background-position: left bottom;
+  }
+}
+
+@media (min-width: 901px) {
+  .screen--stage-activities::after {
+    width: clamp(310px, 23vw, 440px);
+    height: clamp(390px, 43vh, 560px);
+  }
+
+  .stage-activities--explore::after {
+    left: clamp(22px, 2.2vw, 54px);
+    bottom: clamp(-118px, -8vh, -58px);
+    transform: scaleX(-1);
+    transform-origin: center bottom;
+  }
+
+  .stage-activities--develop::after {
+    left: clamp(24px, 2vw, 56px);
+    bottom: clamp(-120px, -9vh, -72px);
+    width: clamp(460px, 34vw, 640px);
+    height: clamp(520px, 55vh, 690px);
+    background-size: auto 100%;
+  }
+
+  .stage-activities--transition::after {
+    left: clamp(44px, 3.4vw, 72px);
+    bottom: clamp(8px, 2vh, 24px);
+    width: clamp(340px, 25vw, 470px);
+    height: clamp(420px, 46vh, 610px);
+  }
+}
+
+@media (min-width: 901px) {
+  /* Tighten desktop stage pages without moving the character art. */
+  .screen--stage-activities {
+    --stage-desktop-panel-top: clamp(138px, 12.5vh, 174px);
+  }
+
+  .stage-activities__content {
+    padding-top: clamp(138px, 12.5vh, 174px);
+  }
+
+  .stage-activities__back {
+    top: clamp(112px, 10.5vh, 142px);
+  }
+
+  .stage-activities__segments {
+    top: var(--stage-desktop-panel-top);
+  }
+
+  .stage-activities__hero {
+    top: calc(var(--stage-desktop-panel-top) + 26px);
+  }
+
+  .screen--stage-activities::before {
+    top: clamp(330px, 32vh, 390px);
+  }
 }
