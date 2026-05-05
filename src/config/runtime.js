@@ -1,3 +1,6 @@
+const PRODUCTION_UNLOCK_API_ENDPOINT =
+  "https://career-ready-rmit-roadmap.vercel.app/api/unlock";
+
 function parseBooleanFlag(value) {
   if (typeof value === "boolean") {
     return value;
@@ -40,7 +43,24 @@ function readRuntimeOverrides() {
     return {};
   }
 
-  return window.__CAREER_READY_ENV__ || {};
+  const metaUnlockApiEndpoint = window.document
+    ?.querySelector?.('meta[name="career-ready-unlock-api"]')
+    ?.getAttribute("content");
+
+  return {
+    ...(window.__CAREER_READY_ENV__ || {}),
+    ...(metaUnlockApiEndpoint ? { unlockApiEndpoint: metaUnlockApiEndpoint } : {})
+  };
+}
+
+function normalizeEndpoint(value, fallback) {
+  if (typeof value !== "string") {
+    return fallback;
+  }
+
+  const trimmedValue = value.trim();
+
+  return trimmedValue || fallback;
 }
 
 export const isLocalRuntime = detectLocalRuntime();
@@ -50,3 +70,8 @@ export const isUnlockSubmissionBypassed = (() => {
 
   return override ?? isLocalRuntime;
 })();
+
+export const unlockApiEndpoint = normalizeEndpoint(
+  readRuntimeOverrides().unlockApiEndpoint,
+  isLocalRuntime ? "/api/unlock" : PRODUCTION_UNLOCK_API_ENDPOINT
+);

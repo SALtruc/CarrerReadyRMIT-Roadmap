@@ -6,6 +6,9 @@ const QUESTION_IDS_BY_STAGE = {
 
 const MAX_BODY_LENGTH = 20000;
 const STUDENT_ID_PATTERN = /^S\d{7}$/;
+const DEFAULT_ALLOWED_ORIGINS = [
+  "https://industryhub.rmit.edu.vn"
+];
 
 function isTruthyEnvFlag(value) {
   return typeof value === "string" && ["1", "true", "yes", "on"].includes(value.trim().toLowerCase());
@@ -13,6 +16,36 @@ function isTruthyEnvFlag(value) {
 
 function json(res, status, body) {
   return res.status(status).json(body);
+}
+
+function getAllowedOrigins() {
+  const configuredOrigins = String(process.env.ALLOWED_ORIGINS || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+  const vercelOrigin = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : null;
+
+  return [
+    ...DEFAULT_ALLOWED_ORIGINS,
+    ...configuredOrigins,
+    ...(vercelOrigin ? [vercelOrigin] : [])
+  ];
+}
+
+function applyCors(req, res) {
+  const requestOrigin = req.headers.origin;
+  const allowedOrigins = getAllowedOrigins();
+  const allowsAnyOrigin = allowedOrigins.includes("*");
+
+  if (requestOrigin && (allowsAnyOrigin || allowedOrigins.includes(requestOrigin))) {
+    res.setHeader("Access-Control-Allow-Origin", allowsAnyOrigin ? "*" : requestOrigin);
+    res.setHeader("Vary", "Origin");
+  }
+
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
 }
 
 async function parseRequestBody(req) {
@@ -110,8 +143,14 @@ function getAppsScriptErrorMessage(errorCode, statusCode) {
 }
 
 module.exports = async function handler(req, res) {
+  applyCors(req, res);
+
+  if (req.method === "OPTIONS") {
+    return res.status(204).end();
+  }
+
   if (req.method !== "POST") {
-    res.setHeader("Allow", "POST");
+    res.setHeader("Allow", "POST, OPTIONS");
     return json(res, 405, {
       ok: false,
       error: "method_not_allowed",

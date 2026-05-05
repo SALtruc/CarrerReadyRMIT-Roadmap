@@ -1,5 +1,5 @@
 import { renderApp } from "./renderApp.js";
-import { isUnlockSubmissionBypassed } from "./config/runtime.js";
+import { isUnlockSubmissionBypassed, unlockApiEndpoint } from "./config/runtime.js";
 import { avatars } from "./data/avatars.js";
 import { getStageActivityAssetPaths, stageSequence } from "./data/activities.js";
 import { getRoadmapAssetPaths, ROADMAP_PREMADE_ASSET_PATH } from "./data/roadmap.js";
@@ -326,7 +326,7 @@ async function submitStudentUnlock(form) {
   }
 
   try {
-    const response = await fetch("/api/unlock", {
+    const response = await fetch(unlockApiEndpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

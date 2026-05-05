@@ -13,6 +13,12 @@ Open `index.html` in a browser.
 - If you run the API locally as well, set `BYPASS_UNLOCK_STORAGE=true` in your env so `/api/unlock` returns `ok` without calling Google Sheets.
 - See `.env.example` for the supported API env keys.
 
+## Static WordPress Hosting + Vercel API
+
+When the app is uploaded as static files under WordPress, `/api/unlock` does not exist on the WordPress domain. The frontend uses `https://career-ready-rmit-roadmap.vercel.app/api/unlock` by default, so the static host does not need extra configuration.
+
+Set `ALLOWED_ORIGINS=https://industryhub.rmit.edu.vn` in the Vercel project env so the WordPress page can call the API.
+
 ## Files
 
 - `index.html`: app shell that loads the modular app
